@@ -4,7 +4,9 @@
  */
 package BO;
 
+import Conexion.IConexionBD;
 import DAO.IPacienteDAO;
+import DAO.PacienteDAO;
 import DTO.PacienteNuevoDTO;
 import Entidades.Paciente;
 import Exception.NegocioException;
@@ -22,8 +24,8 @@ public class PacienteBO {
     private final IPacienteDAO pacienteDAO;
     private final PacienteMapper mapper = new PacienteMapper(); // Usamos el mapper
 
-    public PacienteBO(IPacienteDAO pacienteDAO) {
-        this.pacienteDAO = pacienteDAO;
+    public PacienteBO(IConexionBD conexion) {
+        this.pacienteDAO = new PacienteDAO(conexion);
     }
     
         public boolean agregarPaciente(PacienteNuevoDTO pacienteNuevo) throws NegocioException {
