@@ -20,6 +20,7 @@ public class ConexionBD implements IConexionBD{
     final String PASS = "rootroot18";
     final String CADENA_CONEXION = "jdbc:mysql://localhost:3307/clinicaBD";
 
+    
     @Override
     public Connection crearConexion() throws PersistenciaException {
 

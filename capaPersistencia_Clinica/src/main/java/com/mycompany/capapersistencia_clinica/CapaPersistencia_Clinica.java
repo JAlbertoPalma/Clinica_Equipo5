@@ -1,7 +1,6 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
-
 package com.mycompany.capapersistencia_clinica;
 
 import Conexion.ConexionBD;
@@ -22,7 +21,7 @@ public class CapaPersistencia_Clinica {
 
     public static void main(String[] args) throws ParseException {
         // Crear la conexión a la base de datos
-        IConexionBD conexionBD = new ConexionBD();  
+        IConexionBD conexionBD = new ConexionBD();
         PacienteDAO pacienteBD = new PacienteDAO(conexionBD);
         
         //Pureba para agregar paciente
@@ -46,4 +45,5 @@ public class CapaPersistencia_Clinica {
             e.printStackTrace();
         }
     }
+
 }

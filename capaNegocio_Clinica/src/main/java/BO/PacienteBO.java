@@ -73,8 +73,8 @@ public class PacienteBO {
             pacienteDAO.actualizarPaciente(paciente);
 
         } catch (PersistenciaException ex) {
-            logger.log(Level.SEVERE, "Error al actualizar activista con ID: " + idPaciente, ex);
-            throw new NegocioException("No se pudo actualizar el activista.", ex);
+            logger.log(Level.SEVERE, "Error al actualizar paciente con ID: " + idPaciente, ex);
+            throw new NegocioException("No se pudo actualizar el paciente.", ex);
         }
         return paciente;
     }
