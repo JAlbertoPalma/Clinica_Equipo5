@@ -1,7 +1,6 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
-
 package com.mycompany.capapersistencia_clinica;
 
 import Conexion.ConexionBD;
@@ -21,13 +20,13 @@ public class CapaPersistencia_Clinica {
 
     public static void main(String[] args) throws ParseException {
         // Crear la conexión a la base de datos
-        IConexionBD conexionBD = new ConexionBD();  
+        IConexionBD conexionBD = new ConexionBD();
         PacienteDAO pacienteBD = new PacienteDAO(conexionBD);
-        
+        //Convertir el String a Date
+        Date fechaNacimiento = new Date(2005 - 07 - 12);
 //        //Pureba para agregar paciente
 //        try {           
-//            // Convertir el String a Date
-//            Date fechaNacimiento = new Date(2005-07-12);
+//            
 //            
 //            // Crear el activista que vamos a guardar en la BD
 //            Paciente pacienteAGuardar = new Paciente("Pablo","Zamora","Gàmez",fechaNacimiento,"De la luna","Casa Blanca","2105","1928374632","pabs35@example.com");
@@ -45,5 +44,33 @@ public class CapaPersistencia_Clinica {
 //            System.err.println("Error al insertar: " + e.getMessage());
 //            e.printStackTrace();
 //        }
+
+//// PRUEBA ACTUALIZAR
+//        Paciente pacienteActualizado = new Paciente();
+//        pacienteActualizado.setIdPaciente(6);  // ID del paciente a actualizar (debe existir en la BD)
+//        pacienteActualizado.setNombre("Carlos");
+//        pacienteActualizado.setApellidoPaterno("Ramírez");
+//        pacienteActualizado.setApellidoMaterno("López");
+//        pacienteActualizado.setFechaNacimiento(fechaNacimiento);
+//        pacienteActualizado.setCalle("Calle Reforma");
+//        pacienteActualizado.setColonia("Centro");
+//        pacienteActualizado.setNumero("456");
+//        pacienteActualizado.setTelefono("5559876543");
+//        pacienteActualizado.setCorreo("carlos.ramirez@example.com");
+//
+//        try {
+//            // 4️⃣ Llamar al método actualizarPaciente()
+//            Paciente resultado = pacienteBD.actualizarPaciente(pacienteActualizado);
+//
+//            // 5️⃣ Mostrar el resultado
+//            if (resultado != null) {
+//                System.out.println("Paciente actualizado con éxito: " + resultado);
+//            } else {
+//                System.out.println(" No se encontró el paciente para actualizar.");
+//            }
+//        } catch (PersistenciaException e) {
+//            System.err.println("Error al actualizar el paciente: " + e.getMessage());
+//        }
     }
+
 }

@@ -30,11 +30,9 @@ public class PacienteBO {
     }
 
     public boolean agregarPaciente(PacienteNuevoDTO pacienteNuevo) throws NegocioException {
-        if (pacienteNuevo == null) {
-            throw new NegocioException("El paciente no puede ser nulo.");
-        }
-
         // Validaciones 
+        
+        
         // Convertimos el DTO a la entidad
         Paciente paciente = mapper.toEntity(pacienteNuevo);
 
@@ -48,20 +46,21 @@ public class PacienteBO {
     }
 
     //Actualizacion de paciente
-    public Paciente actualizarActivista(int idPaciente, PacienteNuevoDTO activistaDTO) throws NegocioException {
-        
+    public Paciente actualizarPaciente(int idPaciente, PacienteNuevoDTO pacienteDTO) throws NegocioException {       
         //validaciones
         
         
-        Paciente paciente = mapper.toEntity(activistaDTO);
+        //Convierte un PacienteNuevoDTO a una entidad Paciente
+        Paciente paciente = mapper.toEntity(pacienteDTO);
+        //Se envia aparte el id del paciente
         paciente.setIdPaciente(idPaciente);
         try {
             // Llamar a la DAO para actualizar el paciente
             Paciente actualizado = pacienteDAO.actualizarPaciente(paciente);
 
         } catch (PersistenciaException ex) {
-            logger.log(Level.SEVERE, "Error al actualizar activista con ID: " + idPaciente, ex);
-            throw new NegocioException("No se pudo actualizar el activista.", ex);
+            logger.log(Level.SEVERE, "Error al actualizar paciente con ID: " + idPaciente, ex);
+            throw new NegocioException("No se pudo actualizar el paciente.", ex);
         }
         return paciente;
     }

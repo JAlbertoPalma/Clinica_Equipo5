@@ -13,7 +13,19 @@ import Exception.PersistenciaException;
  */
 public interface IPacienteDAO {
      
+    /**
+     *
+     * @param paciente
+     * @return
+     * @throws PersistenciaException
+     */
     public Paciente agregarPaciente(Paciente paciente)throws PersistenciaException;
         
+    /**
+     *
+     * @param paciented
+     * @return
+     * @throws PersistenciaException
+     */
     public Paciente actualizarPaciente(Paciente paciented)throws PersistenciaException;
 }
