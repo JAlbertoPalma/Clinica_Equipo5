@@ -124,7 +124,7 @@ public class Paciente {
         return telefono;
     }
 
-    public void setTelefono(String telefono) {
+    public void setTelefono() {
         this.telefono = telefono;
     }
 
@@ -132,7 +132,7 @@ public class Paciente {
         return correo;
     }
 
-    public void setCorreo(String correo) {
+    public void setCorreo() {
         this.correo = correo;
     }
     
