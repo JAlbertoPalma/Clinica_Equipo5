@@ -29,14 +29,21 @@ public class PacienteBO {
         this.pacienteDAO = new PacienteDAO(conexion);
     }
 
-    public boolean agregarPaciente(PacienteNuevoDTO pacienteNuevo) throws NegocioException {
-        if (pacienteNuevo == null) {
+    public boolean agregarPaciente(PacienteNuevoDTO pacienteDTO) throws NegocioException {
+        if (pacienteDTO == null) {
             throw new NegocioException("El paciente no puede ser nulo.");
         }
 
-        // Validaciones 
+        //validaciones de espacios vacíos
+        if (pacienteDTO.getNombre().isEmpty() || pacienteDTO.getApellidoPaterno().isEmpty()
+         || pacienteDTO.getCalle().isEmpty() || pacienteDTO.getColonia().isEmpty()
+         || pacienteDTO.getNumero().isEmpty() || pacienteDTO.getTelefono().isEmpty()
+         || pacienteDTO.getCorreo().isEmpty()) {
+            throw new NegocioException("Todos los campos son obligatorios.");
+        }
+        
         // Convertimos el DTO a la entidad
-        Paciente paciente = mapper.toEntity(pacienteNuevo);
+        Paciente paciente = mapper.toEntity(pacienteDTO);
 
         try {
             Paciente pacienteGuardado = pacienteDAO.agregarPaciente(paciente);
@@ -48,16 +55,22 @@ public class PacienteBO {
     }
 
     //Actualizacion de paciente
-    public Paciente actualizarActivista(int idPaciente, PacienteNuevoDTO activistaDTO) throws NegocioException {
+    public Paciente actualizarActivista(int idPaciente, PacienteNuevoDTO pacienteDTO) throws NegocioException {
         
-        //validaciones
+        //validaciones de espacios vacíos
+        if (pacienteDTO.getNombre().isEmpty() || pacienteDTO.getApellidoPaterno().isEmpty()
+         || pacienteDTO.getCalle().isEmpty() || pacienteDTO.getColonia().isEmpty()
+         || pacienteDTO.getNumero().isEmpty() || pacienteDTO.getTelefono().isEmpty()
+         || pacienteDTO.getCorreo().isEmpty()) {
+            throw new NegocioException("Todos los campos son obligatorios.");
+        }
         
         
-        Paciente paciente = mapper.toEntity(activistaDTO);
+        Paciente paciente = mapper.toEntity(pacienteDTO);
         paciente.setIdPaciente(idPaciente);
         try {
             // Llamar a la DAO para actualizar el paciente
-            Paciente actualizado = pacienteDAO.actualizarPaciente(paciente);
+            pacienteDAO.actualizarPaciente(paciente);
 
         } catch (PersistenciaException ex) {
             logger.log(Level.SEVERE, "Error al actualizar activista con ID: " + idPaciente, ex);

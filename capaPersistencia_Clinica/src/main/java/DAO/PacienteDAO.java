@@ -5,10 +5,8 @@
 package DAO;
 
 import Conexion.IConexionBD;
-import DTO.PacienteNuevoDTO;
 import Entidades.Paciente;
 import Exception.PersistenciaException;
-import Mapper.PacienteMapper;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -24,8 +22,7 @@ import java.util.logging.Logger;
  */
 public class PacienteDAO implements IPacienteDAO{
     IConexionBD conexion; 
-    private static final Logger logger = Logger.getLogger(PacienteDAO.class.getName());
-    private final PacienteMapper mapper = new PacienteMapper();
+    private static final Logger logger = Logger.getLogger(PacienteDAO.class.getName());;
     public PacienteDAO(IConexionBD conexion) {
         this.conexion = conexion;
     }
@@ -72,36 +69,31 @@ public class PacienteDAO implements IPacienteDAO{
     }
     
     //ACTUALIZAR PACIENTE
-    public Paciente actualizarPaciente(Paciente paciented)throws PersistenciaException{
+    @Override
+    public boolean actualizarPaciente(Paciente paciente)throws PersistenciaException{
         String consultaSQL = "UPDATE pacientes SET nombre = ?, apellidoPat=?, apellidoMat=?, fechaNacimiento=?, calle=?, colonia=?, numero=?, telefono=?, correo=? WHERE id = ?;";
-        try (Connection con = this.conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(consultaSQL)) {
+        try (Connection con = this.conexion.crearConexion(); 
+                PreparedStatement ps = con.prepareStatement(consultaSQL)) {
 
             // Asignamos los parámetros correctamente
-            ps.setString(1, paciented.getNombre());
-            ps.setString(2, paciented.getApellidoPaterno());
-            ps.setString(3, paciented.getApellidoMaterno());
-            ps.setObject(4, paciented.getFechaNacimiento());
-            ps.setString(5, paciented.getCalle());
-            ps.setString(6, paciented.getColonia());
-            ps.setString(7, paciented.getNumero());
-            ps.setString(8, paciented.getTelefono());
-            ps.setString(9, paciented.getCorreo());
-            ps.setInt(10, paciented.getIdPaciente());// ID del paciente
+            ps.setString(1, paciente.getNombre());
+            ps.setString(2, paciente.getApellidoPaterno());
+            ps.setString(3, paciente.getApellidoMaterno());
+            ps.setObject(4, paciente.getFechaNacimiento());
+            ps.setString(5, paciente.getCalle());
+            ps.setString(6, paciente.getColonia());
+            ps.setString(7, paciente.getNumero());
+            ps.setString(8, paciente.getTelefono());
+            ps.setString(9, paciente.getCorreo());
+            ps.setInt(10, paciente.getIdPaciente());// ID del paciente
 
             // Ejecutamos la actualización
-            int filasActualizadas = ps.executeUpdate();
-            PacienteNuevoDTO paciente = mapper.toNuevoDTO(paciented);
-            if (filasActualizadas > 0) {
-                logger.info("Paciente actualizado correctamente: " + paciente);
-
-            } else {
-                logger.warning("No se encontró paciente con ID: " + paciented.getIdPaciente());
-
-            }
+            int filasAfectadas = ps.executeUpdate();
+            return filasAfectadas > 0;
+            
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error al actualizar paciente con ID: " + paciented.getIdPaciente(), e);
-            throw new PersistenciaException("Error al actualizar paciente con ID " + paciented.getIdPaciente(), e);
+            logger.log(Level.SEVERE, "Error al actualizar paciente con ID: " + paciente.getIdPaciente(), e);
+            throw new PersistenciaException("Error al actualizar paciente con ID " + paciente.getIdPaciente(), e);
         }
-        return paciented;
     }
 }

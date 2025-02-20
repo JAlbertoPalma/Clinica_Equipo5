@@ -5,6 +5,7 @@
 package Entidades;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 /**
  *
@@ -15,7 +16,7 @@ public class Paciente {
     private String nombre;
     private String apellidoPaterno;
     private String apellidoMaterno;
-    private Date fechaNacimiento;
+    private LocalDate fechaNacimiento;
     private String calle;
     private String colonia;
     private String numero;
@@ -28,7 +29,7 @@ public class Paciente {
 
     // Constructor con todos los atributos
 
-    public Paciente(int idPaciente, String nombre, String apellidoPaterno, String apellidoMaterno, Date fechaNacimiento, String calle, String colonia, String numero, String telefono, String correo) {
+    public Paciente(int idPaciente, String nombre, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, String calle, String colonia, String numero, String telefono, String correo) {
         this.idPaciente = idPaciente;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
@@ -43,7 +44,7 @@ public class Paciente {
     
 
     // Constructor con todos los atributos menos ID
-    public Paciente(String nombre, String apellidoPaterno, String apellidoMaterno, Date fechaNacimiento, String calle, String colonia, String numero, String telefono, String correo) {    
+    public Paciente(String nombre, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, String calle, String colonia, String numero, String telefono, String correo) {    
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
@@ -88,11 +89,11 @@ public class Paciente {
         this.apellidoMaterno = apellidoMaterno;
     }
 
-    public Date getFechaNacimiento() {
+    public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(Date fechaNacimiento) {
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 
