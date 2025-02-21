@@ -28,7 +28,6 @@ public class Paciente {
     }
 
     // Constructor con todos los atributos
-
     public Paciente(int idPaciente, String nombre, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, String calle, String colonia, String numero, String telefono, String correo) {
         this.idPaciente = idPaciente;
         this.nombre = nombre;

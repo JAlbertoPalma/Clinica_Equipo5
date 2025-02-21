@@ -5,6 +5,7 @@
 package DAO;
 
 import Entidades.Usuario;
+import Exception.PersistenciaException;
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ import java.util.List;
  * @author Beto_
  */
 public interface IUsuarioDAO {
-    public void agregarUsuario(Usuario usuario);
+    public Usuario agregarUsuario(Usuario usuario)throws PersistenciaException;
     
     public Usuario obtenerUsuarioPorCorreo(String correo);
     
