@@ -32,7 +32,8 @@ public class PacienteMapper {
                 paciNuevo.getColonia(),
                 paciNuevo.getNumero(),
                 paciNuevo.getTelefono(),
-                paciNuevo.getCorreo()
+                paciNuevo.getCorreo(),
+                paciNuevo.getIdUsuario()
         );
     }
 
@@ -52,7 +53,8 @@ public class PacienteMapper {
                 paciente.getColonia(),
                 paciente.getNumero(),
                 paciente.getTelefono(),
-                paciente.getCorreo()
+                paciente.getCorreo(),
+                paciente.getIdUsuario()
         );
     }
 
@@ -73,7 +75,8 @@ public class PacienteMapper {
                 paciente.getColonia(),
                 paciente.getNumero(),
                 paciente.getTelefono(),
-                paciente.getCorreo()
+                paciente.getCorreo(),
+                paciente.getIdUsuario()
         );
     }
 

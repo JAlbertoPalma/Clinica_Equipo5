@@ -13,9 +13,9 @@ import java.util.List;
  * @author Beto_
  */
 public interface IUsuarioDAO {
-    public Usuario agregarUsuario(Usuario usuario)throws PersistenciaException;
+    public Usuario agregarUsuario(Usuario usuario) throws PersistenciaException;
     
-    public Usuario obtenerUsuarioPorCorreo(String correo);
+    public Usuario obtenerUsuarioPorCorreo(String correo)throws PersistenciaException;
     
-    public List<Usuario> obtenerUsuarios();
+    public List<Usuario> obtenerUsuarios() throws PersistenciaException;
 }

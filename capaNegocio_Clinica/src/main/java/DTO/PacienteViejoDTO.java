@@ -4,7 +4,6 @@
  */
 package DTO;
 
-import java.sql.Date;
 import java.time.LocalDate;
 
 /**
@@ -22,13 +21,15 @@ public class PacienteViejoDTO {
     private String numero;
     private String telefono;
     private String correo;
+    private int idUsuario;
 
     // Constructor vacío
     public PacienteViejoDTO() {
     }
 
     // Constructor con todos los atributos
-    public PacienteViejoDTO(String idPaciente, String nombre, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, String calle, String colonia, String numero, String telefono, String correo) {
+    public PacienteViejoDTO(String idPaciente, String nombre, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, 
+            String calle, String colonia, String numero, String telefono, String correo, int idUsuario) {
         this.idPaciente = idPaciente;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
@@ -39,10 +40,12 @@ public class PacienteViejoDTO {
         this.numero = numero;
         this.telefono = telefono;
         this.correo = correo;
+        this.idUsuario = idUsuario;
     }
 
     // Constructor con todos los atributos menos ID
-    public PacienteViejoDTO(String nombre, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, String calle, String colonia, String numero, String telefono, String correo) {
+    public PacienteViejoDTO(String nombre, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, 
+            String calle, String colonia, String numero, String telefono, String correo, int idUsuario) {
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
@@ -52,6 +55,7 @@ public class PacienteViejoDTO {
         this.numero = numero;
         this.telefono = telefono;
         this.correo = correo;
+        this.idUsuario = idUsuario;
     }
     
     // Getters y Setters
@@ -134,12 +138,18 @@ public class PacienteViejoDTO {
     public void setCorreo(String correo) {
         this.correo = correo;
     }
+    
+    public int getId_paciente() {
+        return idUsuario;
+    }
 
-    // Método toString para depuración
+    public void setId_paciente(int id_paciente) {
+        this.idUsuario = id_paciente;
+    }
+
     @Override
     public String toString() {
-        return "PacienteViejoDTO{" + "idPaciente=" + idPaciente + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", fechaNacimiento=" + fechaNacimiento + ", calle=" + calle + ", colonia=" + colonia + ", numero=" + numero + ", telefono=" + telefono + ", correo=" + correo + '}';
+        return "PacienteViejoDTO{" + "idPaciente=" + idPaciente + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", fechaNacimiento=" + fechaNacimiento + ", calle=" + calle + ", colonia=" + colonia + ", numero=" + numero + ", telefono=" + telefono + ", correo=" + correo + ", idUsuario=" + idUsuario + '}';
     }
-    
     
 }

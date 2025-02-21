@@ -6,12 +6,16 @@ package DAO;
 
 import Conexion.IConexionBD;
 import Entidades.Usuario;
+import Entidades.Usuario.TipoUsuario;
 import Exception.PersistenciaException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,9 +31,10 @@ public class UsuarioDAO implements IUsuarioDAO {
         this.conexion = conexion;
     }
     
+    @Override
     public Usuario agregarUsuario(Usuario usuario)throws PersistenciaException{
         // consulta SQL que vamos a ejecutar en mysql
-        String sentenciaSQL = "INSERT INTO usuarios (correo, cedula_profesional, contraseña, tipo)VALUES (?, ?, ?, ?)";
+        String sentenciaSQL = "INSERT INTO usuarios (correo, cedulaProfesional, contrasenia, tipo)VALUES (?, ?, ?, ?)";
 
         try (Connection con = conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(sentenciaSQL, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -37,7 +42,7 @@ public class UsuarioDAO implements IUsuarioDAO {
             ps.setString(1, usuario.getCorreo());
             ps.setString(2, usuario.getCedulaProfesional());
             ps.setString(3, usuario.getContrasenia());
-            ps.setObject(4, usuario.getTipo());
+            ps.setObject(4, usuario.getTipo().toString(), Types.VARCHAR);
 
             int filasAfectadas = ps.executeUpdate();
             if (filasAfectadas == 0) {
@@ -62,13 +67,90 @@ public class UsuarioDAO implements IUsuarioDAO {
     }
 
     @Override
-    public Usuario obtenerUsuarioPorCorreo(String correo) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Usuario obtenerUsuarioPorCorreo(String correo) throws PersistenciaException{
+        // auxiliar de usuario
+        Usuario usuario = null;
+        String tipo = null;
+        
+        String consultaSQL = "SELECT id, correo, cedulaProfesional, contrasenia, tipo FROM usuarios WHERE correo = ?";
+        try (Connection con = this.conexion.crearConexion();
+                PreparedStatement ps = con.prepareStatement(consultaSQL)) {
+
+            // Asignamos el parámetro ID de la consulta 
+            ps.setString(1, correo);
+
+            // Ejecutamos la consulta
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) { //verificamos que se haya obtenido algo
+                    // Se crea el objeto activista y se asignan sus propiedades
+                    usuario = new Usuario(); // es el que definimos al inicio
+                    usuario.setIdUsuario(rs.getInt("id"));
+                    usuario.setCorreo(rs.getString("correo"));
+                    usuario.setCedulaProfesional(rs.getString("cedulaProfesional"));
+                    usuario.setContrasenia(rs.getString("contrasenia"));
+                    
+                    tipo = rs.getString("tipo");
+                    if(tipo.equals("paciente")){
+                        usuario.setTipo(TipoUsuario.paciente);
+                    }else{
+                        usuario.setTipo(TipoUsuario.medico);
+                    }
+                    
+                    logger.info("Usuario encontrado: " + usuario);
+                } else {
+                    logger.warning("No se encontró usuario con correo: " + correo); // no es error, solo advertencia
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error al consultar usuario con correo: " + correo, e);
+            throw new PersistenciaException("Error al consultar usuario por correo " + correo, e);
+
+        }
+        return usuario;
     }
 
     @Override
-    public List<Usuario> obtenerUsuarios() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public List<Usuario> obtenerUsuarios() throws PersistenciaException{
+        String consultaSQL = "SELECT id, correo, cedulaProfesional, contrasenia, tipo FROM usuarios";
+
+        // Lista donde se almacenarán los usuarios recuperados
+        List<Usuario> usuarios = new ArrayList<>();
+
+        // iniciamos el intento de ejecutar el comando/consulta en la bd
+        try (Connection con = this.conexion.crearConexion();
+                PreparedStatement ps = con.prepareStatement(consultaSQL);
+                ResultSet rs = ps.executeQuery() // Se ejecuta la consulta y se obtiene el resultado en un ResultSet
+                ) {
+            // Se recorre el ResultSet mientras haya filas disponibles con el next()
+            while (rs.next()) {
+                String tipo = rs.getString("tipo");
+                TipoUsuario tipoUsuario;
+                if(tipo.equals("paciente")){
+                        tipoUsuario = TipoUsuario.paciente;
+                    }else{
+                        tipoUsuario = TipoUsuario.medico;
+                    }
+                
+                Usuario usuario = new Usuario(
+                        rs.getInt("id"),
+                        rs.getString("correo"),
+                        rs.getString("cedulaProfesional"),
+                        rs.getString("contrasenia"),
+                        tipoUsuario                        
+                );
+
+                // Se agrega el usuario a la lista
+                usuarios.add(usuario);
+            }
+
+            // Se retorna la lista con todos los usuarios obtenidos
+            return usuarios;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+            // Se lanza una excepción personalizada si hay un error en la consulta
+            throw new PersistenciaException("Error al obtener la lista de usuarios.", ex);
+        }
     }
 
 }

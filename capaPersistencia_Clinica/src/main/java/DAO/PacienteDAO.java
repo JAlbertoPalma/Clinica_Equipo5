@@ -30,7 +30,7 @@ public class PacienteDAO implements IPacienteDAO{
     @Override
     public Paciente agregarPaciente(Paciente paciente) throws PersistenciaException {
         // consulta SQL que vamos a ejecutar en mysql
-        String sentenciaSQL = "INSERT INTO pacientes (nombre, apellidoPat, apellidoMat, fechaNacimiento, calle, colonia, numero, telefono, correo)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sentenciaSQL = "INSERT INTO pacientes (nombre, apellidoPat, apellidoMat, fechaNacimiento, calle, colonia, numero, telefono, correo, id_usuario)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection con = conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(sentenciaSQL, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -44,6 +44,7 @@ public class PacienteDAO implements IPacienteDAO{
             ps.setString(7, paciente.getNumero());
             ps.setString(8, paciente.getTelefono());
             ps.setString(9, paciente.getCorreo());
+            ps.setInt(10, paciente.getIdUsuario());
 
             int filasAfectadas = ps.executeUpdate();
             if (filasAfectadas == 0) {
@@ -84,7 +85,7 @@ public class PacienteDAO implements IPacienteDAO{
             ps.setString(7, paciente.getNumero());
             ps.setString(8, paciente.getTelefono());
             ps.setString(9, paciente.getCorreo());
-            ps.setInt(10, paciente.getIdPaciente());// ID del paciente
+            ps.setInt(10, paciente.getIdPaciente()); // WHERE id = ?
 
             // Ejecutamos la actualización
             int filasAfectadas = ps.executeUpdate();

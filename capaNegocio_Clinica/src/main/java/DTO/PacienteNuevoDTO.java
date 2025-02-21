@@ -20,11 +20,13 @@ public class PacienteNuevoDTO {
     private String numero;
     private String telefono;
     private String correo;
+    private int idUsuario;
 
     public PacienteNuevoDTO() {
     }
 
-    public PacienteNuevoDTO(String nombre, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, String calle, String colonia, String numero, String telefono, String correo) {
+    public PacienteNuevoDTO(String nombre, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, 
+            String calle, String colonia, String numero, String telefono, String correo, int idUsuario) {
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
@@ -34,6 +36,7 @@ public class PacienteNuevoDTO {
         this.numero = numero;
         this.telefono = telefono;
         this.correo = correo;
+        this.idUsuario = idUsuario;
     }
 
     public String getNombre() {
@@ -108,9 +111,17 @@ public class PacienteNuevoDTO {
         this.correo = correo;
     }
 
+    public int getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
     @Override
     public String toString() {
-        return "PacienteNuevoDTO{" + "nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", fechaNacimiento=" + fechaNacimiento + ", calle=" + calle + ", colonia=" + colonia + ", numero=" + numero + ", telefono=" + telefono + ", correo=" + correo + '}';
+        return "PacienteNuevoDTO{" + "nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", fechaNacimiento=" + fechaNacimiento + ", calle=" + calle + ", colonia=" + colonia + ", numero=" + numero + ", telefono=" + telefono + ", correo=" + correo + ", idUsuario=" + idUsuario + '}';
     }
     
     

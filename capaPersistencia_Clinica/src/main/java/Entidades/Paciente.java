@@ -22,13 +22,16 @@ public class Paciente {
     private String numero;
     private String telefono;
     private String correo;
+    private int idUsuario;
+    
 
     // Constructor vacío
     public Paciente() {
     }
 
     // Constructor con todos los atributos
-    public Paciente(int idPaciente, String nombre, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, String calle, String colonia, String numero, String telefono, String correo) {
+    public Paciente(int idPaciente, String nombre, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, 
+            String calle, String colonia, String numero, String telefono, String correo, int idUsuario) {
         this.idPaciente = idPaciente;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
@@ -39,11 +42,13 @@ public class Paciente {
         this.numero = numero;
         this.telefono = telefono;
         this.correo = correo;
+        this.idUsuario = idUsuario;
     }
     
 
     // Constructor con todos los atributos menos ID
-    public Paciente(String nombre, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, String calle, String colonia, String numero, String telefono, String correo) {    
+    public Paciente(String nombre, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, 
+            String calle, String colonia, String numero, String telefono, String correo, int idUsuario) {    
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
@@ -53,6 +58,7 @@ public class Paciente {
         this.numero = numero;
         this.telefono = telefono;
         this.correo = correo;
+        this.idUsuario = idUsuario;
     }
 
     // Getters y Setters
@@ -135,10 +141,17 @@ public class Paciente {
     public void setCorreo(String correo) {
         this.correo = correo;
     }
-    
-    // Método toString para depuración
+
+    public int getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
     @Override
     public String toString() {
-        return "Paciente{" + "idPaciente=" + idPaciente + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", fechaNacimiento=" + fechaNacimiento + ", calle=" + calle + ", colonia=" + colonia + ", numero=" + numero + ", telefono=" + telefono + ", correo=" + correo + '}';
+        return "Paciente{" + "idPaciente=" + idPaciente + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", fechaNacimiento=" + fechaNacimiento + ", calle=" + calle + ", colonia=" + colonia + ", numero=" + numero + ", telefono=" + telefono + ", correo=" + correo + ", idUsuario=" + idUsuario + '}';
     }
 }

@@ -2,52 +2,44 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package Entidades;
+package DTO;
+
+import Entidades.Usuario;
 
 /**
  *
  * @author Beto_
  */
-public class Usuario{
-    
-    //Para separar el tipo de usuario
-    public enum TipoUsuario {
-    paciente, medico
-    }
-    
-    private int idUsuario;
+public class UsuarioViejoDTO {
+    private String idUsuario;
     private String correo;
     private String cedulaProfesional;
     private String contrasenia;
-    private TipoUsuario tipo;
+    private Usuario.TipoUsuario tipo;
 
-    //Constructor vacio
-    public Usuario() {
+    public UsuarioViejoDTO() {
     }
 
-    //Constructor cn todos los atributos
-    public Usuario(int idUsuario, String correo, String cedulaProfesional, String contrasenia, TipoUsuario tipo) {
+    public UsuarioViejoDTO(String idUsuario, String correo, String cedulaProfesional, String contrasenia, Usuario.TipoUsuario tipo) {
         this.idUsuario = idUsuario;
         this.correo = correo;
         this.cedulaProfesional = cedulaProfesional;
         this.contrasenia = contrasenia;
         this.tipo = tipo;
     }
-    
-    //Constructor con todos los atricutos menos el ID
-    public Usuario(String correo, String cedulaProfesional, String contrasenia, TipoUsuario tipo) {
+
+    public UsuarioViejoDTO(String correo, String cedulaProfesional, String contrasenia, Usuario.TipoUsuario tipo) {
         this.correo = correo;
         this.cedulaProfesional = cedulaProfesional;
         this.contrasenia = contrasenia;
         this.tipo = tipo;
     }
 
-    //Getters y Setters
-    public int getIdUsuario() {
+    public String getIdUsuario() {
         return idUsuario;
     }
 
-    public void setIdUsuario(int idUsuario) {
+    public void setIdUsuario(String idUsuario) {
         this.idUsuario = idUsuario;
     }
 
@@ -75,18 +67,17 @@ public class Usuario{
         this.contrasenia = contrasenia;
     }
 
-    public TipoUsuario getTipo() {
+    public Usuario.TipoUsuario getTipo() {
         return tipo;
     }
 
-    public void setTipo(TipoUsuario tipo) {
+    public void setTipo(Usuario.TipoUsuario tipo) {
         this.tipo = tipo;
     }
-    
-    //ToString
+
     @Override
     public String toString() {
-        return "Usuario{" + "idUsuario=" + idUsuario + ", correo=" + correo + ", cedulaProfesional=" + cedulaProfesional + ", contrasenia=" + contrasenia + ", tipo=" + tipo + '}';
+        return "UsuarioViejoDTO{" + "idUsuario=" + idUsuario + ", correo=" + correo + ", cedulaProfesional=" + cedulaProfesional + ", contrasenia=" + contrasenia + ", tipo=" + tipo + '}';
     }
     
 }

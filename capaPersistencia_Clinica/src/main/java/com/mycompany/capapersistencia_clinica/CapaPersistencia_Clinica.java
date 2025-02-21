@@ -5,8 +5,12 @@ package com.mycompany.capapersistencia_clinica;
 
 import Conexion.ConexionBD;
 import Conexion.IConexionBD;
+import DAO.IPacienteDAO;
+import DAO.IUsuarioDAO;
 import DAO.PacienteDAO;
+import DAO.UsuarioDAO;
 import Entidades.Paciente;
+import Entidades.Usuario;
 import Exception.PersistenciaException;
 import java.sql.Date;
 import java.text.ParseException;
@@ -22,16 +26,42 @@ public class CapaPersistencia_Clinica {
     public static void main(String[] args) throws ParseException {
         // Crear la conexión a la base de datos
         IConexionBD conexionBD = new ConexionBD();
-        PacienteDAO pacienteBD = new PacienteDAO(conexionBD);
+        IPacienteDAO pacienteBD = new PacienteDAO(conexionBD);
+        IUsuarioDAO usuarioDAO = new UsuarioDAO(conexionBD);
+        Usuario usuarioCreado = null;
+        
+//        //Prueba para agregar al usuario
+//        try{
+//            Usuario usuarioGuardar = new Usuario();
+//            usuarioGuardar.setCorreo("pabs35@example.com");
+//            usuarioGuardar.setContrasenia("contrasenia1");
+//            usuarioGuardar.setTipo(Usuario.TipoUsuario.paciente);
+//            
+//            usuarioDAO.agregarUsuario(usuarioGuardar);
+//            usuarioCreado = usuarioDAO.obtenerUsuarioPorCorreo("pabs35@example.com");
+//            
+//        } catch(PersistenciaException pe){
+//            System.err.println("Error al insertar: " + pe.getMessage());
+//            pe.printStackTrace();
+//        }
         
         //Pureba para agregar paciente
         try { 
+            Usuario usuarioGuardar = new Usuario();
+            usuarioGuardar.setCorreo("pabs35@example.com");
+            usuarioGuardar.setContrasenia("contrasenia1");
+            usuarioGuardar.setTipo(Usuario.TipoUsuario.paciente);
+            
+            usuarioDAO.agregarUsuario(usuarioGuardar);
+            usuarioCreado = usuarioDAO.obtenerUsuarioPorCorreo("pabs35@example.com");
+            
             LocalDate fechaNacimiento = LocalDate.of(2005, 07, 12);
             
-            // Crear el activista que vamos a guardar en la BD
-            Paciente pacienteAGuardar = new Paciente("Pablo","Zamora","Gàmez",fechaNacimiento,"De la luna","Casa Blanca","2105","1928374632","pabs35@examplee.com");
+            // Crear el paciente que vamos a guardar en la BD
+            Paciente pacienteAGuardar = new Paciente("Pablo" ,"Zamora" ,"Gámez" ,fechaNacimiento ,"De la luna" ,"Casa Blanca" ,
+                    "2105" ,"1928374632" , usuarioCreado.getCorreo(), usuarioCreado.getIdUsuario());
 
-            // Guardar el activista en la base de datos y el resultado lo guardamos en otro activista
+            // Guardar el paciente en la base de datos y el resultado lo guardamos en otro activista
             Paciente pacienteGuardado = pacienteBD.agregarPaciente(pacienteAGuardar);
 
             // Verificar si se guardó correctamente
@@ -40,9 +70,9 @@ public class CapaPersistencia_Clinica {
             } else {
                 System.out.println("No se pudo guardar el paciente.");
             }
-        } catch (PersistenciaException e) {
-            System.err.println("Error al insertar: " + e.getMessage());
-            e.printStackTrace();
+        } catch (PersistenciaException pe) {
+            System.err.println("Error al insertar: " + pe.getMessage());
+            pe.printStackTrace();
         }
     }
 
