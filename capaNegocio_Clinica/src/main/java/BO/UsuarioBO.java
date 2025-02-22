@@ -29,7 +29,7 @@ public class UsuarioBO {
         this.usuarioDAO = new UsuarioDAO(conexion);
     }
     
-    public boolean agregarUsuario(UsuarioNuevoDTO usuarioDTO) throws NegocioException {
+    public boolean agregarUsuario(UsuarioNuevoDTO usuarioDTO) throws NegocioException { //Funciona
         if (usuarioDTO == null) {
             throw new NegocioException("El usuario no puede ser nulo.");
         }
@@ -51,7 +51,7 @@ public class UsuarioBO {
         }
     }
     
-    public UsuarioViejoDTO obtenerUsuarioPorCorreo(String correo) throws NegocioException{
+    public UsuarioViejoDTO obtenerUsuarioPorCorreo(String correo) throws NegocioException{  //Funciona
         if (correo.isEmpty()) {
             throw new NegocioException("El usuario no puede ser nulo.");
         }

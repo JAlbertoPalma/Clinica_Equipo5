@@ -77,7 +77,7 @@ public class CapaPersistencia_Clinica {
 //        }
 
         //prueba para dar de baja medico
-        int idMedico = 3; 
+        int idMedico = 1; 
 
         try {
             boolean eliminado = medicoDAO.darBajaMedico(idMedico);

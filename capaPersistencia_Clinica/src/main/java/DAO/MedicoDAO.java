@@ -6,9 +6,11 @@ package DAO;
 
 import Conexion.IConexionBD;
 import Exception.PersistenciaException;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -26,31 +28,19 @@ public class MedicoDAO implements IMedicoDAO {
 
     @Override
     public boolean darBajaMedico(int idMedico) throws PersistenciaException {
-        try (Connection con = this.conexion.crearConexion()) {
-            con.setAutoCommit(false); // Inicia transacción
+        try (Connection con = this.conexion.crearConexion(); CallableStatement pstmt = con.prepareCall("call dar_baja_medico (?)")) {
 
-            // Eliminar cita primero
-            try (PreparedStatement pstmtCitas = con.prepareStatement("DELETE FROM citas WHERE id_medico = ?")) {
-                pstmtCitas.setInt(1, idMedico);
-                pstmtCitas.executeUpdate();
+            pstmt.setInt(1, idMedico);  // Establecer el parámetro del médico a eliminar
+            int filasAfectadas = pstmt.executeUpdate();  // Ejecutar el procedimiento almacenado
+
+            if (filasAfectadas > 0) {
+                return true;  // Si se afectaron filas, significa que la baja fue exitosa
+            } else {
+                throw new PersistenciaException("No se pudo dar de baja el médico con ID: " + idMedico);
             }
 
-            // Luego eliminar el médico
-            try (PreparedStatement pstmtMedico = con.prepareStatement("DELETE FROM medicos WHERE id = ?")) {
-                pstmtMedico.setInt(1, idMedico);
-                int filasAfectadas = pstmtMedico.executeUpdate();
-
-                if (filasAfectadas == 0) {
-                    con.rollback(); // Revertir si no se encontró el médico
-                    throw new PersistenciaException("No se encontró el médico con ID: " + idMedico);
-                }
-
-                con.commit(); // Confirmar cambios
-                return true;
-            }
         } catch (SQLException e) {
-            throw new PersistenciaException("Error al eliminar médico.", e);
+            throw new PersistenciaException("Error al dar de baja médico.", e);
         }
     }
-
 }

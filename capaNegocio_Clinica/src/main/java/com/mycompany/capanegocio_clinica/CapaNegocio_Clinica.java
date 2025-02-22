@@ -82,7 +82,7 @@ public class CapaNegocio_Clinica {
 //        } 
         //Prueba eliminar Medico
         try{
-            boolean resultado = medicoBO.darBajaMedico(7);
+            boolean resultado = medicoBO.darBajaMedico(9);
             if (resultado) {
                 System.out.println("Medico eliminado");
             }else{
