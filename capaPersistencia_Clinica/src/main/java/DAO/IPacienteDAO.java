@@ -6,6 +6,9 @@ package DAO;
 
 import Entidades.Paciente;
 import Exception.PersistenciaException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -22,4 +25,6 @@ public interface IPacienteDAO {
     public Paciente agregarPaciente(Paciente paciente)throws PersistenciaException;
 
     public boolean actualizarPaciente(Paciente paciente)throws PersistenciaException;
+    
+    public List<Map<String, Object>> consultarHistorialConsultas(int idPaciente, String tipoConsulta, LocalDate fechaInicio, LocalDate fechaFin) throws PersistenciaException;
 }

@@ -10,13 +10,9 @@ import DAO.IUsuarioDAO;
 import DAO.MedicoDAO;
 import DAO.PacienteDAO;
 import DAO.UsuarioDAO;
-import Entidades.Paciente;
 import Entidades.Usuario;
 import Exception.PersistenciaException;
-import java.sql.Date;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 
 /**
  *
@@ -77,7 +73,7 @@ public class CapaPersistencia_Clinica {
 //        }
 
         //prueba para dar de baja medico
-        int idMedico = 1; 
+        int idMedico = 3; 
 
         try {
             boolean eliminado = medicoDAO.darBajaMedico(idMedico);

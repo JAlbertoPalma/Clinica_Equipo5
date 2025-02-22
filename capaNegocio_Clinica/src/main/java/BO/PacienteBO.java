@@ -5,13 +5,18 @@
 package BO;
 
 import Conexion.IConexionBD;
+import DAO.IMedicoDAO;
 import DAO.IPacienteDAO;
+import DAO.MedicoDAO;
 import DAO.PacienteDAO;
 import DTO.PacienteNuevoDTO;
 import Entidades.Paciente;
 import Exception.NegocioException;
 import Exception.PersistenciaException;
 import Mapper.PacienteMapper;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,20 +33,19 @@ public class PacienteBO {
     public PacienteBO(IConexionBD conexion) {
         this.pacienteDAO = new PacienteDAO(conexion);
     }
-
+    
     public boolean agregarPaciente(PacienteNuevoDTO pacienteDTO) throws NegocioException {  //Funciona
         if (pacienteDTO == null) {
             throw new NegocioException("El paciente no puede ser nulo.");
         }
-
         //validaciones de espacios vacíos
         if (pacienteDTO.getNombre().isEmpty() || pacienteDTO.getApellidoPaterno().isEmpty()
-         || pacienteDTO.getCalle().isEmpty() || pacienteDTO.getColonia().isEmpty()
-         || pacienteDTO.getNumero().isEmpty() || pacienteDTO.getTelefono().isEmpty()
-         || pacienteDTO.getCorreo().isEmpty()) {
+                || pacienteDTO.getCalle().isEmpty() || pacienteDTO.getColonia().isEmpty()
+                || pacienteDTO.getNumero().isEmpty() || pacienteDTO.getTelefono().isEmpty()
+                || pacienteDTO.getCorreo().isEmpty()) {
             throw new NegocioException("Todos los campos son obligatorios.");
         }
-        
+
         // Convertimos el DTO a la entidad
         Paciente paciente = mapper.toEntity(pacienteDTO);
 
@@ -56,16 +60,13 @@ public class PacienteBO {
 
     //Actualizacion de paciente
     public Paciente actualizarActivista(int idPaciente, PacienteNuevoDTO pacienteDTO) throws NegocioException { //Funciona
-        
         //validaciones de espacios vacíos
         if (pacienteDTO.getNombre().isEmpty() || pacienteDTO.getApellidoPaterno().isEmpty()
-         || pacienteDTO.getCalle().isEmpty() || pacienteDTO.getColonia().isEmpty()
-         || pacienteDTO.getNumero().isEmpty() || pacienteDTO.getTelefono().isEmpty()
-         || pacienteDTO.getCorreo().isEmpty()) {
+                || pacienteDTO.getCalle().isEmpty() || pacienteDTO.getColonia().isEmpty()
+                || pacienteDTO.getNumero().isEmpty() || pacienteDTO.getTelefono().isEmpty()
+                || pacienteDTO.getCorreo().isEmpty()) {
             throw new NegocioException("Todos los campos son obligatorios.");
         }
-        
-        
         Paciente paciente = mapper.toEntity(pacienteDTO);
         paciente.setIdPaciente(idPaciente);
         try {
@@ -77,5 +78,21 @@ public class PacienteBO {
             throw new NegocioException("No se pudo actualizar el paciente.", ex);
         }
         return paciente;
+    }
+
+    //Consulta historial de consultas del paciente
+    public List<Map<String, Object>> consultarHistorialConsultasPaciente(int idPaciente, String tipoConsulta, LocalDate fechaInicio, LocalDate fechaFin) throws NegocioException {
+        if (idPaciente <= 0) {
+            throw new NegocioException("El ID del paciente debe ser válido.");
+        }
+        if ((fechaInicio != null && fechaFin != null) && fechaInicio.isAfter(fechaFin)) {
+            throw new NegocioException("La fecha de inicio no puede ser mayor que la fecha de fin.");
+        }
+        try {
+            return pacienteDAO.consultarHistorialConsultas(idPaciente, tipoConsulta, fechaInicio, fechaFin);
+        } catch (PersistenciaException e) {
+            logger.log(Level.SEVERE, "Error al consultar el historial de consultas del paciente con ID: " + idPaciente, e);
+            throw new NegocioException("No se pudo obtener el historial de consultas del paciente.", e);
+        }
     }
 }

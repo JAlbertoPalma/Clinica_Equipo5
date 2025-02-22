@@ -5,6 +5,8 @@
 package DAO;
 
 import Exception.PersistenciaException;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -13,5 +15,7 @@ import Exception.PersistenciaException;
 public interface IMedicoDAO {
     public boolean darBajaMedico(int idMedico) throws PersistenciaException;
     
+    public List<Map<String, Object>> consultarHistorialConsultas(int idMedico) throws PersistenciaException;
     
+    public List<Map<String, Object>> consultarAgenda(int idMedico) throws PersistenciaException;
 }
