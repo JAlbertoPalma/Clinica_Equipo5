@@ -68,17 +68,15 @@
               </Group>
               <Group type="103" groupAlignment="1" max="-2" attributes="0">
                   <Component id="txtContraseña" pref="341" max="32767" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="txtNumeroC" alignment="1" max="32767" attributes="0"/>
-                      <Component id="txtColonia" alignment="1" max="32767" attributes="0"/>
-                      <Component id="txtApellidoM" alignment="1" max="32767" attributes="0"/>
-                      <Component id="txtApellidoP" alignment="1" max="32767" attributes="0"/>
-                      <Component id="txtNombreC" alignment="1" pref="341" max="32767" attributes="0"/>
-                      <Component id="txtCalle" alignment="1" max="32767" attributes="0"/>
-                      <Component id="jDateChooser1" alignment="1" pref="341" max="32767" attributes="0"/>
-                      <Component id="txtTelefono" alignment="1" max="32767" attributes="0"/>
-                      <Component id="txtCorreo" alignment="1" max="32767" attributes="0"/>
-                  </Group>
+                  <Component id="txtNumeroC" alignment="1" max="32767" attributes="0"/>
+                  <Component id="txtColonia" alignment="1" max="32767" attributes="0"/>
+                  <Component id="txtApellidoM" alignment="1" max="32767" attributes="0"/>
+                  <Component id="txtApellidoP" alignment="1" max="32767" attributes="0"/>
+                  <Component id="txtNombreC" alignment="1" pref="341" max="32767" attributes="0"/>
+                  <Component id="txtCalle" alignment="1" max="32767" attributes="0"/>
+                  <Component id="jDateChooser1" alignment="1" pref="341" max="32767" attributes="0"/>
+                  <Component id="txtTelefono" alignment="1" max="32767" attributes="0"/>
+                  <Component id="txtCorreo" alignment="1" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="108" max="-2" attributes="0"/>
           </Group>
