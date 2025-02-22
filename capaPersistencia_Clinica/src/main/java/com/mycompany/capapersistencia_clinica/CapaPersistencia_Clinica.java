@@ -7,6 +7,7 @@ import Conexion.ConexionBD;
 import Conexion.IConexionBD;
 import DAO.IPacienteDAO;
 import DAO.IUsuarioDAO;
+import DAO.MedicoDAO;
 import DAO.PacienteDAO;
 import DAO.UsuarioDAO;
 import Entidades.Paciente;
@@ -29,7 +30,8 @@ public class CapaPersistencia_Clinica {
         IPacienteDAO pacienteBD = new PacienteDAO(conexionBD);
         IUsuarioDAO usuarioDAO = new UsuarioDAO(conexionBD);
         Usuario usuarioCreado = null;
-        
+        MedicoDAO medicoDAO = new MedicoDAO(conexionBD);
+
 //        //Prueba para agregar al usuario
 //        try{
 //            Usuario usuarioGuardar = new Usuario();
@@ -44,35 +46,48 @@ public class CapaPersistencia_Clinica {
 //            System.err.println("Error al insertar: " + pe.getMessage());
 //            pe.printStackTrace();
 //        }
-        
         //Pureba para agregar paciente
-        try { 
-            Usuario usuarioGuardar = new Usuario();
-            usuarioGuardar.setCorreo("pabs35@example.com");
-            usuarioGuardar.setContrasenia("contrasenia1");
-            usuarioGuardar.setTipo(Usuario.TipoUsuario.paciente);
-            
-            usuarioDAO.agregarUsuario(usuarioGuardar);
-            usuarioCreado = usuarioDAO.obtenerUsuarioPorCorreo("pabs35@example.com");
-            
-            LocalDate fechaNacimiento = LocalDate.of(2005, 07, 12);
-            
-            // Crear el paciente que vamos a guardar en la BD
-            Paciente pacienteAGuardar = new Paciente("Pablo" ,"Zamora" ,"Gámez" ,fechaNacimiento ,"De la luna" ,"Casa Blanca" ,
-                    "2105" ,"1928374632" , usuarioCreado.getCorreo(), usuarioCreado.getIdUsuario());
+//        try { 
+//            Usuario usuarioGuardar = new Usuario();
+//            usuarioGuardar.setCorreo("pabs35@example.com");
+//            usuarioGuardar.setContrasenia("contrasenia1");
+//            usuarioGuardar.setTipo(Usuario.TipoUsuario.paciente);
+//            
+//            usuarioDAO.agregarUsuario(usuarioGuardar);
+//            usuarioCreado = usuarioDAO.obtenerUsuarioPorCorreo("pabs35@example.com");
+//            
+//            LocalDate fechaNacimiento = LocalDate.of(2005, 07, 12);
+//            
+//            // Crear el paciente que vamos a guardar en la BD
+//            Paciente pacienteAGuardar = new Paciente("Pablo" ,"Zamora" ,"Gámez" ,fechaNacimiento ,"De la luna" ,"Casa Blanca" ,
+//                    "2105" ,"1928374632" , usuarioCreado.getCorreo(), usuarioCreado.getIdUsuario());
+//
+//            // Guardar el paciente en la base de datos y el resultado lo guardamos en otro activista
+//            Paciente pacienteGuardado = pacienteBD.agregarPaciente(pacienteAGuardar);
+//
+//            // Verificar si se guardó correctamente
+//            if (pacienteGuardado != null && pacienteGuardado.getIdPaciente() > 0) { // realmente con que sepamos que trae un id, puede ser tambien activistaGuardado.getIdActivista !=0
+//                System.out.println("Paciente guardado con éxito: " + pacienteGuardado);
+//            } else {
+//                System.out.println("No se pudo guardar el paciente.");
+//            }
+//        } catch (PersistenciaException pe) {
+//            System.err.println("Error al insertar: " + pe.getMessage());
+//            pe.printStackTrace();
+//        }
 
-            // Guardar el paciente en la base de datos y el resultado lo guardamos en otro activista
-            Paciente pacienteGuardado = pacienteBD.agregarPaciente(pacienteAGuardar);
+        //prueba para dar de baja medico
+        int idMedico = 3; 
 
-            // Verificar si se guardó correctamente
-            if (pacienteGuardado != null && pacienteGuardado.getIdPaciente() > 0) { // realmente con que sepamos que trae un id, puede ser tambien activistaGuardado.getIdActivista !=0
-                System.out.println("Paciente guardado con éxito: " + pacienteGuardado);
+        try {
+            boolean eliminado = medicoDAO.darBajaMedico(idMedico);
+            if (eliminado) {
+                System.out.println("Médico con ID " + idMedico + " eliminado correctamente.");
             } else {
-                System.out.println("No se pudo guardar el paciente.");
+                System.out.println("No se encontró el médico con ID " + idMedico + ".");
             }
-        } catch (PersistenciaException pe) {
-            System.err.println("Error al insertar: " + pe.getMessage());
-            pe.printStackTrace();
+        } catch (PersistenciaException e) {
+            System.err.println("Error: " + e.getMessage());
         }
     }
 

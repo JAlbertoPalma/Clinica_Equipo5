@@ -29,7 +29,7 @@ public class PacienteBO {
         this.pacienteDAO = new PacienteDAO(conexion);
     }
 
-    public boolean agregarPaciente(PacienteNuevoDTO pacienteDTO) throws NegocioException {
+    public boolean agregarPaciente(PacienteNuevoDTO pacienteDTO) throws NegocioException {  //Funciona
         if (pacienteDTO == null) {
             throw new NegocioException("El paciente no puede ser nulo.");
         }
@@ -55,7 +55,7 @@ public class PacienteBO {
     }
 
     //Actualizacion de paciente
-    public Paciente actualizarActivista(int idPaciente, PacienteNuevoDTO pacienteDTO) throws NegocioException {
+    public Paciente actualizarActivista(int idPaciente, PacienteNuevoDTO pacienteDTO) throws NegocioException { //Funciona
         
         //validaciones de espacios vacíos
         if (pacienteDTO.getNombre().isEmpty() || pacienteDTO.getApellidoPaterno().isEmpty()

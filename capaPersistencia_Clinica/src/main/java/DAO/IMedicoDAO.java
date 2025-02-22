@@ -11,7 +11,7 @@ import Exception.PersistenciaException;
  * @author Beto_
  */
 public interface IMedicoDAO {
-    public void darBajaMedico(int idMedico) throws PersistenciaException;
+    public boolean darBajaMedico(int idMedico) throws PersistenciaException;
     
     
 }
