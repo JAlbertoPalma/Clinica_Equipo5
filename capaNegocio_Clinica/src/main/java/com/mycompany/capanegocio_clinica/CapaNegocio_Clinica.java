@@ -84,18 +84,18 @@ public class CapaNegocio_Clinica {
 //        } 
 
 //        //Prueba eliminar Medico
-//        try {
-//            boolean resultado = medicoBO.darBajaMedico(9);
-//            if (resultado) {
-//                System.out.println("Medico eliminado");
-//            } else {
-//                System.out.println("Algo fallo al eliminar el medico");
-//            }
-//        } catch (NegocioException ne) {
-//            System.err.println("Error al insertar: " + ne.getMessage());
-//            ne.printStackTrace();
-//        }
-
+        try {
+            boolean resultado = medicoBO.darBajaMedico(9);
+            if (resultado) {
+                System.out.println("Medico eliminado");
+            } else {
+                System.out.println("Algo fallo al eliminar el medico");
+            }
+        } catch (NegocioException ne) {
+            System.err.println("Error al insertar: " + ne.getMessage());
+            ne.printStackTrace();
+        }
+        //VISTAS
         //----------------------------------------MEDICO-------------------------------------------------
         //Prueba consultar agenda de medico
         try {

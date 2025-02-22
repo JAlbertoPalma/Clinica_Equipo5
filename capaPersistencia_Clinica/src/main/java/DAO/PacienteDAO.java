@@ -110,14 +110,12 @@ public class PacienteDAO implements IPacienteDAO {
         List<Map<String, Object>> historial = new ArrayList<>();
 
         StringBuilder sql = new StringBuilder("SELECT id_consulta, nombre_medico, apellidoPat_medico, apellidoMat_medico, fechaHora, tipo, estado, tratamiento, diagnostico FROM vista_historial_consultas_paciente WHERE id_paciente = ?");
-
         if (tipoConsulta != null && !tipoConsulta.isEmpty()) {
             sql.append(" AND tipo = ?");
         }
         if (fechaInicio != null && fechaFin != null) {
             sql.append(" AND DATE(fechaHora) BETWEEN ? AND ?");
         }
-
         try (Connection con = this.conexion.crearConexion(); PreparedStatement pstmt = con.prepareStatement(sql.toString())) {
 
             int index = 1;

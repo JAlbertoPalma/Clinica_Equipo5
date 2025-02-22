@@ -52,14 +52,14 @@ public class MedicoDAO implements IMedicoDAO {
     @Override
     public List<Map<String, Object>> consultarHistorialConsultas(int idMedico) throws PersistenciaException {   //Funciona
         List<Map<String, Object>> agenda = new ArrayList<>();
-        String sql = "SELECT id_consulta, nombre_paciente, apellidoPat_paciente, apellidoMat_paciente, fechaHora, tipo, estado, tratamiento, diagnostico FROM vista_historial_consultas_medico WHERE id_medico = ?";
-        try (Connection con = this.conexion.crearConexion(); PreparedStatement pstmt = con.prepareStatement(sql)) {
+        try (Connection con = this.conexion.crearConexion(); ) {
+            CallableStatement pstmt = con.prepareCall("SELECT id_consulta, nombre_paciente, apellidoPat_paciente, apellidoMat_paciente, fechaHora, tipo, estado, tratamiento, diagnostico FROM vista_historial_consultas_medico WHERE id_medico = ?");     
             pstmt.setInt(1, idMedico);
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
                 Map<String, Object> consulta = new HashMap<>();
-                consulta.put("id_consulta", rs.getInt("id_cita"));
+                consulta.put("id_consulta", rs.getInt("id_consulta"));
                 consulta.put("nombre_paciente", rs.getString("nombre_paciente"));
                 consulta.put("apellido_paterno", rs.getString("apellidoPat_paciente"));
                 consulta.put("apellido_materno", rs.getString("apellidoMat_paciente"));
@@ -80,8 +80,8 @@ public class MedicoDAO implements IMedicoDAO {
     @Override
     public List<Map<String, Object>> consultarAgenda(int idMedico) throws PersistenciaException {
         List<Map<String, Object>> agenda = new ArrayList<>();
-        String sql = "SELECT id_cita, nombre_paciente, apellido_paciente, horaInicio, horaFin, estado FROM vista_agenda_medico WHERE id_medico = ?";
-        try (Connection con = this.conexion.crearConexion(); PreparedStatement pstmt = con.prepareStatement(sql)) {
+        try (Connection con = this.conexion.crearConexion(); ) {
+            CallableStatement pstmt = con.prepareCall("SELECT id_cita, nombre_paciente, apellido_paciente, horaInicio, horaFin, estado FROM vista_agenda_medico WHERE id_medico = ?");
             pstmt.setInt(1, idMedico);
             ResultSet rs = pstmt.executeQuery();
 
