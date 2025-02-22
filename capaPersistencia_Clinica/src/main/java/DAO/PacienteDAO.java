@@ -5,14 +5,18 @@
 package DAO;
 
 import Conexion.IConexionBD;
+import Entidades.ConsultaUrgencia;
 import Entidades.Paciente;
 import Exception.PersistenciaException;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Time;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,17 +30,14 @@ import java.util.logging.Logger;
  * @author pablo
  */
 public class PacienteDAO implements IPacienteDAO {
-
     IConexionBD conexion;
     private static final Logger logger = Logger.getLogger(PacienteDAO.class.getName());
-
     public PacienteDAO(IConexionBD conexion) {
         this.conexion = conexion;
     }
-
     //agregar Paciente
     @Override
-    public Paciente agregarPaciente(Paciente paciente) throws PersistenciaException {
+    public Paciente agregarPaciente(Paciente paciente) throws PersistenciaException {//Funciona
         // consulta SQL que vamos a ejecutar en mysql
         String sentenciaSQL = "INSERT INTO pacientes (nombre, apellidoPat, apellidoMat, fechaNacimiento, calle, colonia, numero, telefono, correo, id_usuario)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -78,10 +79,9 @@ public class PacienteDAO implements IPacienteDAO {
 
     //ACTUALIZAR PACIENTE
     @Override
-    public boolean actualizarPaciente(Paciente paciente) throws PersistenciaException {
+    public boolean actualizarPaciente(Paciente paciente) throws PersistenciaException {//Funciona
         String consultaSQL = "UPDATE pacientes SET nombre = ?, apellidoPat=?, apellidoMat=?, fechaNacimiento=?, calle=?, colonia=?, numero=?, telefono=?, correo=? WHERE id = ?;";
         try (Connection con = this.conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(consultaSQL)) {
-
             // Asignamos los parámetros correctamente
             ps.setString(1, paciente.getNombre());
             ps.setString(2, paciente.getApellidoPaterno());
@@ -93,11 +93,9 @@ public class PacienteDAO implements IPacienteDAO {
             ps.setString(8, paciente.getTelefono());
             ps.setString(9, paciente.getCorreo());
             ps.setInt(10, paciente.getIdPaciente()); // WHERE id = ?
-
             // Ejecutamos la actualización
             int filasAfectadas = ps.executeUpdate();
             return filasAfectadas > 0;
-
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error al actualizar paciente con ID: " + paciente.getIdPaciente(), e);
             throw new PersistenciaException("Error al actualizar paciente con ID " + paciente.getIdPaciente(), e);
@@ -106,9 +104,8 @@ public class PacienteDAO implements IPacienteDAO {
 
     //Consulta historial de consultas del paciente
     @Override
-    public List<Map<String, Object>> consultarHistorialConsultas(int idPaciente, String tipoConsulta, LocalDate fechaInicio, LocalDate fechaFin) throws PersistenciaException {
+    public List<Map<String, Object>> consultarHistorialConsultas(int idPaciente, String tipoConsulta, LocalDate fechaInicio, LocalDate fechaFin) throws PersistenciaException {//Funciona
         List<Map<String, Object>> historial = new ArrayList<>();
-
         StringBuilder sql = new StringBuilder("SELECT id_consulta, nombre_medico, apellidoPat_medico, apellidoMat_medico, fechaHora, tipo, estado, tratamiento, diagnostico FROM vista_historial_consultas_paciente WHERE id_paciente = ?");
         if (tipoConsulta != null && !tipoConsulta.isEmpty()) {
             sql.append(" AND tipo = ?");
@@ -117,10 +114,8 @@ public class PacienteDAO implements IPacienteDAO {
             sql.append(" AND DATE(fechaHora) BETWEEN ? AND ?");
         }
         try (Connection con = this.conexion.crearConexion(); PreparedStatement pstmt = con.prepareStatement(sql.toString())) {
-
             int index = 1;
             pstmt.setInt(index++, idPaciente);
-
             if (tipoConsulta != null && !tipoConsulta.isEmpty()) {
                 pstmt.setString(index++, tipoConsulta);
             }
@@ -128,9 +123,7 @@ public class PacienteDAO implements IPacienteDAO {
                 pstmt.setDate(index++, Date.valueOf(fechaInicio));
                 pstmt.setDate(index++, Date.valueOf(fechaFin));
             }
-
             ResultSet rs = pstmt.executeQuery();
-
             while (rs.next()) {
                 Map<String, Object> consulta = new HashMap<>();
                 consulta.put("id_consulta", rs.getInt("id_consulta"));
@@ -142,13 +135,35 @@ public class PacienteDAO implements IPacienteDAO {
                 consulta.put("estado", rs.getString("estado"));
                 consulta.put("tratamiento", rs.getString("tratamiento"));
                 consulta.put("diagnostico", rs.getString("diagnostico"));
-
                 historial.add(consulta);
             }
-
         } catch (SQLException e) {
             throw new PersistenciaException("Error al consultar el historial de consultas del paciente.", e);
         }
         return historial;
     }
+
+    //Buscar Citas disponibles
+    @Override
+    public List<Map<String, Object>> buscarCitasDisponibles(int idPaciente, String fechaCita) throws SQLException {//Funciona
+        List<Map<String, Object>> horariosDisponibles = new ArrayList<>();
+        try (Connection con = this.conexion.crearConexion();) {
+            CallableStatement pstmt = con.prepareCall("CALL buscar_citas_disponibles(?, ?)");
+            pstmt.setInt(1, idPaciente);
+            pstmt.setString(2, fechaCita);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Map<String, Object> horario = new HashMap<>();
+                    horario.put("horaInicio", rs.getTime("horaInicio"));
+                    horario.put("horaFin", rs.getTime("horaFin"));
+                    horariosDisponibles.add(horario);
+                }
+            }
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(PacienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return horariosDisponibles;
+    }
+    
+    //Asignar medico a urgencias
 }

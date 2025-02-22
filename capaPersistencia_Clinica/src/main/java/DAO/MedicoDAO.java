@@ -36,10 +36,10 @@ public class MedicoDAO implements IMedicoDAO {
     @Override
     public boolean darBajaMedico(int idMedico) throws PersistenciaException {
         try (Connection con = this.conexion.crearConexion(); CallableStatement pstmt = con.prepareCall("call dar_baja_medico (?)")) {
-            pstmt.setInt(1, idMedico);  // Establecer el parámetro del médico a eliminar
-            int filasAfectadas = pstmt.executeUpdate();  // Ejecutar el procedimiento almacenado
+            pstmt.setInt(1, idMedico);  
+            int filasAfectadas = pstmt.executeUpdate();  
             if (filasAfectadas > 0) {
-                return true;  // Si se afectaron filas, significa que la baja fue exitosa
+                return true; 
             } else {
                 throw new PersistenciaException("No se pudo dar de baja el médico con ID: " + idMedico);
             }
@@ -78,7 +78,7 @@ public class MedicoDAO implements IMedicoDAO {
 
     //Consultar agenda del medico
     @Override
-    public List<Map<String, Object>> consultarAgenda(int idMedico) throws PersistenciaException {
+    public List<Map<String, Object>> consultarAgenda(int idMedico) throws PersistenciaException {//Funciona
         List<Map<String, Object>> agenda = new ArrayList<>();
         try (Connection con = this.conexion.crearConexion(); ) {
             CallableStatement pstmt = con.prepareCall("SELECT id_cita, nombre_paciente, apellido_paciente, horaInicio, horaFin, estado FROM vista_agenda_medico WHERE id_medico = ?");

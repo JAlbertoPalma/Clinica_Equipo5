@@ -48,7 +48,7 @@ public class MedicoBO {
     }
 
     //Consultar de historial del medico
-    public List<Map<String, Object>> consultarHistorialMedico(int idMedico) throws NegocioException {
+    public List<Map<String, Object>> consultarHistorialMedico(int idMedico) throws NegocioException {//Funciona
         if (idMedico <= 0) {
             throw new NegocioException("El ID del médico debe ser válido.");
         }

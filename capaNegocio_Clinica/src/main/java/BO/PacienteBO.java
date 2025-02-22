@@ -14,6 +14,7 @@ import Entidades.Paciente;
 import Exception.NegocioException;
 import Exception.PersistenciaException;
 import Mapper.PacienteMapper;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +34,7 @@ public class PacienteBO {
     public PacienteBO(IConexionBD conexion) {
         this.pacienteDAO = new PacienteDAO(conexion);
     }
-    
+
     public boolean agregarPaciente(PacienteNuevoDTO pacienteDTO) throws NegocioException {  //Funciona
         if (pacienteDTO == null) {
             throw new NegocioException("El paciente no puede ser nulo.");
@@ -81,7 +82,7 @@ public class PacienteBO {
     }
 
     //Consulta historial de consultas del paciente
-    public List<Map<String, Object>> consultarHistorialConsultasPaciente(int idPaciente, String tipoConsulta, LocalDate fechaInicio, LocalDate fechaFin) throws NegocioException {
+    public List<Map<String, Object>> consultarHistorialConsultasPaciente(int idPaciente, String tipoConsulta, LocalDate fechaInicio, LocalDate fechaFin) throws NegocioException {//Funciona
         if (idPaciente <= 0) {
             throw new NegocioException("El ID del paciente debe ser válido.");
         }
@@ -93,6 +94,21 @@ public class PacienteBO {
         } catch (PersistenciaException e) {
             logger.log(Level.SEVERE, "Error al consultar el historial de consultas del paciente con ID: " + idPaciente, e);
             throw new NegocioException("No se pudo obtener el historial de consultas del paciente.", e);
+        }
+    }
+
+    //Buscar citas disponibles
+    public List<Map<String, Object>> consultarCitasDisponibles(int idPaciente, String fechaCita) throws Exception {//Funciona
+        if (idPaciente <= 0) {
+            throw new Exception("El ID del paciente debe ser válido.");
+        }
+        if (fechaCita == null || fechaCita.isEmpty()) {
+            throw new Exception("La fecha de la cita no puede estar vacía.");
+        }
+        try {
+            return pacienteDAO.buscarCitasDisponibles(idPaciente, fechaCita);
+        } catch (SQLException e) {
+            throw new Exception("Error al consultar citas disponibles: " + e.getMessage(), e);
         }
     }
 }
