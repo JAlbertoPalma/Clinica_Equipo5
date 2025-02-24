@@ -10,6 +10,7 @@ import DAO.IPacienteDAO;
 import DAO.MedicoDAO;
 import DAO.PacienteDAO;
 import DTO.PacienteNuevoDTO;
+import DTO.PacienteViejoDTO;
 import Entidades.Paciente;
 import Exception.NegocioException;
 import Exception.PersistenciaException;
@@ -79,6 +80,15 @@ public class PacienteBO {
             throw new NegocioException("No se pudo actualizar el paciente.", ex);
         }
         return paciente;
+    }
+    
+    public PacienteViejoDTO obtenerPaciente(int idPaciente) throws NegocioException{
+        try {
+            return mapper.toViejoDTO(pacienteDAO.obtenerPaciente(idPaciente));
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(PacienteBO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new NegocioException("No se logró obtener al paciente" + ex.getMessage());
+        }
     }
 
     //Consulta historial de consultas del paciente

@@ -7,6 +7,7 @@ package BO;
 import Conexion.IConexionBD;
 import DAO.IMedicoDAO;
 import DAO.MedicoDAO;
+import DTO.MedicoViejoDTO;
 import Entidades.Consulta;
 import Exception.NegocioException;
 import Exception.PersistenciaException;
@@ -51,6 +52,15 @@ public class MedicoBO {
             throw new NegocioException("No se pudo dar de baja el médico con ID: " + idMedico, ex);
         }
     }
+    
+    public MedicoViejoDTO obtenerMedico(int idMedico) throws NegocioException{
+        try {
+            return mapper.toViejoDTO(medicoDAO.obtenerMedico(idMedico));
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(MedicoBO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new NegocioException("No se logró obtener al medico" + ex.getMessage());
+        }
+    }
 
     //Consultar de historial del medico
     public List<Map<String, Object>> consultarHistorialMedico(int idMedico) throws NegocioException {//Funciona
@@ -77,4 +87,6 @@ public class MedicoBO {
             throw new NegocioException("No se pudo obtener la agenda del médico.", e);
         }
     }
+    
+    
 }

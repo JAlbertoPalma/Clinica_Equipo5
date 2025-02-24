@@ -13,6 +13,8 @@ import Exception.NegocioException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -20,7 +22,7 @@ import java.util.Map;
  */
 public class CapaNegocio_Clinica {
     
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args){
         IConexionBD conexion = new ConexionBD();
         PacienteBO pacienteBO = new PacienteBO(conexion);
         UsuarioBO usuarioBO = new UsuarioBO(conexion);
@@ -170,6 +172,14 @@ public class CapaNegocio_Clinica {
             }
         }catch(NegocioException e){
             e.printStackTrace();
+        }
+        
+        try {
+            System.out.println("Usuario: " + usuarioBO.obtenerUsuarioPorCorreo("2"));
+            System.out.println("Paciente: " + pacienteBO.obtenerPaciente(1));
+            System.out.println("Medico: " + medicoBO.obtenerMedico(1));
+        } catch (NegocioException ex) {
+            Logger.getLogger(CapaNegocio_Clinica.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
