@@ -31,7 +31,7 @@ public class MedicoBO {
     }
 
     //Dar de baja al medico
-    public boolean darBajaMedico(int idMedico) throws NegocioException {    //Funciona
+    public void darBajaMedico(int idMedico) throws NegocioException {    //Funciona
         // Validar que el ID sea positivo
         if (idMedico <= 0) {
             throw new NegocioException("El ID debe ser un número válido mayor que cero.");
@@ -39,7 +39,7 @@ public class MedicoBO {
 
         try {
             // Intentar dar de baja al médico utilizando el DAO
-            return medicoDAO.darBajaMedico(idMedico);
+            medicoDAO.darBajaMedico(idMedico);
         } catch (PersistenciaException ex) {
             // Registrar el error y lanzar una excepción de negocio
             logger.log(Level.SEVERE, "Error al dar de baja a medico con ID: " + idMedico, ex);

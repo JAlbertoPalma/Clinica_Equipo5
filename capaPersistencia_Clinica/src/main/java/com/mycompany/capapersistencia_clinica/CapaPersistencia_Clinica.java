@@ -10,9 +10,13 @@ import DAO.IUsuarioDAO;
 import DAO.MedicoDAO;
 import DAO.PacienteDAO;
 import DAO.UsuarioDAO;
+import Entidades.Paciente;
 import Entidades.Usuario;
 import Exception.PersistenciaException;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -42,7 +46,8 @@ public class CapaPersistencia_Clinica {
 //            System.err.println("Error al insertar: " + pe.getMessage());
 //            pe.printStackTrace();
 //        }
-        //Pureba para agregar paciente
+        
+//        Pureba para agregar paciente
 //        try { 
 //            Usuario usuarioGuardar = new Usuario();
 //            usuarioGuardar.setCorreo("pabs35@example.com");
@@ -71,19 +76,26 @@ public class CapaPersistencia_Clinica {
 //            System.err.println("Error al insertar: " + pe.getMessage());
 //            pe.printStackTrace();
 //        }
+//
+//        //prueba para dar de baja medico
+//        int idMedico = 3; 
+//
+//        try {
+//            medicoDAO.darBajaMedico(idMedico);
+//            System.out.println("El médico con id: " + idMedico + " ha sido dado de baja");
+//        } catch (PersistenciaException e) {
+//            System.err.println("Error: " + e.getMessage());
+//        }
 
-        //prueba para dar de baja medico
-        int idMedico = 3; 
-
-        try {
-            boolean eliminado = medicoDAO.darBajaMedico(idMedico);
-            if (eliminado) {
-                System.out.println("Médico con ID " + idMedico + " eliminado correctamente.");
-            } else {
-                System.out.println("No se encontró el médico con ID " + idMedico + ".");
+        try{
+            List<Map<String, Object>> agenda = medicoDAO.consultarAgenda(1);
+            
+            for (Map<String, Object> map : agenda) {
+                System.out.println("cita: " + map.get("id_cita") 
+                                 + " nombre del paciente: " + map.get("nombre_paciente") );
             }
-        } catch (PersistenciaException e) {
-            System.err.println("Error: " + e.getMessage());
+        }catch(PersistenciaException pe){
+            System.out.println("Error: " + pe);
         }
     }
 

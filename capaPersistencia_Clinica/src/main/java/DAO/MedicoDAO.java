@@ -34,17 +34,18 @@ public class MedicoDAO implements IMedicoDAO {
 
     //Dar de baja al medico
     @Override
-    public boolean darBajaMedico(int idMedico) throws PersistenciaException {
+    public void darBajaMedico(int idMedico) throws PersistenciaException {
         try (Connection con = this.conexion.crearConexion(); CallableStatement pstmt = con.prepareCall("call dar_baja_medico (?)")) {
             pstmt.setInt(1, idMedico);  
             int filasAfectadas = pstmt.executeUpdate();  
-            if (filasAfectadas > 0) {
-                return true; 
-            } else {
-                throw new PersistenciaException("No se pudo dar de baja el médico con ID: " + idMedico);
-            }
+            
+//            if (filasAfectadas > 0) {
+//                return true; 
+//            } else {
+//                throw new PersistenciaException("No se pudo dar de baja el médico con ID: " + idMedico);
+//            }
         } catch (SQLException e) {
-            throw new PersistenciaException("Error al dar de baja médico.", e);
+            throw new PersistenciaException("No se pudo dar de baja el médico con ID: " + idMedico, e);
         }
     }
 

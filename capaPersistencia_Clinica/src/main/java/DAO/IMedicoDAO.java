@@ -13,7 +13,7 @@ import java.util.Map;
  * @author Beto_
  */
 public interface IMedicoDAO {
-    public boolean darBajaMedico(int idMedico) throws PersistenciaException;
+    public void darBajaMedico(int idMedico) throws PersistenciaException;
     
     public List<Map<String, Object>> consultarHistorialConsultas(int idMedico) throws PersistenciaException;
     
