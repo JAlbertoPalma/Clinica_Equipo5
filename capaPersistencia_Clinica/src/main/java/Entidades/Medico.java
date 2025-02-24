@@ -23,6 +23,9 @@ public class Medico {
     private boolean estaActivo;
     private int idUsuario;
 
+    public Medico() {
+    }
+
     public Medico(int idMedico, String nombre, String apellidoPaterno, String apellidoMaterno, EspecialidadMedico especialidad, String cedulaProfesional, boolean estaActivo, int idUsuario) {
         this.idMedico = idMedico;
         this.nombre = nombre;

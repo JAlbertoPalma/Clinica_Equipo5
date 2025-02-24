@@ -27,7 +27,7 @@ public class CapaPersistencia_Clinica {
     public static void main(String[] args) throws ParseException {
         // Crear la conexión a la base de datos
         IConexionBD conexionBD = new ConexionBD();
-        IPacienteDAO pacienteBD = new PacienteDAO(conexionBD);
+        IPacienteDAO pacienteDAO = new PacienteDAO(conexionBD);
         IUsuarioDAO usuarioDAO = new UsuarioDAO(conexionBD);
         Usuario usuarioCreado = null;
         MedicoDAO medicoDAO = new MedicoDAO(conexionBD);
@@ -87,13 +87,34 @@ public class CapaPersistencia_Clinica {
 //            System.err.println("Error: " + e.getMessage());
 //        }
 
+//        try{
+//            List<Map<String, Object>> agenda = medicoDAO.consultarAgenda(1);
+//            
+//            for (Map<String, Object> map : agenda) {
+//                System.out.println("cita: " + map.get("id_cita") 
+//                                 + " nombre del paciente: " + map.get("nombre_paciente")
+//                                 + "fecha cita: " + map.get("horaInicio").toString());
+//            }
+//        }catch(PersistenciaException pe){
+//            System.out.println("Error: " + pe);
+//        }
+        
+        
+//        try{
+//            List<Map<String, Object>> horarios = pacienteDAO.buscarCitasDisponibles(1, LocalDate.of(2025, 05, 11).toString());
+//        
+//            for (Map<String, Object> horario : horarios) {
+//                System.out.println("hora inicio: " + horario.get("horaInicio")
+//                                 + " hora fin: " + horario.get("horaFin"));
+//            }
+//        }catch(PersistenciaException pe){
+//            System.out.println("Error: " + pe);
+//        }
+
         try{
-            List<Map<String, Object>> agenda = medicoDAO.consultarAgenda(1);
-            
-            for (Map<String, Object> map : agenda) {
-                System.out.println("cita: " + map.get("id_cita") 
-                                 + " nombre del paciente: " + map.get("nombre_paciente") );
-            }
+            System.out.println("Usuario: " + usuarioDAO.obtenerUsuarioPorCorreo("leonardo.alarcon@example.com").toString());
+            System.out.println("Paciente: " + pacienteDAO.obtenerPaciente(1).toString());
+            System.out.println("Medico: " + medicoDAO.obtenerMedico(1).toString());
         }catch(PersistenciaException pe){
             System.out.println("Error: " + pe);
         }

@@ -101,6 +101,50 @@ public class PacienteDAO implements IPacienteDAO {
             throw new PersistenciaException("Error al actualizar paciente con ID " + paciente.getIdPaciente(), e);
         }
     }
+    
+    @Override
+    public Paciente obtenerPaciente(int idPaciente) throws PersistenciaException{
+        // auxiliar de usuario
+        Paciente paciente = null;
+        String tipo;
+        
+        String consultaSQL = "SELECT id, nombre, apellidoPat, apellidoMat, fechaNacimiento, calle, colonia, numero, telefono, correo, id_usuario FROM pacientes WHERE id = ?";
+        try (Connection con = this.conexion.crearConexion();
+                PreparedStatement ps = con.prepareStatement(consultaSQL)) {
+
+            // Asignamos el parámetro ID de la consulta 
+            ps.setInt(1, idPaciente);
+
+            // Ejecutamos la consulta
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) { //verificamos que se haya obtenido algo
+                    // Se crea el objeto paciente y se asignan sus propiedades
+                    paciente = new Paciente();
+                    
+                    paciente.setIdPaciente(rs.getInt("id"));
+                    paciente.setNombre(rs.getString("nombre"));
+                    paciente.setApellidoPaterno(rs.getString("apellidoPat"));
+                    paciente.setApellidoMaterno(rs.getString("apellidoMat"));
+                    paciente.setFechaNacimiento(rs.getObject("fechaNacimiento", LocalDate.class));
+                    paciente.setCalle(rs.getString("calle"));
+                    paciente.setColonia(rs.getString("colonia"));
+                    paciente.setNumero(rs.getString("numero"));
+                    paciente.setTelefono(rs.getString("telefono"));
+                    paciente.setCorreo(rs.getString("correo"));
+                    paciente.setIdUsuario(rs.getInt("id_usuario"));
+                    
+                    logger.info("Paciente encontrado: " + paciente);
+                } else {
+                    logger.warning("No se encontró el paciente con id: " + idPaciente); // no es error, solo advertencia
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error al consultar paciente con id: " + idPaciente, e);
+            throw new PersistenciaException("Error al consultar paciente por id " + idPaciente, e);
+
+        }
+        return paciente;
+    }
 
     //Consulta historial de consultas del paciente
     @Override
@@ -145,11 +189,11 @@ public class PacienteDAO implements IPacienteDAO {
 
     //Buscar Citas disponibles
     @Override
-    public List<Map<String, Object>> buscarCitasDisponibles(int idPaciente, String fechaCita) throws SQLException {//Funciona
+    public List<Map<String, Object>> buscarCitasDisponibles(int idMedico, String fechaCita) throws PersistenciaException {//Funciona
         List<Map<String, Object>> horariosDisponibles = new ArrayList<>();
         try (Connection con = this.conexion.crearConexion();) {
             CallableStatement pstmt = con.prepareCall("CALL buscar_citas_disponibles(?, ?)");
-            pstmt.setInt(1, idPaciente);
+            pstmt.setInt(1, idMedico);
             pstmt.setString(2, fechaCita);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
@@ -159,7 +203,7 @@ public class PacienteDAO implements IPacienteDAO {
                     horariosDisponibles.add(horario);
                 }
             }
-        } catch (PersistenciaException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(PacienteDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return horariosDisponibles;

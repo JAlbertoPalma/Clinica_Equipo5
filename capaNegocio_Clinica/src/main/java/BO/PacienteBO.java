@@ -98,17 +98,17 @@ public class PacienteBO {
     }
 
     //Buscar citas disponibles
-    public List<Map<String, Object>> consultarCitasDisponibles(int idPaciente, String fechaCita) throws Exception {//Funciona
-        if (idPaciente <= 0) {
-            throw new Exception("El ID del paciente debe ser válido.");
+    public List<Map<String, Object>> consultarCitasDisponibles(int idMedico, String fechaCita) throws NegocioException {//Funciona
+        if (idMedico <= 0) {
+            throw new NegocioException("El ID del paciente debe ser válido.");
         }
         if (fechaCita == null || fechaCita.isEmpty()) {
-            throw new Exception("La fecha de la cita no puede estar vacía.");
+            throw new NegocioException("La fecha de la cita no puede estar vacía.");
         }
         try {
-            return pacienteDAO.buscarCitasDisponibles(idPaciente, fechaCita);
-        } catch (SQLException e) {
-            throw new Exception("Error al consultar citas disponibles: " + e.getMessage(), e);
+            return pacienteDAO.buscarCitasDisponibles(idMedico, fechaCita);
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al consultar citas disponibles: " + e.getMessage(), e);
         }
     }
 }

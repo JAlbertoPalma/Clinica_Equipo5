@@ -70,7 +70,7 @@ public class UsuarioDAO implements IUsuarioDAO {
     public Usuario obtenerUsuarioPorCorreo(String correo) throws PersistenciaException{
         // auxiliar de usuario
         Usuario usuario = null;
-        String tipo = null;
+        String tipo;
         
         String consultaSQL = "SELECT id, correo, cedulaProfesional, contrasenia, tipo FROM usuarios WHERE correo = ?";
         try (Connection con = this.conexion.crearConexion();

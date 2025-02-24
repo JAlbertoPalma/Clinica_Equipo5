@@ -32,6 +32,11 @@ public class MedicoBO {
 
     //Dar de baja al medico
     public void darBajaMedico(int idMedico) throws NegocioException {    //Funciona
+        
+        //Validar que el id exista
+        
+        //validar que el medico este dado de alta
+        
         // Validar que el ID sea positivo
         if (idMedico <= 0) {
             throw new NegocioException("El ID debe ser un número válido mayor que cero.");
