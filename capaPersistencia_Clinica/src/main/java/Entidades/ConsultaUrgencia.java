@@ -5,6 +5,7 @@
 package Entidades;
 
 import java.sql.Time;
+import java.time.LocalTime;
 
 /**
  *
@@ -15,13 +16,13 @@ public class ConsultaUrgencia {
     private int idCita;
     private String folio;
     private String nombreMedico;
-    private Time horaInicioConsulta;
-    private Time horaFinConsulta;
+    private LocalTime horaInicioConsulta;
+    private LocalTime horaFinConsulta;
 
     public ConsultaUrgencia() {
     }
 
-    public ConsultaUrgencia(int idCitasUrgencia, int idCita, String folio, String nombreMedico, Time horaInicioConsulta, Time horaFinConsulta) {
+    public ConsultaUrgencia(int idCitasUrgencia, int idCita, String folio, String nombreMedico, LocalTime horaInicioConsulta, LocalTime horaFinConsulta) {
         this.idCitasUrgencia = idCitasUrgencia;
         this.idCita = idCita;
         this.folio = folio;
@@ -30,9 +31,15 @@ public class ConsultaUrgencia {
         this.horaFinConsulta = horaFinConsulta;
     }
 
-    public ConsultaUrgencia(int idCita, String folio, String nombreMedico, Time horaInicioConsulta, Time horaFinConsulta) {
+    public ConsultaUrgencia(int idCita, String folio, String nombreMedico, LocalTime horaInicioConsulta, LocalTime horaFinConsulta) {
         this.idCita = idCita;
         this.folio = folio;
+        this.nombreMedico = nombreMedico;
+        this.horaInicioConsulta = horaInicioConsulta;
+        this.horaFinConsulta = horaFinConsulta;
+    }
+    
+    public ConsultaUrgencia(String nombreMedico, LocalTime horaInicioConsulta, LocalTime horaFinConsulta) {
         this.nombreMedico = nombreMedico;
         this.horaInicioConsulta = horaInicioConsulta;
         this.horaFinConsulta = horaFinConsulta;
@@ -70,24 +77,24 @@ public class ConsultaUrgencia {
         this.nombreMedico = nombreMedico;
     }
 
-    public Time getHoraInicioConsulta() {
+    public LocalTime getHoraInicioConsulta() {
         return horaInicioConsulta;
     }
 
-    public void setHoraInicioConsulta(Time horaInicioConsulta) {
+    public void setHoraInicioConsulta(LocalTime horaInicioConsulta) {
         this.horaInicioConsulta = horaInicioConsulta;
     }
 
-    public Time getHoraFinConsulta() {
+    public LocalTime getHoraFinConsulta() {
         return horaFinConsulta;
     }
 
-    public void setHoraFinConsulta(Time horaFinConsulta) {
+    public void setHoraFinConsulta(LocalTime horaFinConsulta) {
         this.horaFinConsulta = horaFinConsulta;
     }
 
     @Override
     public String toString() {
-        return "CitasUrgencia{" + "idCitasUrgencia=" + idCitasUrgencia + ", idCita=" + idCita + ", folio=" + folio + ", nombreMedico=" + nombreMedico + ", horaInicioConsulta=" + horaInicioConsulta + ", horaFinConsulta=" + horaFinConsulta + '}';
+        return "ConsultaUrgencia{" + "idCitasUrgencia=" + idCitasUrgencia + ", idCita=" + idCita + ", folio=" + folio + ", nombreMedico=" + nombreMedico + ", horaInicioConsulta=" + horaInicioConsulta + ", horaFinConsulta=" + horaFinConsulta + '}';
     }
 }

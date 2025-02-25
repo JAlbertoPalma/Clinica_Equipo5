@@ -46,6 +46,8 @@ public class Medico {
         this.estaActivo = estaActivo;
         this.idUsuario = idUsuario;
     }
+    
+    
 
     public int getIdMedico() {
         return idMedico;

@@ -4,10 +4,11 @@
  */
 package DAO;
 
+import Entidades.ConsultaUrgencia;
 import Entidades.Paciente;
 import Exception.PersistenciaException;
-import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
@@ -34,4 +35,6 @@ public interface IPacienteDAO {
     public List<Map<String, Object>> consultarHistorialConsultas(int idPaciente, String tipoConsulta, LocalDate fechaInicio, LocalDate fechaFin) throws PersistenciaException;
     
     public List<Map<String, Object>> buscarCitasDisponibles(int idMedico, String fechaCita)throws PersistenciaException;
+    
+    public ConsultaUrgencia asignarMedicoUrgencia(int idPaciente, String nombreMedico, LocalTime horaInicio,LocalTime horaFin) throws PersistenciaException;
 }

@@ -11,12 +11,15 @@ import DAO.MedicoDAO;
 import DAO.PacienteDAO;
 import DTO.PacienteNuevoDTO;
 import DTO.PacienteViejoDTO;
+import Entidades.Cita;
+import Entidades.ConsultaUrgencia;
 import Entidades.Paciente;
 import Exception.NegocioException;
 import Exception.PersistenciaException;
 import Mapper.PacienteMapper;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -121,4 +124,13 @@ public class PacienteBO {
             throw new NegocioException("Error al consultar citas disponibles: " + e.getMessage(), e);
         }
     }
+    
+    //AsignarMedicoUrgencia
+    public ConsultaUrgencia asignarMedicoUrgencia(int idPaciente, String nombreMedico, LocalTime horaInicio,LocalTime horaFin) throws PersistenciaException{
+        if (idPaciente <= 0) {
+            throw new PersistenciaException("El ID del paciente debe ser válido.");
+        }
+        return pacienteDAO.asignarMedicoUrgencia(idPaciente, nombreMedico, horaInicio, horaFin);
+    }
+            
 }

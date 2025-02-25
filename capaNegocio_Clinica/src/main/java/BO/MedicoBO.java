@@ -63,12 +63,25 @@ public class MedicoBO {
     }
     
     public MedicoViejoDTO obtenerMedico(int idMedico) throws NegocioException{
+        if (idMedico <= 0) {
+            throw new NegocioException("El ID debe ser un número válido mayor que cero.");
+        }
         try {
             return mapper.toViejoDTO(medicoDAO.obtenerMedico(idMedico));
         } catch (PersistenciaException ex) {
             Logger.getLogger(MedicoBO.class.getName()).log(Level.SEVERE, null, ex);
             throw new NegocioException("No se logró obtener al medico" + ex.getMessage());
         }
+    }
+    
+    public List<MedicoViejoDTO> obtenerMedicosActivos() throws NegocioException{
+        try{
+            List<Medico> MedicosEncontrados = medicoDAO.obtenerMedicosActivos();
+            return mapper.toViejoDTOList(MedicosEncontrados);
+        }catch(PersistenciaException e){
+            logger.log(Level.SEVERE, "Error al obtener la lista de medicos activos.", e);
+            throw new NegocioException("No se pudo obtener la lista de médicos activos.", e);
+        }        
     }
 
     //Consultar de historial del medico

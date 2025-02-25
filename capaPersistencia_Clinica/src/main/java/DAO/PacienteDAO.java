@@ -6,6 +6,7 @@ package DAO;
 
 import Conexion.IConexionBD;
 import Entidades.ConsultaUrgencia;
+import Entidades.Medico;
 import Entidades.Paciente;
 import Exception.PersistenciaException;
 import java.sql.CallableStatement;
@@ -18,6 +19,7 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Types;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -254,4 +256,25 @@ public class PacienteDAO implements IPacienteDAO {
     }
     
     //Asignar medico a urgencias
+    @Override
+    public ConsultaUrgencia asignarMedicoUrgencia(int idPaciente, String nombreMedico, LocalTime horaInicio,LocalTime horaFin) throws PersistenciaException {
+        try (Connection con = this.conexion.crearConexion();) {
+            CallableStatement pstmt = con.prepareCall("CALL asignar_medico_urgencia(?,?,?,?)");
+            pstmt.setInt(1, idPaciente);
+            pstmt.registerOutParameter(2, Types.VARCHAR);
+            pstmt.registerOutParameter(3, Types.TIME);
+            pstmt.registerOutParameter(4, Types.TIME);
+            pstmt.execute();
+            
+            String NombreMedico = pstmt.getString(2);
+            LocalTime HoraInicio = pstmt.getTime(3).toLocalTime();
+            LocalTime HoraFin = pstmt.getTime(4).toLocalTime();
+            
+            return new ConsultaUrgencia(nombreMedico,horaInicio,horaFin);
+        } catch (SQLException ex) {
+            Logger.getLogger(PacienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new PersistenciaException("Error al asignar médico de urgencia", ex);
+        }
+    }
+            
 }
