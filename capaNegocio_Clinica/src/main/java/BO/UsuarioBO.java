@@ -51,6 +51,24 @@ public class UsuarioBO {
         }
     }
     
+    public UsuarioViejoDTO iniciarSesionPaciente(String correo, String contrasenia) throws NegocioException{
+        try {
+            return mapper.toViejoDTO(usuarioDAO.iniciarSesionPaciente(correo, contrasenia));
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(UsuarioBO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    public UsuarioViejoDTO iniciarSesionMedico(String cedula, String contrasenia) throws NegocioException{
+        try {
+            return mapper.toViejoDTO(usuarioDAO.iniciarSesionMedico(cedula, contrasenia));
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(UsuarioBO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
     public UsuarioViejoDTO obtenerUsuarioPorCorreo(String correo) throws NegocioException{  //Funciona
         if (correo.isEmpty()) {
             throw new NegocioException("El usuario no puede ser nulo.");

@@ -4,15 +4,25 @@
  */
 package GUIs;
 
+import BO.MedicoBO;
 import BO.PacienteBO;
+import BO.UsuarioBO;
+import DTO.UsuarioNuevoDTO;
+import Exception.NegocioException;
 import configuracion.DependencyInjector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author jorge
  */
 public class InicioSesion extends javax.swing.JFrame {
-    private PacienteBO activistaBO = DependencyInjector.crearPacienteBO();
+    private PacienteBO pacienteBO = DependencyInjector.crearPacienteBO();
+    private MedicoBO medicoBO = DependencyInjector.crearMedicoBO();
+    private UsuarioBO usuarioBO = DependencyInjector.crearUsuarioBO();
+    
     /**
      * Creates new form InicioSesion
      */
@@ -110,13 +120,24 @@ public class InicioSesion extends javax.swing.JFrame {
     }//GEN-LAST:event_txtUsuarioActionPerformed
 
     private void btnRegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistroActionPerformed
-         Registro registro = new Registro(); // Crear la instancia de la otra pantalla
-    registro.setVisible(true); // Hacer visible la nueva pantalla
-    this.dispose(); // Cerrar la pantalla actual
+        Registro registro = new Registro(); // Crear la instancia de la otra pantalla
+        registro.setVisible(true); // Hacer visible la nueva pantalla
+        this.dispose(); // Cerrar la pantalla actual
     }//GEN-LAST:event_btnRegistroActionPerformed
 
     private void btnIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarSesionActionPerformed
+        UsuarioNuevoDTO usuarioDTO = null;
         
+        try {
+            usuarioBO.iniciarSesionPaciente(txtUsuario.getText(), String.valueOf(txtContra.getPassword()));
+            JOptionPane.showMessageDialog(this, "Sesion iniciada");
+            MenuPacientes menuPacientes = new MenuPacientes();
+            menuPacientes.setVisible(true);
+            dispose();
+            
+        } catch (NegocioException ex) {
+            Logger.getLogger(InicioSesion.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnIniciarSesionActionPerformed
 
   

@@ -185,12 +185,19 @@ public class CapaNegocio_Clinica {
 //        }
 
         //Prueba asignar medico Urgencia
-        try{
-            int idPaciente = 1;
-            ConsultaUrgencia consultaU = pacienteBO.asignarMedicoUrgencia(idPaciente);
-            System.out.println(consultaU);
-        }catch(NegocioException ne){
-            System.err.println("");
+//        try{
+//            int idPaciente = 1;
+//            ConsultaUrgencia consultaU = pacienteBO.asignarMedicoUrgencia(idPaciente);
+//            System.out.println(consultaU);
+//        }catch(NegocioException ne){
+//            System.err.println("");
+//        }
+        try {
+            usuarioBO.iniciarSesionPaciente("pabs35@example.com", "contrasenia1");
+            System.out.println("Sesion exitosa");
+        } catch (NegocioException ex) {
+            Logger.getLogger(CapaNegocio_Clinica.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }
 }

@@ -51,7 +51,7 @@ public class CapaPersistencia_Clinica {
 //            pe.printStackTrace();
 //        }
         
-//        //Pureba para agregar paciente
+        //Pureba para agregar paciente
 //        try { 
 //            Usuario usuarioGuardar = new Usuario();
 //            usuarioGuardar.setCorreo("pabs35@example.com");
