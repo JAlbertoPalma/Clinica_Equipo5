@@ -149,6 +149,50 @@ public class PacienteDAO implements IPacienteDAO {
     }
     
     @Override
+    public Paciente obtenerPacientePorCorreo(String correo) throws PersistenciaException{
+        // auxiliar de usuario
+        Paciente paciente = null;
+        String tipo;
+        
+        String consultaSQL = "SELECT id, nombre, apellidoPat, apellidoMat, fechaNacimiento, calle, colonia, numero, telefono, correo, id_usuario FROM pacientes WHERE correo = ?";
+        try (Connection con = this.conexion.crearConexion();
+                PreparedStatement ps = con.prepareStatement(consultaSQL)) {
+
+            // Asignamos el parámetro ID de la consulta 
+            ps.setString(1, correo);
+
+            // Ejecutamos la consulta
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) { //verificamos que se haya obtenido algo
+                    // Se crea el objeto paciente y se asignan sus propiedades
+                    paciente = new Paciente();
+                    
+                    paciente.setIdPaciente(rs.getInt("id"));
+                    paciente.setNombre(rs.getString("nombre"));
+                    paciente.setApellidoPaterno(rs.getString("apellidoPat"));
+                    paciente.setApellidoMaterno(rs.getString("apellidoMat"));
+                    paciente.setFechaNacimiento(rs.getObject("fechaNacimiento", LocalDate.class));
+                    paciente.setCalle(rs.getString("calle"));
+                    paciente.setColonia(rs.getString("colonia"));
+                    paciente.setNumero(rs.getString("numero"));
+                    paciente.setTelefono(rs.getString("telefono"));
+                    paciente.setCorreo(rs.getString("correo"));
+                    paciente.setIdUsuario(rs.getInt("id_usuario"));
+                    
+                    logger.info("Paciente encontrado: " + paciente);
+                } else {
+                    logger.warning("No se encontró el paciente con correo: " + correo); // no es error, solo advertencia
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error al consultar paciente con correo: " + correo, e);
+            throw new PersistenciaException("Error al consultar paciente por correo " + correo, e);
+
+        }
+        return paciente;
+    }
+    
+    @Override
     public List<Paciente> obtenerPacientes() throws PersistenciaException{
         String consultaSQL = "SELECT id, nombre, apellidoPat, apellidoMat, fechaNacimiento, calle, colonia, numero, telefono, correo, id_usuario FROM pacientes";
 

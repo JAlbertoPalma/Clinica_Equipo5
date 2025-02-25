@@ -30,6 +30,8 @@ public interface IPacienteDAO {
     
     public Paciente obtenerPaciente(int idPaciente) throws PersistenciaException;
     
+    public Paciente obtenerPacientePorCorreo(String correo) throws PersistenciaException;
+    
     public List<Paciente> obtenerPacientes() throws PersistenciaException;
     
     public List<Map<String, Object>> consultarHistorialConsultas(int idPaciente, String tipoConsulta, LocalDate fechaInicio, LocalDate fechaFin) throws PersistenciaException;

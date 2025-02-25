@@ -77,16 +77,14 @@ public class MedicoDAO implements IMedicoDAO {
                     
                     
                     especialidad = rs.getString("especialidad");
-                    if(especialidad.equals("cardiologia")){
-                        medico.setEspecialidad(Medico.EspecialidadMedico.cardiologia);
-                    }else if(especialidad.equals("oftamologia")){
-                        medico.setEspecialidad(Medico.EspecialidadMedico.oftamologia);
-                    }else if(especialidad.equals("ortopedia")){
-                        medico.setEspecialidad(Medico.EspecialidadMedico.ortopedia);
-                    }else if(especialidad.equals("neurologia")){
-                        medico.setEspecialidad(Medico.EspecialidadMedico.neurologia);
-                    }else if(especialidad.equals("nefrologia")){
-                        medico.setEspecialidad(Medico.EspecialidadMedico.nefrologia);
+                    switch (especialidad) {
+                        case "cardiologia" -> medico.setEspecialidad(Medico.EspecialidadMedico.cardiologia);
+                        case "oftamologia" -> medico.setEspecialidad(Medico.EspecialidadMedico.oftamologia);
+                        case "ortopedia" -> medico.setEspecialidad(Medico.EspecialidadMedico.ortopedia);
+                        case "neurologia" -> medico.setEspecialidad(Medico.EspecialidadMedico.neurologia);
+                        case "nefrologia" -> medico.setEspecialidad(Medico.EspecialidadMedico.nefrologia);
+                        default -> {
+                        }
                     }
                     
                     logger.info("Medico encontrado: " + medico);
@@ -101,6 +99,59 @@ public class MedicoDAO implements IMedicoDAO {
         }
         return medico;
     }
+    
+    @Override
+    public Medico obtenerMedicoPorCedula(String cedula) throws PersistenciaException{
+        // auxiliar de usuario
+        Medico medico = null;
+        String especialidad;
+        
+        String consultaSQL = "SELECT id, nombre, apellidoPat, apellidoMat, especialidad, cedulaProfesional, estaActivo, id_usuario FROM medicos WHERE cedula = ?";
+        try (Connection con = this.conexion.crearConexion();
+                PreparedStatement ps = con.prepareStatement(consultaSQL)) {
+
+            // Asignamos el parámetro ID de la consulta 
+            ps.setString(1, cedula);
+
+            // Ejecutamos la consulta
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) { //verificamos que se haya obtenido algo
+                    // Se crea el objeto medico y se asignan sus propiedades
+                    medico = new Medico();
+                    
+                    medico.setIdMedico(rs.getInt("id"));
+                    medico.setNombre(rs.getString("nombre"));
+                    medico.setApellidoPaterno(rs.getString("apellidoPat"));
+                    medico.setApellidoMaterno(rs.getString("apellidoMat"));
+                    medico.setCedulaProfesional(rs.getString("cedulaProfesional"));
+                    medico.setEstaActivo(rs.getBoolean("estaActivo"));
+                    medico.setIdUsuario(rs.getInt("id_usuario"));
+                    
+                    
+                    especialidad = rs.getString("especialidad");
+                    switch (especialidad) {
+                        case "cardiologia" -> medico.setEspecialidad(Medico.EspecialidadMedico.cardiologia);
+                        case "oftamologia" -> medico.setEspecialidad(Medico.EspecialidadMedico.oftamologia);
+                        case "ortopedia" -> medico.setEspecialidad(Medico.EspecialidadMedico.ortopedia);
+                        case "neurologia" -> medico.setEspecialidad(Medico.EspecialidadMedico.neurologia);
+                        case "nefrologia" -> medico.setEspecialidad(Medico.EspecialidadMedico.nefrologia);
+                        default -> {
+                        }
+                    }
+                    
+                    logger.info("Medico encontrado: " + medico);
+                } else {
+                    logger.warning("No se encontró el médico con cedula: " + cedula); // no es error, solo advertencia
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error al consultar medico con cedula: " + cedula, e);
+            throw new PersistenciaException("Error al consultar medico por cedula " + cedula, e);
+
+        }
+        return medico;
+    }
+
     
     @Override
     public List<Medico> obtenerMedicosActivos() throws PersistenciaException{

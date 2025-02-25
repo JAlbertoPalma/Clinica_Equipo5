@@ -15,6 +15,10 @@ import java.util.List;
 public interface IUsuarioDAO {
     public Usuario agregarUsuario(Usuario usuario) throws PersistenciaException;
     
+    public Usuario iniciarSesionPaciente(String correo, String contrasenia) throws PersistenciaException;
+    
+    public Usuario iniciarSesionMedico(String cedula, String contrasenia) throws PersistenciaException;
+    
     public Usuario obtenerUsuarioPorCorreo(String correo)throws PersistenciaException;
     
     public Usuario obtenerUsuarioPorCedula(String cedula)throws PersistenciaException;

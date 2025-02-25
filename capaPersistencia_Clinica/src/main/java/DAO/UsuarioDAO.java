@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
@@ -34,13 +35,16 @@ public class UsuarioDAO implements IUsuarioDAO {
     public Usuario agregarUsuario(Usuario usuario)throws PersistenciaException{
         // consulta SQL que vamos a ejecutar en mysql
         String sentenciaSQL = "INSERT INTO usuarios (correo, cedulaProfesional, contrasenia, tipo)VALUES (?, ?, ?, ?)";
-
+        
+        //Encriptamos la contraseña antes de guardarla
+        String contraseniaEncriptada = BCrypt.hashpw(usuario.getContrasenia(), BCrypt.gensalt());
+        
         try (Connection con = conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(sentenciaSQL, Statement.RETURN_GENERATED_KEYS)) {
 
             // Se establecen los parámetros de la consulta
             ps.setString(1, usuario.getCorreo());
             ps.setString(2, usuario.getCedulaProfesional());
-            ps.setString(3, usuario.getContrasenia());
+            ps.setString(3, contraseniaEncriptada);
             ps.setObject(4, usuario.getTipo().toString(), Types.VARCHAR);
 
             int filasAfectadas = ps.executeUpdate();
@@ -59,11 +63,44 @@ public class UsuarioDAO implements IUsuarioDAO {
                 }
             }
             return usuario;
-       } catch (SQLException e) {
+       } catch (Exception e) {
             logger.log(Level.SEVERE, "Error al crear usuario", e);
             throw new PersistenciaException("Error al crear al usuario", e);
         }
     }
+    
+    @Override
+    public Usuario iniciarSesionPaciente(String correo, String contrasenia) throws PersistenciaException{
+        Usuario usuario = obtenerUsuarioPorCorreo(correo);
+        try{
+            String contraseniaEncriptada = usuario.getContrasenia();
+            if (BCrypt.checkpw(contrasenia, contraseniaEncriptada)) {
+                return usuario;
+            }else{
+                throw new PersistenciaException("Error: la contraseña no coincide con el correo");
+            }
+        }catch(Exception e){
+            logger.log(Level.SEVERE, "Error al iniciarSesion ",  e);
+            throw new PersistenciaException("Error al iniciar sesión ", e);
+        }
+    }
+    
+    @Override
+    public Usuario iniciarSesionMedico(String cedula, String contrasenia) throws PersistenciaException{
+        Usuario usuario = obtenerUsuarioPorCedula(cedula);
+        try{
+            String contraseniaEncriptada = usuario.getContrasenia();
+            if (BCrypt.checkpw(contrasenia, contraseniaEncriptada)) {
+                return usuario;
+            }else{
+                throw new PersistenciaException("Error: la contraseña no coincide con la cedula");
+            }
+        }catch(Exception e){
+            logger.log(Level.SEVERE, "Error al iniciarSesion ",  e);
+            throw new PersistenciaException("Error al iniciar sesión ", e);
+        }
+    }
+
 
     @Override
     public Usuario obtenerUsuarioPorCorreo(String correo) throws PersistenciaException{
