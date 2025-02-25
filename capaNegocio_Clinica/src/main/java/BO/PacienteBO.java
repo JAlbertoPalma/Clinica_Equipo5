@@ -5,21 +5,16 @@
 package BO;
 
 import Conexion.IConexionBD;
-import DAO.IMedicoDAO;
 import DAO.IPacienteDAO;
-import DAO.MedicoDAO;
 import DAO.PacienteDAO;
 import DTO.PacienteNuevoDTO;
 import DTO.PacienteViejoDTO;
-import Entidades.Cita;
 import Entidades.ConsultaUrgencia;
 import Entidades.Paciente;
 import Exception.NegocioException;
 import Exception.PersistenciaException;
 import Mapper.PacienteMapper;
-import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -93,6 +88,15 @@ public class PacienteBO {
             throw new NegocioException("No se logró obtener al paciente" + ex.getMessage());
         }
     }
+    
+    public List<PacienteViejoDTO> obtenerTodos() throws NegocioException{
+        try{
+            return mapper.toViejoDTOList(pacienteDAO.obtenerPacientes());
+        }catch(PersistenciaException pe){
+            Logger.getLogger(PacienteBO.class.getName()).log(Level.SEVERE, null, pe);
+            throw new NegocioException("No se lograron obtener los pacientes" + pe.getMessage());
+        }
+    }
 
     //Consulta historial de consultas del paciente
     public List<Map<String, Object>> consultarHistorialConsultasPaciente(int idPaciente, String tipoConsulta, LocalDate fechaInicio, LocalDate fechaFin) throws NegocioException {//Funciona
@@ -126,11 +130,15 @@ public class PacienteBO {
     }
     
     //AsignarMedicoUrgencia
-    public ConsultaUrgencia asignarMedicoUrgencia(int idPaciente, String nombreMedico, LocalTime horaInicio,LocalTime horaFin) throws PersistenciaException{
-        if (idPaciente <= 0) {
-            throw new PersistenciaException("El ID del paciente debe ser válido.");
+    public ConsultaUrgencia asignarMedicoUrgencia(int idPaciente) throws NegocioException{
+        try{
+            if (idPaciente <= 0) {
+                throw new NegocioException("El ID del paciente debe ser válido.");
+            }
+            return pacienteDAO.asignarMedicoUrgencia(idPaciente);
+        }catch(PersistenciaException pe){
+            throw new NegocioException("Error: " + pe.getMessage());
         }
-        return pacienteDAO.asignarMedicoUrgencia(idPaciente, nombreMedico, horaInicio, horaFin);
     }
             
 }

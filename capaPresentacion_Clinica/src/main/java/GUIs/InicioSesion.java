@@ -4,12 +4,15 @@
  */
 package GUIs;
 
+import BO.PacienteBO;
+import configuracion.DependencyInjector;
+
 /**
  *
  * @author jorge
  */
 public class InicioSesion extends javax.swing.JFrame {
-
+    private PacienteBO activistaBO = DependencyInjector.crearPacienteBO();
     /**
      * Creates new form InicioSesion
      */
@@ -49,6 +52,11 @@ public class InicioSesion extends javax.swing.JFrame {
         });
 
         btnIniciarSesion.setText("Iniciar Sesion");
+        btnIniciarSesion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIniciarSesionActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Ingrese Usuario o Correo:");
 
@@ -106,6 +114,10 @@ public class InicioSesion extends javax.swing.JFrame {
     registro.setVisible(true); // Hacer visible la nueva pantalla
     this.dispose(); // Cerrar la pantalla actual
     }//GEN-LAST:event_btnRegistroActionPerformed
+
+    private void btnIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarSesionActionPerformed
+        
+    }//GEN-LAST:event_btnIniciarSesionActionPerformed
 
   
 

@@ -26,5 +26,6 @@ GUIs\MenuPacientes$2.class
 GUIs\MenuMedico$1.class
 GUIs\MenuPacientes.class
 GUIs\CitasPacientes.class
+GUIs\InicioSesion$3.class
 GUIs\PerfilPaciente$1.class
 GUIs\MenuMedico.class

@@ -185,11 +185,12 @@ public class CapaNegocio_Clinica {
 //        }
 
         //Prueba asignar medico Urgencia
-        int idPaciente = 1;
-        String nombreMedico = "Dr Leonardo";
-        LocalTime HoraInicio = LocalTime.of(10, 00);
-        LocalTime HoraFin = LocalTime.of(14, 00);
-        ConsultaUrgencia consultaU = pacienteBO.asignarMedicoUrgencia(idPaciente, nombreMedico, HoraInicio, HoraFin);
-        System.out.println(consultaU);
+        try{
+            int idPaciente = 1;
+            ConsultaUrgencia consultaU = pacienteBO.asignarMedicoUrgencia(idPaciente);
+            System.out.println(consultaU);
+        }catch(NegocioException ne){
+            System.err.println("");
+        }
     }
 }

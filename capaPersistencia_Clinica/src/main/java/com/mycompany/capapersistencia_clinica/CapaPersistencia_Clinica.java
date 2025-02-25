@@ -16,8 +16,11 @@ import Entidades.Usuario;
 import Exception.PersistenciaException;
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -154,12 +157,21 @@ public class CapaPersistencia_Clinica {
         }
         
         try{
-            Usuario usuarioSesion = usuarioDAO.iniciarSesionMedico("8888999999", "contrasenia8");
+            Usuario usuarioSesion = usuarioDAO.iniciarSesionMedico("8888999999", "contrasena8");
             Medico medicoSesion = medicoDAO.obtenerMedicoPorCedula(usuarioSesion.getCedulaProfesional());
             System.out.println("Bienvenido Medico: " + medicoSesion.getNombre());
         }catch(PersistenciaException pe){
             System.err.println("Error: " + pe);
         }
+        
+        
+        try {
+            // Asignar médico de urgencia
+            pacienteDAO.asignarMedicoUrgencia(1);
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(CapaPersistencia_Clinica.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
     }
 
 }

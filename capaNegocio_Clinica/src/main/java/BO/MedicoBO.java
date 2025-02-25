@@ -74,6 +74,15 @@ public class MedicoBO {
         }
     }
     
+    public List<MedicoViejoDTO> obtenerTodos() throws NegocioException{
+        try {
+            return mapper.toViejoDTOList(medicoDAO.obtenerMedicosActivos());
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(MedicoBO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new NegocioException("No se lograron obtener registros" + ex.getMessage());
+        }
+    }
+    
     public List<MedicoViejoDTO> obtenerMedicosActivos() throws NegocioException{
         try{
             List<Medico> MedicosEncontrados = medicoDAO.obtenerMedicosActivos();

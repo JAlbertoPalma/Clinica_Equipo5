@@ -106,7 +106,7 @@ public class MedicoDAO implements IMedicoDAO {
         Medico medico = null;
         String especialidad;
         
-        String consultaSQL = "SELECT id, nombre, apellidoPat, apellidoMat, especialidad, cedulaProfesional, estaActivo, id_usuario FROM medicos WHERE cedula = ?";
+        String consultaSQL = "SELECT id, nombre, apellidoPat, apellidoMat, especialidad, cedulaProfesional, estaActivo, id_usuario FROM medicos WHERE cedulaProfesional = ?";
         try (Connection con = this.conexion.crearConexion();
                 PreparedStatement ps = con.prepareStatement(consultaSQL)) {
 

@@ -38,5 +38,5 @@ public interface IPacienteDAO {
     
     public List<Map<String, Object>> buscarCitasDisponibles(int idMedico, String fechaCita)throws PersistenciaException;
     
-    public ConsultaUrgencia asignarMedicoUrgencia(int idPaciente, String nombreMedico, LocalTime horaInicio,LocalTime horaFin) throws PersistenciaException;
+    public ConsultaUrgencia asignarMedicoUrgencia(int idPaciente) throws PersistenciaException;
 }

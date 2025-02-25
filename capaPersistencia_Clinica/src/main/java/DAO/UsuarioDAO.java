@@ -71,8 +71,8 @@ public class UsuarioDAO implements IUsuarioDAO {
     
     @Override
     public Usuario iniciarSesionPaciente(String correo, String contrasenia) throws PersistenciaException{
-        Usuario usuario = obtenerUsuarioPorCorreo(correo);
         try{
+            Usuario usuario = obtenerUsuarioPorCorreo(correo);
             String contraseniaEncriptada = usuario.getContrasenia();
             if (BCrypt.checkpw(contrasenia, contraseniaEncriptada)) {
                 return usuario;
@@ -87,10 +87,10 @@ public class UsuarioDAO implements IUsuarioDAO {
     
     @Override
     public Usuario iniciarSesionMedico(String cedula, String contrasenia) throws PersistenciaException{
-        Usuario usuario = obtenerUsuarioPorCedula(cedula);
         try{
-            String contraseniaEncriptada = usuario.getContrasenia();
-            if (BCrypt.checkpw(contrasenia, contraseniaEncriptada)) {
+            Usuario usuario = obtenerUsuarioPorCedula(cedula);
+            String contraseniaBD = usuario.getContrasenia();
+            if (contrasenia.equals(contraseniaBD)) {
                 return usuario;
             }else{
                 throw new PersistenciaException("Error: la contraseña no coincide con la cedula");
@@ -135,6 +135,7 @@ public class UsuarioDAO implements IUsuarioDAO {
                     logger.info("Usuario encontrado: " + usuario);
                 } else {
                     logger.warning("No se encontró usuario con correo: " + correo); // no es error, solo advertencia
+                    throw new PersistenciaException("No se encontró un registro con este correo");
                 }
             }
         } catch (SQLException e) {
@@ -178,6 +179,7 @@ public class UsuarioDAO implements IUsuarioDAO {
                     logger.info("Usuario encontrado: " + usuario);
                 } else {
                     logger.warning("No se encontró usuario con cedula: " + cedula); // no es error, solo advertencia
+                    throw new PersistenciaException("No se encontró un registro con esta cedula ");
                 }
             }
         } catch (SQLException e) {

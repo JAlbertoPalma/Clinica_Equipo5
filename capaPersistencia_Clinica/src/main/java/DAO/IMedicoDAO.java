@@ -14,6 +14,7 @@ import java.util.Map;
  * @author Beto_
  */
 public interface IMedicoDAO {
+    
     public void darBajaMedico(int idMedico) throws PersistenciaException;
     
     public Medico obtenerMedico(int idMedico) throws PersistenciaException;
