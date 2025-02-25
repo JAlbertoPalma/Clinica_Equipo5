@@ -8,7 +8,6 @@ import BO.MedicoBO;
 import BO.PacienteBO;
 import BO.UsuarioBO;
 import DTO.UsuarioNuevoDTO;
-import DTO.UsuarioViejoDTO;
 import Exception.NegocioException;
 import configuracion.DependencyInjector;
 import java.util.logging.Level;
@@ -127,37 +126,18 @@ public class InicioSesion extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegistroActionPerformed
 
     private void btnIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarSesionActionPerformed
-     String usuario = txtUsuario.getText();
-    String contrasenia = String.valueOf(txtContra.getPassword());
-
-    try {
-        UsuarioViejoDTO usuarioPaciente = usuarioBO.iniciarSesionPaciente(usuario, contrasenia);
-
-        if (usuarioPaciente != null) {
-            JOptionPane.showMessageDialog(this, "Sesión iniciada como Paciente");
+        UsuarioNuevoDTO usuarioDTO = null;
+        
+        try {
+            usuarioBO.iniciarSesionPaciente(txtUsuario.getText(), String.valueOf(txtContra.getPassword()));
+            JOptionPane.showMessageDialog(this, "Sesion iniciada");
             MenuPacientes menuPacientes = new MenuPacientes();
             menuPacientes.setVisible(true);
             dispose();
-            return;
+            
+        } catch (NegocioException ex) {
+            Logger.getLogger(InicioSesion.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        UsuarioViejoDTO usuarioMedico = usuarioBO.iniciarSesionMedico(usuario, contrasenia);
-        
-        if (usuarioMedico != null) {
-            JOptionPane.showMessageDialog(this, "Sesión iniciada como Médico");
-            MenuMedico menuMedicos = new MenuMedico();
-            menuMedicos.setVisible(true);
-            dispose();
-            return;
-        }
-
-        // Si no se encuentra ni paciente ni médico, mostrar error
-        JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
-
-    } catch (NegocioException ex) {
-        Logger.getLogger(InicioSesion.class.getName()).log(Level.SEVERE, null, ex);
-        JOptionPane.showMessageDialog(this, "Error al iniciar sesión", "Error", JOptionPane.ERROR_MESSAGE);
-    }
     }//GEN-LAST:event_btnIniciarSesionActionPerformed
 
   
