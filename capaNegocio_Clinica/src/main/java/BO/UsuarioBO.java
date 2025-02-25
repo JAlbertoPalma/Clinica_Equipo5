@@ -56,8 +56,8 @@ public class UsuarioBO {
             return mapper.toViejoDTO(usuarioDAO.iniciarSesionPaciente(correo, contrasenia));
         } catch (PersistenciaException ex) {
             Logger.getLogger(UsuarioBO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new NegocioException("Hubo un error al guardar el usuario.", ex);
         }
-        return null;
     }
     
     public UsuarioViejoDTO iniciarSesionMedico(String cedula, String contrasenia) throws NegocioException{
