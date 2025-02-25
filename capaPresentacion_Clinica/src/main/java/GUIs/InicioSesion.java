@@ -9,7 +9,9 @@ import BO.PacienteBO;
 import BO.UsuarioBO;
 import DTO.UsuarioNuevoDTO;
 import Exception.NegocioException;
+import Exception.PersistenciaException;
 import configuracion.DependencyInjector;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -127,15 +129,24 @@ public class InicioSesion extends javax.swing.JFrame {
 
     private void btnIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarSesionActionPerformed
         UsuarioNuevoDTO usuarioDTO = null;
+        String contra = txtContra.getText();
         
         try {
             usuarioBO.iniciarSesionPaciente(txtUsuario.getText(), String.valueOf(txtContra.getPassword()));
             JOptionPane.showMessageDialog(this, "Sesion iniciada");
             MenuPacientes menuPacientes = new MenuPacientes();
-            menuPacientes.setVisible(true);
-            dispose();
-            
+            boolean contraencontrada = usuarioBO.verificarContra(contra);
+            if (contraencontrada!=false) {
+                menuPacientes.setVisible(true);
+                dispose();  
+            }else{
+                JOptionPane.showMessageDialog(this, "La contraseña no es valida", "Error", JOptionPane.ERROR_MESSAGE);
+            }  
         } catch (NegocioException ex) {
+            Logger.getLogger(InicioSesion.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(InicioSesion.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (PersistenciaException ex) {
             Logger.getLogger(InicioSesion.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnIniciarSesionActionPerformed

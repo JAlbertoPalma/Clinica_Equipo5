@@ -12,6 +12,7 @@ import DTO.UsuarioViejoDTO;
 import Entidades.ConsultaUrgencia;
 import Exception.NegocioException;
 import Exception.PersistenciaException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -25,7 +26,7 @@ import java.util.logging.Logger;
  */
 public class CapaNegocio_Clinica {
 
-    public static void main(String[] args) throws PersistenciaException {
+    public static void main(String[] args) throws PersistenciaException, SQLException {
         IConexionBD conexion = new ConexionBD();
         PacienteBO pacienteBO = new PacienteBO(conexion);
         UsuarioBO usuarioBO = new UsuarioBO(conexion);
@@ -192,10 +193,22 @@ public class CapaNegocio_Clinica {
 //        }catch(NegocioException ne){
 //            System.err.println("");
 //        }
-        try {
-            usuarioBO.iniciarSesionPaciente("pabs35@example.com", "contrasenia1");
-            System.out.println("Sesion exitosa");
-        } catch (NegocioException ex) {
+//        try {
+//            usuarioBO.iniciarSesionPaciente("pabs35@example.com", "contrasenia1");
+//            System.out.println("Sesion exitosa");
+//        } catch (NegocioException ex) {
+//            Logger.getLogger(CapaNegocio_Clinica.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+        
+        try{
+            String contra = "contraseni0";
+            boolean contraencontrada = usuarioBO.verificarContra(contra);
+            if (contraencontrada!=false) {
+                System.out.println("contrasenia encontrada");
+            }else{
+                System.out.println("no existe la contrasenia");
+            }
+        }catch (NegocioException ex) {
             Logger.getLogger(CapaNegocio_Clinica.class.getName()).log(Level.SEVERE, null, ex);
         }
         

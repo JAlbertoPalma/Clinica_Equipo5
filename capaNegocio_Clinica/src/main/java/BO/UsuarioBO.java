@@ -13,6 +13,7 @@ import Entidades.Usuario;
 import Exception.NegocioException;
 import Exception.PersistenciaException;
 import Mapper.UsuarioMapper;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -80,6 +81,16 @@ public class UsuarioBO {
         } catch (PersistenciaException ex) {
             logger.log(Level.SEVERE, "Error al guardar usuario en la Base de Datos", ex);
             throw new NegocioException("Hubo un error al guardar el usuario.", ex);
+        }
+    }
+    
+    public boolean verificarContra(String texto) throws SQLException, PersistenciaException, NegocioException{
+        try{
+            boolean contraBuscada = usuarioDAO.verificarContra(texto);
+            return contraBuscada;
+        }catch (PersistenciaException ex) {
+            Logger.getLogger(UsuarioBO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new NegocioException("Hubo un error al verificar la contrasenia.", ex);
         }
     }
 }
