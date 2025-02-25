@@ -14,7 +14,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -104,6 +103,49 @@ public class UsuarioDAO implements IUsuarioDAO {
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error al consultar usuario con correo: " + correo, e);
             throw new PersistenciaException("Error al consultar usuario por correo " + correo, e);
+
+        }
+        return usuario;
+    }
+    
+    @Override
+    public Usuario obtenerUsuarioPorCedula(String cedula)throws PersistenciaException{
+        // auxiliar de usuario
+        Usuario usuario = null;
+        String tipo;
+        
+        String consultaSQL = "SELECT id, correo, cedulaProfesional, contrasenia, tipo FROM usuarios WHERE cedulaProfesional = ?";
+        try (Connection con = this.conexion.crearConexion();
+                PreparedStatement ps = con.prepareStatement(consultaSQL)) {
+
+            // Asignamos el parámetro ID de la consulta 
+            ps.setString(1, cedula);
+
+            // Ejecutamos la consulta
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) { //verificamos que se haya obtenido algo
+                    // Se crea el objeto activista y se asignan sus propiedades
+                    usuario = new Usuario(); // es el que definimos al inicio
+                    usuario.setIdUsuario(rs.getInt("id"));
+                    usuario.setCorreo(rs.getString("correo"));
+                    usuario.setCedulaProfesional(rs.getString("cedulaProfesional"));
+                    usuario.setContrasenia(rs.getString("contrasenia"));
+                    
+                    tipo = rs.getString("tipo");
+                    if(tipo.equals("paciente")){
+                        usuario.setTipo(TipoUsuario.paciente);
+                    }else{
+                        usuario.setTipo(TipoUsuario.medico);
+                    }
+                    
+                    logger.info("Usuario encontrado: " + usuario);
+                } else {
+                    logger.warning("No se encontró usuario con cedula: " + cedula); // no es error, solo advertencia
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error al consultar usuario con cedula: " + cedula, e);
+            throw new PersistenciaException("Error al consultar usuario por cedula " + cedula, e);
 
         }
         return usuario;

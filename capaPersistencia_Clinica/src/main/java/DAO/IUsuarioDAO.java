@@ -17,5 +17,7 @@ public interface IUsuarioDAO {
     
     public Usuario obtenerUsuarioPorCorreo(String correo)throws PersistenciaException;
     
+    public Usuario obtenerUsuarioPorCedula(String cedula)throws PersistenciaException;
+    
     public List<Usuario> obtenerUsuarios() throws PersistenciaException;
 }

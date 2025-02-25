@@ -145,6 +145,50 @@ public class PacienteDAO implements IPacienteDAO {
         }
         return paciente;
     }
+    
+    @Override
+    public List<Paciente> obtenerPacientes() throws PersistenciaException{
+        String consultaSQL = "SELECT id, nombre, apellidoPat, apellidoMat, fechaNacimiento, calle, colonia, numero, telefono, correo, id_usuario FROM pacientes";
+
+        // Lista donde se almacenarán los usuarios recuperados
+        List<Paciente> pacientes = new ArrayList<>();
+
+        // iniciamos el intento de ejecutar el comando/consulta en la bd
+        try (Connection con = this.conexion.crearConexion();
+                PreparedStatement ps = con.prepareStatement(consultaSQL);
+                ResultSet rs = ps.executeQuery() // Se ejecuta la consulta y se obtiene el resultado en un ResultSet
+                ) {
+            // Se recorre el ResultSet mientras haya filas disponibles con el next()
+            while (rs.next()) {
+                
+                // Se crea el objeto medico y se asignan sus propiedades
+                    Paciente paciente = new Paciente();
+                    
+                    paciente.setIdPaciente(rs.getInt("id"));
+                    paciente.setNombre(rs.getString("nombre"));
+                    paciente.setApellidoPaterno(rs.getString("apellidoPat"));
+                    paciente.setApellidoMaterno(rs.getString("apellidoMat"));
+                    paciente.setFechaNacimiento(rs.getObject("fechaNacimiento", LocalDate.class));
+                    paciente.setCalle(rs.getString("calle"));
+                    paciente.setColonia(rs.getString("colonia"));
+                    paciente.setNumero(rs.getString("numero"));
+                    paciente.setTelefono(rs.getString("telefono"));
+                    paciente.setCorreo(rs.getString("correo"));
+                    paciente.setIdUsuario(rs.getInt("id_usuario"));
+
+                // Se agrega el usuario a la lista
+                pacientes.add(paciente);
+            }
+
+            // Se retorna la lista con todos los usuarios obtenidos
+            return pacientes;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(PacienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+            // Se lanza una excepción personalizada si hay un error en la consulta
+            throw new PersistenciaException("Error al obtener la lista de pacientes.", ex);
+        }
+    }
 
     //Consulta historial de consultas del paciente
     @Override

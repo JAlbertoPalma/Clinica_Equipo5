@@ -6,6 +6,7 @@ package DAO;
 
 import Conexion.IConexionBD;
 import Entidades.Medico;
+import Entidades.Medico.EspecialidadMedico;
 import Entidades.Usuario;
 import Exception.PersistenciaException;
 import java.sql.CallableStatement;
@@ -39,24 +40,19 @@ public class MedicoDAO implements IMedicoDAO {
     public void darBajaMedico(int idMedico) throws PersistenciaException {
         try (Connection con = this.conexion.crearConexion(); CallableStatement pstmt = con.prepareCall("call dar_baja_medico (?)")) {
             pstmt.setInt(1, idMedico);  
-            int filasAfectadas = pstmt.executeUpdate();  
+            pstmt.executeUpdate(); 
             
-//            if (filasAfectadas > 0) {
-//                return true; 
-//            } else {
-//                throw new PersistenciaException("No se pudo dar de baja el médico con ID: " + idMedico);
-//            }
         } catch (SQLException e) {
             throw new PersistenciaException("No se pudo dar de baja el médico con ID: " + idMedico, e);
         }
     }
     
+    
     @Override
     public Medico obtenerMedico(int idMedico) throws PersistenciaException{
         // auxiliar de usuario
         Medico medico = null;
-        String tipo;
-        
+        String especialidad;
         
         String consultaSQL = "SELECT id, nombre, apellidoPat, apellidoMat, especialidad, cedulaProfesional, estaActivo, id_usuario FROM medicos WHERE id = ?";
         try (Connection con = this.conexion.crearConexion();
@@ -80,16 +76,16 @@ public class MedicoDAO implements IMedicoDAO {
                     medico.setIdUsuario(rs.getInt("id_usuario"));
                     
                     
-                    tipo = rs.getString("especialidad");
-                    if(tipo.equals("cardiologia")){
+                    especialidad = rs.getString("especialidad");
+                    if(especialidad.equals("cardiologia")){
                         medico.setEspecialidad(Medico.EspecialidadMedico.cardiologia);
-                    }else if(tipo.equals("oftamologia")){
+                    }else if(especialidad.equals("oftamologia")){
                         medico.setEspecialidad(Medico.EspecialidadMedico.oftamologia);
-                    }else if(tipo.equals("ortopedia")){
+                    }else if(especialidad.equals("ortopedia")){
                         medico.setEspecialidad(Medico.EspecialidadMedico.ortopedia);
-                    }else if(tipo.equals("neurologia")){
+                    }else if(especialidad.equals("neurologia")){
                         medico.setEspecialidad(Medico.EspecialidadMedico.neurologia);
-                    }else if(tipo.equals("nefrologia")){
+                    }else if(especialidad.equals("nefrologia")){
                         medico.setEspecialidad(Medico.EspecialidadMedico.nefrologia);
                     }
                     
@@ -104,6 +100,57 @@ public class MedicoDAO implements IMedicoDAO {
 
         }
         return medico;
+    }
+    
+    @Override
+    public List<Medico> obtenerMedicosActivos() throws PersistenciaException{
+        String consultaSQL = "SELECT id, nombre, apellidoPat, apellidoMat, especialidad, cedulaProfesional, estaActivo, id_usuario FROM medicos WHERE estaActivo = TRUE";
+
+        // Lista donde se almacenarán los usuarios recuperados
+        List<Medico> medicos = new ArrayList<>();
+
+        // iniciamos el intento de ejecutar el comando/consulta en la bd
+        try (Connection con = this.conexion.crearConexion();
+                PreparedStatement ps = con.prepareStatement(consultaSQL);
+                ResultSet rs = ps.executeQuery() // Se ejecuta la consulta y se obtiene el resultado en un ResultSet
+                ) {
+            // Se recorre el ResultSet mientras haya filas disponibles con el next()
+            while (rs.next()) {
+                
+                // Se crea el objeto medico y se asignan sus propiedades
+                    Medico medico = new Medico();
+                    String especialidad = rs.getString("especialidad");
+                    
+                    medico.setIdMedico(rs.getInt("id"));
+                    medico.setNombre(rs.getString("nombre"));
+                    medico.setApellidoPaterno(rs.getString("apellidoPat"));
+                    medico.setApellidoMaterno(rs.getString("apellidoMat"));
+                    medico.setCedulaProfesional(rs.getString("cedulaProfesional"));
+                    medico.setEstaActivo(rs.getBoolean("estaActivo"));
+                    medico.setIdUsuario(rs.getInt("id_usuario"));
+                    
+                switch (especialidad) {
+                    case "cardiologia" -> medico.setEspecialidad(Medico.EspecialidadMedico.cardiologia);
+                    case "oftamologia" -> medico.setEspecialidad(Medico.EspecialidadMedico.oftamologia);
+                    case "ortopedia" -> medico.setEspecialidad(Medico.EspecialidadMedico.ortopedia);
+                    case "neurologia" -> medico.setEspecialidad(Medico.EspecialidadMedico.neurologia);
+                    case "nefrologia" -> medico.setEspecialidad(Medico.EspecialidadMedico.nefrologia);
+                    default -> {
+                    }
+                }
+
+                // Se agrega el usuario a la lista
+                medicos.add(medico);
+            }
+
+            // Se retorna la lista con todos los usuarios obtenidos
+            return medicos;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(MedicoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            // Se lanza una excepción personalizada si hay un error en la consulta
+            throw new PersistenciaException("Error al obtener la lista de medicos.", ex);
+        }
     }
 
     //Consultar de historial del medico

@@ -9,6 +9,7 @@ import DAO.IMedicoDAO;
 import DAO.MedicoDAO;
 import DTO.MedicoViejoDTO;
 import Entidades.Consulta;
+import Entidades.Medico;
 import Exception.NegocioException;
 import Exception.PersistenciaException;
 import Mapper.MedicoMapper;
@@ -32,11 +33,7 @@ public class MedicoBO {
     }
 
     //Dar de baja al medico
-    public void darBajaMedico(int idMedico) throws NegocioException {    //Funciona
-        
-        //Validar que el id exista
-        
-        //validar que el medico este dado de alta
+    public boolean darBajaMedico(int idMedico) throws NegocioException {    //Funciona        
         
         // Validar que el ID sea positivo
         if (idMedico <= 0) {
@@ -44,8 +41,20 @@ public class MedicoBO {
         }
 
         try {
+            // Validar que el id exista
+            Medico medicoBuscado = medicoDAO.obtenerMedico(idMedico);
+            if(medicoBuscado == null){
+                throw new NegocioException("No hay registros de un médico con este id");
+            }
+            
+            //validar que el medico este dado de alta
+            if(!medicoBuscado.isEstaActivo()){
+                throw new NegocioException("Este médico ya está dado de baja");
+            }
+            
             // Intentar dar de baja al médico utilizando el DAO
             medicoDAO.darBajaMedico(idMedico);
+            return true;
         } catch (PersistenciaException ex) {
             // Registrar el error y lanzar una excepción de negocio
             logger.log(Level.SEVERE, "Error al dar de baja a medico con ID: " + idMedico, ex);

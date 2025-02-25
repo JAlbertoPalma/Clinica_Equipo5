@@ -29,6 +29,8 @@ public interface IPacienteDAO {
     
     public Paciente obtenerPaciente(int idPaciente) throws PersistenciaException;
     
+    public List<Paciente> obtenerPacientes() throws PersistenciaException;
+    
     public List<Map<String, Object>> consultarHistorialConsultas(int idPaciente, String tipoConsulta, LocalDate fechaInicio, LocalDate fechaFin) throws PersistenciaException;
     
     public List<Map<String, Object>> buscarCitasDisponibles(int idMedico, String fechaCita)throws PersistenciaException;

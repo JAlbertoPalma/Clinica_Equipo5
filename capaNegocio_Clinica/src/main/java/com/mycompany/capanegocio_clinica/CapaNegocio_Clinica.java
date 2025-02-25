@@ -86,18 +86,18 @@ public class CapaNegocio_Clinica {
 //        } 
 //        //VISTAS
 //        //----------------------------------------MEDICO-------------------------------------------------
-//        //Prueba eliminar Medico
-//        try {
-//            boolean resultado = medicoBO.darBajaMedico(9);
-//            if (resultado) {
-//                System.out.println("Medico eliminado");
-//            } else {
-//                System.out.println("Algo fallo al eliminar el medico");
-//            }
-//        } catch (NegocioException ne) {
-//            System.err.println("Error al insertar: " + ne.getMessage());
-//            ne.printStackTrace();
-//        }
+        //Prueba eliminar Medico
+        try {
+            boolean resultado = medicoBO.darBajaMedico(3);
+            if (resultado) {
+                System.out.println("Medico eliminado");
+            } else {
+                System.out.println("Algo fallo al dar de baja al medico");
+            }
+        } catch (NegocioException ne) {
+            System.err.println("Error al insertar: " + ne.getMessage());
+            ne.printStackTrace();
+        }
 //
 //        //Prueba consultar agenda de medico
         try {
@@ -119,7 +119,7 @@ public class CapaNegocio_Clinica {
 //
 //        //Consulta historial de consultas del medico
         try {
-            int idMedico = 3;            
+            int idMedico = 1;            
             
             List<Map<String, Object>> historial = medicoBO.consultarHistorialMedico(idMedico);
             
@@ -138,48 +138,48 @@ public class CapaNegocio_Clinica {
 //
 //        //---------------------------------PACIENTE------------------------------------------------------
 //        //Consulta historial de consultas del paciente
-        try {
-            int idPaciente = 1; // ID del paciente
-            String tipoConsulta = "Cardiología";
-            LocalDate fechaInicio = LocalDate.of(2024, 1, 1);
-            LocalDate fechaFin = LocalDate.of(2024, 12, 31);
-            
-            List<Map<String, Object>> historial = pacienteBO.consultarHistorialConsultasPaciente(idPaciente, tipoConsulta, fechaInicio, fechaFin);
-            
-            System.out.println("Historial de Consultas del Paciente con ID: " + idPaciente);
-            for (Map<String, Object> consulta : historial) {
-                System.out.println("Consulta ID: " + consulta.get("id_consulta"));
-                System.out.println("Médico: " + consulta.get("nombre_medico") + " " + consulta.get("apellidoPat_medico") + " " + consulta.get("apellidoMat_medico"));
-                System.out.println("Tipo de consulta: " + consulta.get("tipo"));
-                System.out.println("Fecha y Hora: " + consulta.get("fechaHora"));
-                System.out.println("Estado: " + consulta.get("estado"));
-                System.out.println("Diagnóstico: " + consulta.get("diagnostico"));
-                System.out.println("Tratamiento: " + consulta.get("tratamiento"));
-                System.out.println("---------------------------------");
-            }
-        } catch (NegocioException e) {
-            System.err.println("Error: " + e.getMessage());
-        }
+//        try {
+//            int idPaciente = 1; // ID del paciente
+//            String tipoConsulta = "Cardiología";
+//            LocalDate fechaInicio = LocalDate.of(2024, 1, 1);
+//            LocalDate fechaFin = LocalDate.of(2024, 12, 31);
+//            
+//            List<Map<String, Object>> historial = pacienteBO.consultarHistorialConsultasPaciente(idPaciente, tipoConsulta, fechaInicio, fechaFin);
+//            
+//            System.out.println("Historial de Consultas del Paciente con ID: " + idPaciente);
+//            for (Map<String, Object> consulta : historial) {
+//                System.out.println("Consulta ID: " + consulta.get("id_consulta"));
+//                System.out.println("Médico: " + consulta.get("nombre_medico") + " " + consulta.get("apellidoPat_medico") + " " + consulta.get("apellidoMat_medico"));
+//                System.out.println("Tipo de consulta: " + consulta.get("tipo"));
+//                System.out.println("Fecha y Hora: " + consulta.get("fechaHora"));
+//                System.out.println("Estado: " + consulta.get("estado"));
+//                System.out.println("Diagnóstico: " + consulta.get("diagnostico"));
+//                System.out.println("Tratamiento: " + consulta.get("tratamiento"));
+//                System.out.println("---------------------------------");
+//            }
+//        } catch (NegocioException e) {
+//            System.err.println("Error: " + e.getMessage());
+//        }
 
         //Consultar citas disponibles
-        try {
-            int idMedico = 1;
-            String fechaCita = "2025-02-24";
-            List<Map<String, Object>> horarios = pacienteBO.consultarCitasDisponibles(idMedico, fechaCita);
-            System.out.println("Horarios disponibles para el medico con id " + idMedico);
-            for (Map<String, Object> horario : horarios) {
-                System.out.println("Inicio: " + horario.get("horaInicio") + " - Fin: " + horario.get("horaFin"));
-            }
-        }catch(NegocioException e){
-            e.printStackTrace();
-        }
-        
-        try {
-            System.out.println("Usuario: " + usuarioBO.obtenerUsuarioPorCorreo("2"));
-            System.out.println("Paciente: " + pacienteBO.obtenerPaciente(1));
-            System.out.println("Medico: " + medicoBO.obtenerMedico(1));
-        } catch (NegocioException ex) {
-            Logger.getLogger(CapaNegocio_Clinica.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            int idMedico = 1;
+//            String fechaCita = "2025-02-24";
+//            List<Map<String, Object>> horarios = pacienteBO.consultarCitasDisponibles(idMedico, fechaCita);
+//            System.out.println("Horarios disponibles para el medico con id " + idMedico);
+//            for (Map<String, Object> horario : horarios) {
+//                System.out.println("Inicio: " + horario.get("horaInicio") + " - Fin: " + horario.get("horaFin"));
+//            }
+//        }catch(NegocioException e){
+//            e.printStackTrace();
+//        }
+//        
+//        try {
+//            System.out.println("Usuario: " + usuarioBO.obtenerUsuarioPorCorreo("2"));
+//            System.out.println("Paciente: " + pacienteBO.obtenerPaciente(1));
+//            System.out.println("Medico: " + medicoBO.obtenerMedico(1));
+//        } catch (NegocioException ex) {
+//            Logger.getLogger(CapaNegocio_Clinica.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
 }

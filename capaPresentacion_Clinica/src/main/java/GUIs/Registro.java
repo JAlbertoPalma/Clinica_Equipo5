@@ -4,11 +4,22 @@
  */
 package GUIs;
 
+import BO.PacienteBO;
+import BO.UsuarioBO;
 import Conexion.ConexionBD;
+import Conexion.IConexionBD;
+import DTO.PacienteNuevoDTO;
+import DTO.UsuarioNuevoDTO;
+import DTO.UsuarioViejoDTO;
+import Entidades.Usuario;
+import Exception.NegocioException;
 import Exception.PersistenciaException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import javax.swing.JOptionPane;
 
 
 
@@ -221,55 +232,56 @@ public class Registro extends javax.swing.JFrame {
     }//GEN-LAST:event_btncancelarActionPerformed
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-      ConexionBD conexionBD = new ConexionBD();
-    Connection con;
-    
-    try {
-        con = conexionBD.crearConexion();
-    } catch (PersistenciaException e) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Error al conectar con la base de datos: " + e.getMessage());
-        return;
-    }
-
-    String sql = "INSERT INTO pacientes (nombre, apellidoPat, apellidoMat, fechaNacimiento, calle, colonia, numero, telefono, correo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    
-    try {
-        PreparedStatement ps = con.prepareStatement(sql);
-        ps.setString(1, txtNombreC.getText());
-        ps.setString(2, txtApellidoP.getText());
-        ps.setString(3, txtApellidoM.getText());
-        ps.setString(4, txtCalle.getText());
-        ps.setString(5, txtColonia.getText());
-        ps.setString(6, txtNumeroC.getText());
+        IConexionBD conexion = new ConexionBD();
+        PacienteBO pacienteBO = new PacienteBO(conexion);
+        UsuarioBO usuarioBO = new UsuarioBO(conexion);
+        UsuarioViejoDTO usuario = null;
         
-        // Convertir la fecha seleccionada en formato SQL
-        java.util.Date fecha = jDateChooser1.getDate();
-        if (fecha != null) {
-            java.sql.Date fechaSQL = new java.sql.Date(fecha.getTime());
-            ps.setDate(7, fechaSQL);
-        } else {
-            ps.setNull(7, java.sql.Types.DATE);
+        String correo = txtCorreo.getText();
+        String contrasena = txtContraseña.getText();
+        String nombre = txtNombreC.getText();
+        String apellidoP = txtApellidoP.getText();
+        String apellidoM = txtApellidoM.getText();
+        String calle = txtCalle.getText();
+        String colonia = txtColonia.getText();
+        String numeroCasa = txtNumeroC.getText();
+        String telefono = txtTelefono.getText();
+        LocalDate fechaNacimiento = jDateChooser1.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        UsuarioNuevoDTO usuarioGuardar = new UsuarioNuevoDTO(correo, contrasena, Usuario.TipoUsuario.paciente);
+
+        try {
+            boolean resultadoUsuario = usuarioBO.agregarUsuario(usuarioGuardar);
+            usuario = usuarioBO.obtenerUsuarioPorCorreo(correo);
+
+            if (resultadoUsuario) {
+                System.out.println("Usuario almacenado con éxito");
+            } else {
+                System.out.println("Algo falló, no se pudo guardar el usuario");
+                return;
+            }
+
+            PacienteNuevoDTO pacienteGuardar = new PacienteNuevoDTO(
+                nombre, apellidoP, apellidoM, fechaNacimiento,
+                calle, colonia, numeroCasa, telefono,
+                usuario.getCorreo(), Integer.parseInt(usuario.getIdUsuario())
+            );
+
+            boolean resultadoPaciente = pacienteBO.agregarPaciente(pacienteGuardar);
+
+            if (resultadoPaciente) {
+                System.out.println("Paciente almacenado con éxito");
+                JOptionPane.showMessageDialog(this, "Registro exitoso", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                System.out.println("Algo falló, no se pudo guardar el paciente");
+                JOptionPane.showMessageDialog(this, "Error al registrar el paciente", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (NegocioException ne) {
+            System.err.println("Error al insertar: " + ne.getMessage());
+            ne.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error en el registro: " + ne.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-        
-        ps.setString(8, txtTelefono.getText());
-        ps.setString(9, txtCorreo.getText());
-//        ps.setString(10, txtContraseña.getText());
-
-        int resultado = ps.executeUpdate();
-        
-        if (resultado > 0) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Paciente registrado con éxito.");
-        } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error al registrar el paciente.");
-        }
-        
-        ps.close();
-        con.close();
-    } catch (SQLException e) {
-        e.printStackTrace();
-        javax.swing.JOptionPane.showMessageDialog(this, "Error en la base de datos: " + e.getMessage());
-    }
-
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
   

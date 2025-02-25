@@ -18,6 +18,8 @@ public interface IMedicoDAO {
     
     public Medico obtenerMedico(int idMedico) throws PersistenciaException;
     
+    public List<Medico> obtenerMedicosActivos() throws PersistenciaException;
+    
     public List<Map<String, Object>> consultarHistorialConsultas(int idMedico) throws PersistenciaException;
     
     public List<Map<String, Object>> consultarAgenda(int idMedico) throws PersistenciaException;

@@ -10,6 +10,7 @@ import DAO.IUsuarioDAO;
 import DAO.MedicoDAO;
 import DAO.PacienteDAO;
 import DAO.UsuarioDAO;
+import Entidades.Medico;
 import Entidades.Paciente;
 import Entidades.Usuario;
 import Exception.PersistenciaException;
@@ -111,12 +112,37 @@ public class CapaPersistencia_Clinica {
 //            System.out.println("Error: " + pe);
 //        }
 
+//        try{
+//            System.out.println("Usuario: " + usuarioDAO.obtenerUsuarioPorCorreo("leonardo.alarcon@example.com").toString());
+//            System.out.println("Paciente: " + pacienteDAO.obtenerPaciente(1).toString());
+//            System.out.println("Medico: " + medicoDAO.obtenerMedico(1).toString());
+//        }catch(PersistenciaException pe){
+//            System.out.println("Error: " + pe);
+//        }
+
         try{
-            System.out.println("Usuario: " + usuarioDAO.obtenerUsuarioPorCorreo("leonardo.alarcon@example.com").toString());
-            System.out.println("Paciente: " + pacienteDAO.obtenerPaciente(1).toString());
-            System.out.println("Medico: " + medicoDAO.obtenerMedico(1).toString());
+            List<Medico> medicosActivos = medicoDAO.obtenerMedicosActivos();
+            List<Paciente> pacientes = pacienteDAO.obtenerPacientes();
+            List<Usuario> usuarios = usuarioDAO.obtenerUsuarios();
+            
+            System.out.println(" Usuarios");
+            for (Usuario usuario : usuarios) {
+                System.out.println(usuario.toString());
+            }
+            
+            System.out.println("\n Pacientes");
+            for (Paciente paciente : pacientes) {
+                System.out.println(paciente.toString());
+            }
+            
+            System.out.println("\n MédicosActivos");
+            for (Medico medico : medicosActivos) {
+                System.out.println(medico.toString());
+            }
+            
+            
         }catch(PersistenciaException pe){
-            System.out.println("Error: " + pe);
+            
         }
     }
 
