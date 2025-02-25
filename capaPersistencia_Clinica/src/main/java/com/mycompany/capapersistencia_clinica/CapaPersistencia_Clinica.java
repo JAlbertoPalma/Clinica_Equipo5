@@ -48,7 +48,7 @@ public class CapaPersistencia_Clinica {
 //            pe.printStackTrace();
 //        }
         
-//        Pureba para agregar paciente
+//        //Pureba para agregar paciente
 //        try { 
 //            Usuario usuarioGuardar = new Usuario();
 //            usuarioGuardar.setCorreo("pabs35@example.com");
@@ -65,7 +65,7 @@ public class CapaPersistencia_Clinica {
 //                    "2105" ,"1928374632" , usuarioCreado.getCorreo(), usuarioCreado.getIdUsuario());
 //
 //            // Guardar el paciente en la base de datos y el resultado lo guardamos en otro activista
-//            Paciente pacienteGuardado = pacienteBD.agregarPaciente(pacienteAGuardar);
+//            Paciente pacienteGuardado = pacienteDAO.agregarPaciente(pacienteAGuardar);
 //
 //            // Verificar si se guardó correctamente
 //            if (pacienteGuardado != null && pacienteGuardado.getIdPaciente() > 0) { // realmente con que sepamos que trae un id, puede ser tambien activistaGuardado.getIdActivista !=0
@@ -120,29 +120,45 @@ public class CapaPersistencia_Clinica {
 //            System.out.println("Error: " + pe);
 //        }
 
+//        try{
+//            List<Medico> medicosActivos = medicoDAO.obtenerMedicosActivos();
+//            List<Paciente> pacientes = pacienteDAO.obtenerPacientes();
+//            List<Usuario> usuarios = usuarioDAO.obtenerUsuarios();
+//            
+//            System.out.println(" Usuarios");
+//            for (Usuario usuario : usuarios) {
+//                System.out.println(usuario.toString());
+//            }
+//            
+//            System.out.println("\n Pacientes");
+//            for (Paciente paciente : pacientes) {
+//                System.out.println(paciente.toString());
+//            }
+//            
+//            System.out.println("\n MédicosActivos");
+//            for (Medico medico : medicosActivos) {
+//                System.out.println(medico.toString());
+//            }
+//            
+//            
+//        }catch(PersistenciaException pe){
+//            
+//        }
+        
         try{
-            List<Medico> medicosActivos = medicoDAO.obtenerMedicosActivos();
-            List<Paciente> pacientes = pacienteDAO.obtenerPacientes();
-            List<Usuario> usuarios = usuarioDAO.obtenerUsuarios();
-            
-            System.out.println(" Usuarios");
-            for (Usuario usuario : usuarios) {
-                System.out.println(usuario.toString());
-            }
-            
-            System.out.println("\n Pacientes");
-            for (Paciente paciente : pacientes) {
-                System.out.println(paciente.toString());
-            }
-            
-            System.out.println("\n MédicosActivos");
-            for (Medico medico : medicosActivos) {
-                System.out.println(medico.toString());
-            }
-            
-            
+            Usuario usuarioSesion = usuarioDAO.iniciarSesionPaciente("pabs35@example.com", "contrasenia1");
+            Paciente pacienteSesion = pacienteDAO.obtenerPacientePorCorreo(usuarioSesion.getCorreo());
+            System.out.println("Bienvenido paciente: " + pacienteSesion.getNombre());
         }catch(PersistenciaException pe){
-            
+            System.err.println("Error: " + pe);
+        }
+        
+        try{
+            Usuario usuarioSesion = usuarioDAO.iniciarSesionMedico("8888999999", "contrasenia8");
+            Medico medicoSesion = medicoDAO.obtenerMedicoPorCedula(usuarioSesion.getCedulaProfesional());
+            System.out.println("Bienvenido Medico: " + medicoSesion.getNombre());
+        }catch(PersistenciaException pe){
+            System.err.println("Error: " + pe);
         }
     }
 
