@@ -129,7 +129,7 @@ public class InicioSesion extends javax.swing.JFrame {
 
     private void btnIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarSesionActionPerformed
         UsuarioNuevoDTO usuarioDTO = null;
-        String contra = txtContra.getText();
+        String contra = String.valueOf(txtContra.getPassword());
         
         try {
             usuarioBO.iniciarSesionPaciente(txtUsuario.getText(), String.valueOf(txtContra.getPassword()));
