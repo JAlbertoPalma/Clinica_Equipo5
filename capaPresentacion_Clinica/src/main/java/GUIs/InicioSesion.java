@@ -9,6 +9,7 @@ import BO.PacienteBO;
 import BO.UsuarioBO;
 import DTO.UsuarioNuevoDTO;
 import DTO.UsuarioViejoDTO;
+import Entidades.Usuario;
 import Exception.NegocioException;
 import Exception.PersistenciaException;
 import configuracion.DependencyInjector;
@@ -129,37 +130,34 @@ public class InicioSesion extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegistroActionPerformed
 
     private void btnIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarSesionActionPerformed
-         String usuario = txtUsuario.getText();
-    String contrasenia = String.valueOf(txtContra.getPassword());
+        String entrada = txtUsuario.getText();
+        String contrasenia = String.valueOf(txtContra.getPassword());
 
-    try {
-        UsuarioViejoDTO usuarioPaciente = usuarioBO.iniciarSesionPaciente(usuario, contrasenia);
+        try {
+            UsuarioViejoDTO usuario = usuarioBO.iniciarSesion(entrada, contrasenia);
 
-        if (usuarioPaciente != null) {
-            JOptionPane.showMessageDialog(this, "Sesión iniciada como Paciente");
-            MenuPacientes menuPacientes = new MenuPacientes();
-            menuPacientes.setVisible(true);
-            dispose();
-            return;
+            if (usuario != null) {
+                if (usuario.getTipo() == Usuario.TipoUsuario.paciente){
+                    JOptionPane.showMessageDialog(this, "Sesión iniciada como paciente");
+                    MenuPacientes menuPacientes = new MenuPacientes();
+                    menuPacientes.setVisible(true);
+                    dispose();
+                }
+                else if (usuario.getTipo() == Usuario.TipoUsuario.medico){
+                    JOptionPane.showMessageDialog(this, "Sesión iniciada como médico");
+                    MenuMedico menuMedicos = new MenuMedico();
+                    menuMedicos.setVisible(true);
+                    dispose();
+                }
+            }
+
+            // Si no se encuentra ni paciente ni médico, mostrar error
+            JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
+
+        } catch (NegocioException ne) {
+            Logger.getLogger(InicioSesion.class.getName()).log(Level.SEVERE, null, ne.getMessage());
+            JOptionPane.showMessageDialog(this, "Error al iniciar sesión: " + ne.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-
-        UsuarioViejoDTO usuarioMedico = usuarioBO.iniciarSesionMedico(usuario, contrasenia);
-        
-        if (usuarioMedico != null) {
-            JOptionPane.showMessageDialog(this, "Sesión iniciada como Médico");
-            MenuMedico menuMedicos = new MenuMedico();
-            menuMedicos.setVisible(true);
-            dispose();
-            return;
-        }
-
-        // Si no se encuentra ni paciente ni médico, mostrar error
-        JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
-
-    } catch (NegocioException ex) {
-        Logger.getLogger(InicioSesion.class.getName()).log(Level.SEVERE, null, ex);
-        JOptionPane.showMessageDialog(this, "Error al iniciar sesión", "Error", JOptionPane.ERROR_MESSAGE);
-    }
     }//GEN-LAST:event_btnIniciarSesionActionPerformed
 
   

@@ -36,7 +36,7 @@ public class CapaPersistencia_Clinica {
         Usuario usuarioCreado = null;
         MedicoDAO medicoDAO = new MedicoDAO(conexionBD);
 
-//        //Prueba para agregar al usuario
+            //        //Prueba para agregar al usuario
 //        try{
 //            Usuario usuarioGuardar = new Usuario();
 //            usuarioGuardar.setCorreo("pabs35@example.com");
@@ -50,8 +50,8 @@ public class CapaPersistencia_Clinica {
 //            System.err.println("Error al insertar: " + pe.getMessage());
 //            pe.printStackTrace();
 //        }
-        
-        //Pureba para agregar paciente
+
+//Pureba para agregar paciente
 //        try { 
 //            Usuario usuarioGuardar = new Usuario();
 //            usuarioGuardar.setCorreo("pabs35@example.com");
@@ -91,19 +91,17 @@ public class CapaPersistencia_Clinica {
 //            System.err.println("Error: " + e.getMessage());
 //        }
 
-//        try{
-//            List<Map<String, Object>> agenda = medicoDAO.consultarAgenda(1);
-//            
-//            for (Map<String, Object> map : agenda) {
-//                System.out.println("cita: " + map.get("id_cita") 
-//                                 + " nombre del paciente: " + map.get("nombre_paciente")
-//                                 + "fecha cita: " + map.get("horaInicio").toString());
-//            }
-//        }catch(PersistenciaException pe){
-//            System.out.println("Error: " + pe);
-//        }
-        
-        
+        try{
+            List<Map<String, Object>> agenda = medicoDAO.consultarAgenda(1);
+            
+            for (Map<String, Object> map : agenda) {
+                System.out.println("cita: " + map.get("id_cita") 
+                                 + " nombre del paciente: " + map.get("nombre_paciente")
+                                 + "fecha cita: " + map.get("horaInicio").toString());
+            }
+        }catch(PersistenciaException pe){
+            System.out.println("Error: " + pe);
+        }     
 //        try{
 //            List<Map<String, Object>> horarios = pacienteDAO.buscarCitasDisponibles(1, LocalDate.of(2025, 05, 11).toString());
 //        
@@ -142,36 +140,47 @@ public class CapaPersistencia_Clinica {
 //            for (Medico medico : medicosActivos) {
 //                System.out.println(medico.toString());
 //            }
-//            
+//
 //            
 //        }catch(PersistenciaException pe){
 //            
 //        }
         
+//        try{
+//            Usuario usuarioSesion = usuarioDAO.iniciarSesionPaciente("pabs35@example.com", "contrasenia1");
+//            Paciente pacienteSesion = pacienteDAO.obtenerPacientePorCorreo(usuarioSesion.getCorreo());
+//            System.out.println("Bienvenido paciente: " + pacienteSesion.getNombre());
+//        }catch(PersistenciaException pe){
+//            System.err.println("Error: " + pe);
+//        }
+//        
+//        try{
+//            Usuario usuarioSesion = usuarioDAO.iniciarSesionMedico("8888999999", "contrasena8");
+//            Medico medicoSesion = medicoDAO.obtenerMedicoPorCedula(usuarioSesion.getCedulaProfesional());
+//            System.out.println("Bienvenido Medico: " + medicoSesion.getNombre());
+//        }catch(PersistenciaException pe){
+//            System.err.println("Error: " + pe);
+//        }
+//
+//        
+//        try {
+//            // Asignar médico de urgencia
+//            pacienteDAO.asignarMedicoUrgencia(1);
+//        } catch (PersistenciaException ex) {
+//            Logger.getLogger(CapaPersistencia_Clinica.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        try{
+//            usuarioDAO.encriptarContrasenias();
+//        }catch(PersistenciaException pe){
+//            System.out.println("Error: " + pe.getMessage());
+//        }
+
         try{
-            Usuario usuarioSesion = usuarioDAO.iniciarSesionPaciente("pabs35@example.com", "contrasenia1");
-            Paciente pacienteSesion = pacienteDAO.obtenerPacientePorCorreo(usuarioSesion.getCorreo());
-            System.out.println("Bienvenido paciente: " + pacienteSesion.getNombre());
+            usuarioDAO.iniciarSesion("8888999999", "contrasena8");
+            System.out.println("Bienvenido ");
         }catch(PersistenciaException pe){
-            System.err.println("Error: " + pe);
+            System.out.println(pe.getMessage());
         }
-        
-        try{
-            Usuario usuarioSesion = usuarioDAO.iniciarSesionMedico("8888999999", "contrasena8");
-            Medico medicoSesion = medicoDAO.obtenerMedicoPorCedula(usuarioSesion.getCedulaProfesional());
-            System.out.println("Bienvenido Medico: " + medicoSesion.getNombre());
-        }catch(PersistenciaException pe){
-            System.err.println("Error: " + pe);
-        }
-        
-        
-        try {
-            // Asignar médico de urgencia
-            pacienteDAO.asignarMedicoUrgencia(1);
-        } catch (PersistenciaException ex) {
-            Logger.getLogger(CapaPersistencia_Clinica.class.getName()).log(Level.SEVERE, null, ex);
-        }
-       
     }
 
 }

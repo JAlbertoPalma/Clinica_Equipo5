@@ -4,17 +4,30 @@
  */
 package GUIs;
 
+import BO.MedicoBO;
+import Exception.NegocioException;
+import configuracion.DependencyInjector;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author jorge
  */
 public class AgendaMedico extends javax.swing.JFrame {
-
+    private MedicoBO medicoBO = DependencyInjector.crearMedicoBO();
+    private final int idMedico = 1; // ID del médico
+    private static final Logger logger = Logger.getLogger(AgendaMedico.class.getName());
     /**
      * Creates new form AgendaMedico
      */
     public AgendaMedico() {
         initComponents();
+        cargarAgenda(); // Llenar la tabla al abrir la ventana
     }
 
     /**
@@ -137,7 +150,6 @@ public class AgendaMedico extends javax.swing.JFrame {
         menuMedico.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnVolverActionPerformed
-
   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -150,4 +162,37 @@ public class AgendaMedico extends javax.swing.JFrame {
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField txtPaciente;
     // End of variables declaration//GEN-END:variables
+
+    private void cargarAgenda() {
+        try {
+            List<Map<String, Object>> citas = medicoBO.consultarAgendaMedico(idMedico);
+
+            if (citas == null || citas.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No se encontraron citas para el médico.", "Información", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+            modelo.setRowCount(0); // Limpiar la tabla antes de agregar datos
+
+            for (Map<String, Object> cita : citas) {
+                String nombre = (String) cita.get("nombre_paciente");
+                String horaInicio = (String) cita.get("horaInicio").toString();
+                String estado = (String) cita.get("estado");
+
+                if (nombre == null || horaInicio == null || estado == null) {
+                    JOptionPane.showMessageDialog(this, "Datos de cita incompletos.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                modelo.addRow(new String[]{nombre, horaInicio, estado});
+            }
+            modelo.fireTableDataChanged();
+            jTable1.repaint();
+        } catch (NegocioException e) {
+            JOptionPane.showMessageDialog(this, "Error al cargar la agenda: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace(); // Imprimir la traza de la excepción en la consola
+        }
+    }
+
 }

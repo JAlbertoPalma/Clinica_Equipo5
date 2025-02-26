@@ -24,6 +24,9 @@ public class Cita {
     private LocalTime horaFin;
     private EstadoCita estado;
 
+    public Cita() {
+    }
+    
     public Cita(int idCita, int idMedico, LocalDate fecha, LocalTime horaInicio, LocalTime horaFin, EstadoCita estado) {
         this.idCita = idCita;
         this.idMedico = idMedico;

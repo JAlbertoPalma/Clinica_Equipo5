@@ -52,23 +52,32 @@ public class UsuarioBO {
         }
     }
     
-    public UsuarioViejoDTO iniciarSesionPaciente(String correo, String contrasenia) throws NegocioException{
+    public UsuarioViejoDTO iniciarSesion(String entrada, String contrasenia) throws NegocioException{
         try {
-            return mapper.toViejoDTO(usuarioDAO.iniciarSesionPaciente(correo, contrasenia));
+            return mapper.toViejoDTO(usuarioDAO.iniciarSesion(entrada, contrasenia));
         } catch (PersistenciaException ex) {
             Logger.getLogger(UsuarioBO.class.getName()).log(Level.SEVERE, null, ex);
             throw new NegocioException("Hubo un error al guardar el usuario.", ex);
         }
     }
     
-    public UsuarioViejoDTO iniciarSesionMedico(String cedula, String contrasenia) throws NegocioException{
-        try {
-            return mapper.toViejoDTO(usuarioDAO.iniciarSesionMedico(cedula, contrasenia));
-        } catch (PersistenciaException ex) {
-            Logger.getLogger(UsuarioBO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
+//    public UsuarioViejoDTO iniciarSesionPaciente(String correo, String contrasenia) throws NegocioException{
+//        try {
+//            return mapper.toViejoDTO(usuarioDAO.iniciarSesionPaciente(correo, contrasenia));
+//        } catch (PersistenciaException ex) {
+//            Logger.getLogger(UsuarioBO.class.getName()).log(Level.SEVERE, null, ex);
+//            throw new NegocioException("Hubo un error al guardar el usuario.", ex);
+//        }
+//    }
+//    
+//    public UsuarioViejoDTO iniciarSesionMedico(String cedula, String contrasenia) throws NegocioException{
+//        try {
+//            return mapper.toViejoDTO(usuarioDAO.iniciarSesionMedico(cedula, contrasenia));
+//        } catch (PersistenciaException ex) {
+//            Logger.getLogger(UsuarioBO.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return null;
+//    }
     
     public UsuarioViejoDTO obtenerUsuarioPorCorreo(String correo) throws NegocioException{  //Funciona
         if (correo.isEmpty()) {

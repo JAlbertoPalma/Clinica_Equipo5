@@ -200,16 +200,28 @@ public class CapaNegocio_Clinica {
 //            Logger.getLogger(CapaNegocio_Clinica.class.getName()).log(Level.SEVERE, null, ex);
 //        }
         
+//        try{
+//            String contra = "contraseni0";
+//            boolean contraencontrada = usuarioBO.verificarContra(contra);
+//            if (contraencontrada!=false) {
+//                System.out.println("contrasenia encontrada");
+//            }else{
+//                System.out.println("no existe la contrasenia");
+//            }
+//        }catch (NegocioException ex) {
+//            Logger.getLogger(CapaNegocio_Clinica.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+        
         try{
-            String contra = "contraseni0";
-            boolean contraencontrada = usuarioBO.verificarContra(contra);
-            if (contraencontrada!=false) {
-                System.out.println("contrasenia encontrada");
-            }else{
-                System.out.println("no existe la contrasenia");
+            List<Map<String, Object>> agenda = medicoBO.consultarAgendaMedico(1);
+            
+            for (Map<String, Object> map : agenda) {
+                System.out.println("cita: " + map.get("id_cita") 
+                                 + " nombre del paciente: " + map.get("nombre_paciente")
+                                 + "fecha cita: " + map.get("horaInicio").toString());
             }
-        }catch (NegocioException ex) {
-            Logger.getLogger(CapaNegocio_Clinica.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(NegocioException ne){
+            System.out.println(ne.getMessage());
         }
         
     }
