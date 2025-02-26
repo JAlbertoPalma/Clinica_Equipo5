@@ -17,6 +17,8 @@ public interface IMedicoDAO {
     
     public void darBajaMedico(int idMedico) throws PersistenciaException;
     
+    public boolean actualizarMedico(int idMedico, Medico medico) throws PersistenciaException;
+    
     public Medico obtenerMedico(int idMedico) throws PersistenciaException;
     
     public Medico obtenerMedicoPorCedula(String cedula) throws PersistenciaException;

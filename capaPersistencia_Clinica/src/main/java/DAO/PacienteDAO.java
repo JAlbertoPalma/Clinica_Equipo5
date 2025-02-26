@@ -84,8 +84,8 @@ public class PacienteDAO implements IPacienteDAO {
 
     //ACTUALIZAR PACIENTE
     @Override
-    public boolean actualizarPaciente(Paciente paciente) throws PersistenciaException {//Funciona
-        String consultaSQL = "UPDATE pacientes SET nombre = ?, apellidoPat=?, apellidoMat=?, fechaNacimiento=?, calle=?, colonia=?, numero=?, telefono=?, correo=? WHERE id = ?;";
+    public boolean actualizarPaciente(int idPaciente, Paciente paciente) throws PersistenciaException {//Funciona
+        String consultaSQL = "UPDATE pacientes SET nombre = ?, apellidoPat=?, apellidoMat=?, fechaNacimiento=?, calle=?, colonia=?, numero=?, telefono=?, correo=? WHERE id = ?";
         try (Connection con = this.conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(consultaSQL)) {
             // Asignamos los parámetros correctamente
             ps.setString(1, paciente.getNombre());
@@ -97,7 +97,7 @@ public class PacienteDAO implements IPacienteDAO {
             ps.setString(7, paciente.getNumero());
             ps.setString(8, paciente.getTelefono());
             ps.setString(9, paciente.getCorreo());
-            ps.setInt(10, paciente.getIdPaciente()); // WHERE id = ?
+            ps.setInt(10, idPaciente); // WHERE id = ?
             // Ejecutamos la actualización
             int filasAfectadas = ps.executeUpdate();
             return filasAfectadas > 0;

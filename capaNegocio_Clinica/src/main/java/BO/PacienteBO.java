@@ -59,7 +59,7 @@ public class PacienteBO {
     }
 
     //Actualizacion de paciente
-    public Paciente actualizarPaciente(PacienteViejoDTO pacienteDTO) throws NegocioException { //Funciona
+    public boolean actualizarPaciente(int idPaciente, PacienteNuevoDTO pacienteDTO) throws NegocioException { //Funciona
         //validaciones de espacios vacíos
         if (pacienteDTO.getNombre().isEmpty() || pacienteDTO.getApellidoPaterno().isEmpty()
                 || pacienteDTO.getCalle().isEmpty() || pacienteDTO.getColonia().isEmpty()
@@ -67,22 +67,19 @@ public class PacienteBO {
             throw new NegocioException("Todos los campos son obligatorios.");
         }
 
-        // Obtener el ID del paciente desde el DTO (asumiendo que pacienteViejoDTO contiene el idPaciente)
-        int idPaciente = pacienteDTO.getId_paciente();
-        System.out.println("Id en la BO es: "+pacienteDTO.getId_paciente());
+        System.out.println("Id en la BO es: "+idPaciente);
         // Mapeo del DTO a la entidad
-        Paciente paciente = mapper.toEntityV(pacienteDTO);
-        paciente.setIdPaciente(idPaciente);
+        Paciente paciente = mapper.toEntity(pacienteDTO);
 
         try {
             // Llamar a la DAO para actualizar el paciente
-            pacienteDAO.actualizarPaciente(paciente);
+            pacienteDAO.actualizarPaciente(idPaciente, paciente);
 
         } catch (PersistenciaException ex) {
             logger.log(Level.SEVERE, "Error al actualizar paciente con ID: " + idPaciente, ex);
             throw new NegocioException("No se pudo actualizar el paciente.", ex);
         }
-        return paciente;
+        return true;
     }
 
     public PacienteViejoDTO obtenerPaciente(int idPaciente) throws NegocioException {

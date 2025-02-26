@@ -7,6 +7,7 @@ package BO;
 import Conexion.IConexionBD;
 import DAO.IMedicoDAO;
 import DAO.MedicoDAO;
+import DTO.MedicoNuevoDTO;
 import DTO.MedicoViejoDTO;
 import Entidades.Consulta;
 import Entidades.Medico;
@@ -59,6 +60,29 @@ public class MedicoBO {
             logger.log(Level.SEVERE, "Error al dar de baja a medico con ID: " + idMedico, ex);
             throw new NegocioException("No se pudo dar de baja el médico con ID: " + idMedico, ex);
         }
+    }
+    
+    //Actualizacion de paciente
+    public boolean actualizarMedico(int idMedico, MedicoNuevoDTO medicoDTO) throws NegocioException { //Funciona
+        //validaciones de espacios vacíos
+        if (medicoDTO.getNombre().isEmpty() || medicoDTO.getApellidoPaterno().isEmpty()
+         || medicoDTO.getCedulaProfesional().isEmpty()) {
+            throw new NegocioException("Todos los campos son obligatorios.");
+        }
+
+        System.out.println("Id en la BO es: "+idMedico);
+        // Mapeo del DTO a la entidad
+        Medico medico = mapper.toEntity(medicoDTO);
+
+        try {
+            // Llamar a la DAO para actualizar el paciente
+            medicoDAO.actualizarMedico(idMedico, medico);
+
+        } catch (PersistenciaException ex) {
+            logger.log(Level.SEVERE, "Error al actualizar medico con ID: " + idMedico, ex);
+            throw new NegocioException("No se pudo actualizar el medico.", ex);
+        }
+        return true;
     }
     
     public MedicoViejoDTO obtenerMedico(int idMedico) throws NegocioException{

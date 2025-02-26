@@ -26,7 +26,7 @@ public interface IPacienteDAO {
      */
     public Paciente agregarPaciente(Paciente paciente)throws PersistenciaException;
 
-    public boolean actualizarPaciente(Paciente paciente)throws PersistenciaException;
+    public boolean actualizarPaciente(int idPaciente, Paciente paciente)throws PersistenciaException;
     
     public Paciente obtenerPaciente(int idPaciente) throws PersistenciaException;
     

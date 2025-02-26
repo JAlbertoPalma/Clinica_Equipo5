@@ -14,6 +14,8 @@ import DAO.MedicoDAO;
 import DAO.PacienteDAO;
 import DAO.UsuarioDAO;
 import Entidades.Cita;
+import Entidades.Medico;
+import Entidades.Paciente;
 import Entidades.Usuario;
 import Exception.PersistenciaException;
 import java.sql.Time;
@@ -24,6 +26,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
@@ -204,17 +207,49 @@ public class CapaPersistencia_Clinica {
         
         
 
+//        try{
+////            Cita cita = new Cita(1, 1, LocalDate.of(2025, 2, 27), LocalTime.of(10, 30) , LocalTime.of(11, 0), Cita.EstadoCita.pendiente);
+////            citaDAO.agendarCita(cita);
+//            citaDAO.cancelarCita(1);
+//            citaDAO.obtenerCita(6);
+//            List<Cita> citas = citaDAO.obtenerTodas();
+//            for (Cita cita : citas) {
+//                System.out.println(cita.toString());
+//            }
+//        }catch(PersistenciaException pe){
+//            System.out.println(pe.getMessage());
+//        }
+        
         try{
-//            Cita cita = new Cita(1, 1, LocalDate.of(2025, 2, 27), LocalTime.of(10, 30) , LocalTime.of(11, 0), Cita.EstadoCita.pendiente);
-//            citaDAO.agendarCita(cita);
-            citaDAO.cancelarCita(1);
-            citaDAO.obtenerCita(6);
-            List<Cita> citas = citaDAO.obtenerTodas();
-            for (Cita cita : citas) {
-                System.out.println(cita.toString());
+            Usuario u = usuarioDAO.obtenerUsuario("ximena.valencia@example.com");
+            System.out.println("Usuario: " + u);
+            System.out.println("Es: " + BCrypt.checkpw("contrasena1", u.getContrasenia()));
+        }catch(PersistenciaException pe){
+            
+        }
+        
+        try{
+            Paciente pas1 = new Paciente("Ximena", "Valencia", "Ríos", LocalDate.of(2000, 4, 4), "Calle de la Paz", "Jardines del Sur", "333", "555-789-0123", "ximena.valencia@example.com", 1);
+            if(pacienteDAO.actualizarPaciente(1, pas1)){
+                System.out.println("exito");
+            }else{
+                System.out.println("no exito");
             }
+            System.out.println(pas1.toString());
         }catch(PersistenciaException pe){
             System.out.println(pe.getMessage());
+        }
+        
+        try{
+            Medico med1 = new Medico("Dr. Leonardo", "Alarcón", "Jiménes", Medico.EspecialidadMedico.cardiologia, "4444555555", true, 6);
+            if(medicoDAO.actualizarMedico(1, med1)){
+                System.out.println("exito");
+            }else{
+                System.out.println("no exito");
+            }
+            System.out.println(med1.toString());
+        }catch(PersistenciaException pe){
+            System.out.println("Error: " + pe.getMessage());
         }
        
     }

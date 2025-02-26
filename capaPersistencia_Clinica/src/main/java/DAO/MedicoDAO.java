@@ -14,6 +14,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,6 +48,27 @@ public class MedicoDAO implements IMedicoDAO {
         }
     }
     
+    @Override
+    public boolean actualizarMedico(int idMedico, Medico medico) throws PersistenciaException{
+        String consultaSQL = "UPDATE medicos SET nombre = ?, apellidoPat=?, apellidoMat=?, especialidad=?, cedulaProfesional=?, id_usuario=? WHERE id = ?";
+        try (Connection con = this.conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(consultaSQL)) {
+            // Asignamos los parámetros correctamente
+            ps.setString(1, medico.getNombre());
+            ps.setString(2, medico.getApellidoPaterno());
+            ps.setString(3, medico.getApellidoMaterno());
+            ps.setObject(4, medico.getEspecialidad().toString(), Types.VARCHAR);
+            ps.setString(5, medico.getCedulaProfesional());
+            ps.setInt(6, medico.getIdUsuario());
+            ps.setInt(7, idMedico);
+            
+            // Ejecutamos la actualización
+            int filasAfectadas = ps.executeUpdate();
+            return filasAfectadas > 0;
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error al actualizar medico con ID: " + idMedico, e);
+            throw new PersistenciaException("Error al actualizar medico con ID " + idMedico, e);
+        }
+    }
     
     @Override
     public Medico obtenerMedico(int idMedico) throws PersistenciaException{
