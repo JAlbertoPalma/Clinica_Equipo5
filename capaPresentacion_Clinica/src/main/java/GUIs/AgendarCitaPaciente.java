@@ -4,17 +4,92 @@
  */
 package GUIs;
 
+import BO.CitaBO;
+import BO.MedicoBO;
+import BO.PacienteBO;
+import DTO.CitaNuevaDTO;
+import DTO.MedicoViejoDTO;
+import Entidades.Cita;
+import Entidades.Medico;
+import Exception.NegocioException;
+import configuracion.DependencyInjector;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import sesionUsuario.SesionUsuario;
+
 /**
  *
  * @author jorge
  */
 public class AgendarCitaPaciente extends javax.swing.JFrame {
+    private MedicoBO medicoBO = DependencyInjector.crearMedicoBO();
+    private PacienteBO pacienteBO = DependencyInjector.crearPacienteBO();
+    private CitaBO citaBO = DependencyInjector.crearCitaBO();
 
     /**
      * Creates new form AgendarCitaPaciente
      */
     public AgendarCitaPaciente() {
         initComponents();
+        
+        // Llenar comboEspecialidad
+        String[] especialidades = {"cardiologia", "oftamologia", "ortopedia", "neurologia", "nefrologia"};
+        comboEspecialidad.setModel(new DefaultComboBoxModel<>(especialidades));
+            // ActionListener para comboEspecialidad
+        comboEspecialidad.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    String especialidadSeleccionada = (String) comboEspecialidad.getSelectedItem();
+                    List<MedicoViejoDTO> medicosDisponibles = medicoBO.obtenerMedicosActivos();
+                    
+                    comboMedicoDisponible.removeAllItems();
+                    for (MedicoViejoDTO medico : medicosDisponibles) {
+                        if(medico.getEspecialidad().toString().equalsIgnoreCase(especialidadSeleccionada))
+                            comboMedicoDisponible.addItem(new MedicoComboBoxItem(medico));
+                    }
+                } catch (NegocioException ne) {
+                    Logger.getLogger(AgendarCitaPaciente.class.getName()).log(Level.SEVERE, null, ne);
+                }
+            }
+        });
+        
+       
+        // ActionListener para comboMedicoDisponible
+        comboMedicoDisponible.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MedicoComboBoxItem medicoItem = (MedicoComboBoxItem) comboMedicoDisponible.getSelectedItem();
+                if (medicoItem != null) {
+                    MedicoViejoDTO medicoSeleccionado = medicoItem.getMedico();
+                    // Ahora tienes el objeto Medico completo y puedes acceder a su ID y otros datos
+                    int idMedico = medicoSeleccionado.getIdMedico();
+                    List<Map<String,Object>> citasDisponibles;
+                    try {
+                        //Date to LocalDate
+                            LocalDate fechaLocalDate = jDateChooser1.getDate().toInstant()
+                                                          .atZone(ZoneId.systemDefault())
+                                                          .toLocalDate();
+                        citasDisponibles = pacienteBO.consultarCitasDisponibles(idMedico, fechaLocalDate.toString());
+                        comboHorario.removeAllItems();
+                        for (Map<String, Object> citasDisponible : citasDisponibles) {
+                            comboHorario.addItem(citasDisponible.get("horaInicio").toString() + " - " + citasDisponible.get("horaFin").toString());
+                        }
+                    } catch (NegocioException ex) {
+                        Logger.getLogger(AgendarCitaPaciente.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -34,6 +109,8 @@ public class AgendarCitaPaciente extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         btnConfirmar = new javax.swing.JButton();
+        jDateChooser1 = new com.toedter.calendar.JDateChooser();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -44,11 +121,18 @@ public class AgendarCitaPaciente extends javax.swing.JFrame {
             }
         });
 
-        comboEspecialidad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboEspecialidad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "cardiologia", "oftamologia", "ortopedia", "neurologia", "nefrologia" }));
+        comboEspecialidad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboEspecialidadActionPerformed(evt);
+            }
+        });
 
-        comboMedicoDisponible.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        comboHorario.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboHorario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboHorarioActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Especialidad:");
 
@@ -57,6 +141,13 @@ public class AgendarCitaPaciente extends javax.swing.JFrame {
         jLabel3.setText("Horario de atencion:");
 
         btnConfirmar.setText("Confirmar Cita");
+        btnConfirmar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConfirmarActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("fecha");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -69,7 +160,7 @@ public class AgendarCitaPaciente extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
                             .addComponent(jLabel1))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(0, 310, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -79,8 +170,13 @@ public class AgendarCitaPaciente extends javax.swing.JFrame {
                                 .addGap(66, 66, 66)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(comboHorario, 0, 137, Short.MAX_VALUE)
-                                    .addComponent(comboMedicoDisponible, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
-                .addGap(165, 165, 165))
+                                    .addComponent(comboMedicoDisponible, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(165, 165, 165))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(84, 84, 84))))
             .addGroup(layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addComponent(btnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -95,21 +191,28 @@ public class AgendarCitaPaciente extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(btnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(83, 83, 83)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(comboEspecialidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(36, 36, 36)
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(comboMedicoDisponible, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(32, 32, 32)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(comboHorario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
-                .addComponent(btnConfirmar)
-                .addGap(45, 45, 45))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(comboEspecialidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(36, 36, 36)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(comboMedicoDisponible, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(32, 32, 32)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(comboHorario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                        .addComponent(btnConfirmar)
+                        .addGap(45, 45, 45))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         pack();
@@ -123,15 +226,78 @@ public class AgendarCitaPaciente extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_btnVolverActionPerformed
 
+    private void comboEspecialidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboEspecialidadActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboEspecialidadActionPerformed
+
+    private void comboHorarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboHorarioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboHorarioActionPerformed
+
+    private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
+        // TODO add your handling code here:
+        try{
+            // Extraer el medico de la combobox
+            MedicoComboBoxItem medicoSeleccionado = (MedicoComboBoxItem) comboMedicoDisponible.getSelectedItem();
+            int idMedico = medicoSeleccionado.getMedico().getIdMedico();
+            
+            //to LocalDate
+            LocalDate fechaLocalDate = jDateChooser1.getDate().toInstant()
+                                          .atZone(ZoneId.systemDefault())
+                                          .toLocalDate();
+            
+            // separar fechas
+            LocalTime fechaInicio;
+            LocalTime fechaFin;
+            
+            String fechas = (String) comboHorario.getSelectedItem();
+            String[] fechasSplit = fechas.split(" - ");
+            fechaInicio = LocalTime.parse(fechasSplit[0]);
+            fechaFin = LocalTime.parse(fechasSplit[1]);
+            
+            
+            //to LocalDate
+            CitaNuevaDTO citaDTO = new CitaNuevaDTO(idMedico, SesionUsuario.getPaciente().getId_paciente(), 
+                    fechaLocalDate, fechaInicio, fechaFin, Cita.EstadoCita.pendiente);
+            citaBO.agendarCita(citaDTO);
+        }catch(NegocioException ne){
+            Logger.getLogger(AgendarCitaPaciente.class.getName()).log(Level.SEVERE, null, ne);
+            JOptionPane.showMessageDialog(this, ne.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnConfirmarActionPerformed
+
    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnConfirmar;
     private javax.swing.JButton btnVolver;
     private javax.swing.JComboBox<String> comboEspecialidad;
     private javax.swing.JComboBox<String> comboHorario;
-    private javax.swing.JComboBox<String> comboMedicoDisponible;
+    private javax.swing.JComboBox<MedicoComboBoxItem> comboMedicoDisponible;
+    private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     // End of variables declaration//GEN-END:variables
+
+    /**
+     * Clase interna para almacenar al medico en la comvbox
+     */
+    private class MedicoComboBoxItem {
+        private MedicoViejoDTO medico;
+
+        public MedicoComboBoxItem(MedicoViejoDTO medico) {
+            this.medico = medico;
+        }
+
+        public MedicoViejoDTO getMedico() {
+            return medico;
+        }
+
+        @Override
+        public String toString() {
+            return medico.getNombre();
+        }
+    }
+
 }

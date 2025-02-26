@@ -3,11 +3,13 @@ GUIs\Registro$3.class
 GUIs\InicioSesion.class
 GUIs\Registro.class
 GUIs\InicioSesion$2.class
+GUIs\AgendarCitaPaciente$6.class
 GUIs\Inicio$1.class
 GUIs\AgendaMedico$2.class
 GUIs\Registro$1.class
 GUIs\MenuMedico$3.class
 GUIs\HistorialConsultas.class
+GUIs\AgendarCitaPaciente$2.class
 GUIs\PerfilPaciente$2.class
 GUIs\MenuPacientes$3.class
 GUIs\MenuPacientes$1.class
@@ -15,8 +17,10 @@ GUIs\CitasPacientes$1.class
 GUIs\Inicio.class
 GUIs\ConsultaSinCita$1.class
 sesionUsuario\SesionUsuario.class
+GUIs\AgendarCitaPaciente$5.class
 GUIs\ConsultaSinCita.class
 GUIs\InicioSesion$1.class
+GUIs\AgendarCitaPaciente$MedicoComboBoxItem.class
 GUIs\AgendaMedico$1.class
 GUIs\PerfilMedico.class
 GUIs\Registro$2.class
@@ -26,9 +30,11 @@ GUIs\AgendaMedico.class
 GUIs\PerfilMedico$1.class
 GUIs\Inicio$2.class
 GUIs\PerfilPaciente.class
+GUIs\AgendarCitaPaciente$3.class
 GUIs\MenuPacientes$4.class
 GUIs\MenuPacientes$2.class
 GUIs\CitasPacientes$2.class
+GUIs\AgendarCitaPaciente$4.class
 GUIs\MenuMedico$1.class
 GUIs\MenuPacientes.class
 GUIs\AgendarCitaPaciente$1.class
