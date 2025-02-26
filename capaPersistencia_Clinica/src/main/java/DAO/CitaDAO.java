@@ -35,9 +35,10 @@ public class CitaDAO implements ICitaDAO{
     @Override
     public Cita agendarCita(Cita cita) throws PersistenciaException {
         // consulta SQL que vamos a ejecutar en mysql
-        String sentenciaSQL = "INSERT INTO citas (fecha, horaInicio, horaFin, estado, id_medico)VALUES (?, ?, ?, ?, ?)";
+        String sentenciaSQL = "INSERT INTO citas (fecha, horaInicio, horaFin, estado, id_medico, id_paciente)VALUES (?, ?, ?, ?, ?, ?)";
 
-        try (Connection con = conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(sentenciaSQL, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection con = conexion.crearConexion(); 
+                PreparedStatement ps = con.prepareStatement(sentenciaSQL, Statement.RETURN_GENERATED_KEYS)) {
 
             // Se establecen los parámetros de la consulta
             ps.setObject(1, cita.getFecha(), Types.DATE);
@@ -45,6 +46,7 @@ public class CitaDAO implements ICitaDAO{
             ps.setObject(3, cita.getHoraFin(), Types.TIME);
             ps.setObject(4, cita.getEstado().toString(), Types.VARCHAR);
             ps.setInt(5, cita.getIdMedico());
+            ps.setInt(6, cita.getIdPaciente());
 
             int filasAfectadas = ps.executeUpdate();
             if (filasAfectadas == 0) {
@@ -55,28 +57,30 @@ public class CitaDAO implements ICitaDAO{
             try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     cita.setIdCita(generatedKeys.getInt(1));
-                    logger.info("Usuario creado exitosamente con ID: " + cita.getIdCita());
+                    logger.info("Cita creada con fecha: " + cita.getFecha() + " y hora: " + cita.getHoraInicio());
                 } else {
-                    logger.severe("La creación del usuario falló, no se obtuvo ID.");
-                    throw new PersistenciaException("La creación del usuario falló, no se obtuvo ID.");
+                    logger.severe("La creación de la cita falló, no se obtuvo ID.");
+                    throw new PersistenciaException("La creación de la cita falló, no se obtuvo ID.");
                 }
             }
             return cita;
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error al crear usuario", e);
-            throw new PersistenciaException("Error al crear al usuario", e);
+            logger.log(Level.SEVERE, "Error al crear cita", e.getMessage());
+            throw new PersistenciaException("Error al crear al cita: " + e.getMessage());
         }
     }
 
     @Override
     public boolean cancelarCita(int idCita) throws PersistenciaException {
-        String sentenciaSQL = "UPDATE citas SET estado = 'cancelado' WHERE id = ?";
+        String sentenciaSQL = "UPDATE citas SET estado = 'cancelada' WHERE id = ?";
         
-        try (Connection con = this.conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(sentenciaSQL)) {
+        try (Connection con = this.conexion.crearConexion(); 
+                PreparedStatement ps = con.prepareStatement(sentenciaSQL)) {
             // Asignamos los parámetros correctamente
             ps.setInt(1, idCita); // WHERE id = ?
             // Ejecutamos la actualización
             int filasAfectadas = ps.executeUpdate();
+            logger.info("Cancelada la cita con id: " + idCita);
             return filasAfectadas > 0;
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error al cancelar la cita con ID: " + idCita, e);
@@ -88,9 +92,9 @@ public class CitaDAO implements ICitaDAO{
     public Cita obtenerCita(int idCita) throws PersistenciaException{
         // auxiliar de usuario
         Cita cita = null;
-        String especialidad;
         
-        String consultaSQL = "SELECT idfecha, horaInicio, horaFin, estado, id_medico FROM citas WHERE id = ?";
+        
+        String consultaSQL = "SELECT id, fecha, horaInicio, horaFin, estado, id_medico, id_paciente FROM citas WHERE id = ?";
         try (Connection con = this.conexion.crearConexion();
                 PreparedStatement ps = con.prepareStatement(consultaSQL)) {
 
@@ -102,12 +106,22 @@ public class CitaDAO implements ICitaDAO{
                 if (rs.next()) { //verificamos que se haya obtenido algo
                     // Se crea el objeto cita y se asignan sus propiedades
                     cita = new Cita();
+                    String estado = rs.getString("estado");
+                    
                     cita.setIdCita(rs.getInt("id"));
                     cita.setFecha(rs.getObject("fecha", LocalDate.class));
                     cita.setHoraFin(rs.getObject("horaInicio", LocalTime.class));
                     cita.setHoraInicio(rs.getObject("horaFin", LocalTime.class));
-                    cita.setEstado(rs.getObject("estado", Cita.EstadoCita.class));
                     cita.setIdMedico(rs.getInt("id_medico"));
+                    cita.setIdMedico(rs.getInt("id_paciente"));
+                    
+                    switch (estado) {
+                    case "atendida" -> cita.setEstado(Cita.EstadoCita.atendida);
+                    case "cancelada" -> cita.setEstado(Cita.EstadoCita.cancelada);
+                    case "pendiente" -> cita.setEstado(Cita.EstadoCita.pendiente);
+                    default -> {
+                    }
+                }
                     
                     logger.info("Cita encontrada: " + cita);
                 } else {
@@ -124,7 +138,7 @@ public class CitaDAO implements ICitaDAO{
 
     @Override
     public List<Cita> obtenerTodas() throws PersistenciaException {
-        String consultaSQL = "SELECT id, nombre, apellidoPat, apellidoMat, especialidad, cedulaProfesional, estaActivo, id_usuario FROM medicos WHERE estaActivo = TRUE";
+        String consultaSQL = "SELECT id, fecha, horaInicio, horaFin, estado, id_medico, id_paciente FROM citas WHERE id";
 
         // Lista donde se almacenarán los usuarios recuperados
         List<Cita> citas = new ArrayList<>();
@@ -140,12 +154,22 @@ public class CitaDAO implements ICitaDAO{
                 // Se crea el objeto medico y se asignan sus propiedades
                     // Se crea el objeto cita y se asignan sus propiedades
                     Cita cita = new Cita();
+                    String estado = rs.getString("estado");
+                    
                     cita.setIdCita(rs.getInt("id"));
                     cita.setFecha(rs.getObject("fecha", LocalDate.class));
                     cita.setHoraFin(rs.getObject("horaInicio", LocalTime.class));
                     cita.setHoraInicio(rs.getObject("horaFin", LocalTime.class));
-                    cita.setEstado(rs.getObject("estado", Cita.EstadoCita.class));
                     cita.setIdMedico(rs.getInt("id_medico"));
+                    cita.setIdPaciente(rs.getInt("id_paciente"));
+                    
+                    switch (estado) {
+                        case "atendida" -> cita.setEstado(Cita.EstadoCita.atendida);
+                        case "cancelada" -> cita.setEstado(Cita.EstadoCita.cancelada);
+                        case "pendiente" -> cita.setEstado(Cita.EstadoCita.pendiente);
+                        default -> {
+                        }
+                    }
                     
                     logger.info("Cita encontrada: " + cita);
 

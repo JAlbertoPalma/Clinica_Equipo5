@@ -23,7 +23,6 @@ import java.util.logging.Logger;
  * @author pablo
  */
 public class MedicoBO {
-
     private static final Logger logger = Logger.getLogger(MedicoBO.class.getName());
     private final IMedicoDAO medicoDAO;
     private final MedicoMapper mapper = new MedicoMapper(); // Usamos el mapper

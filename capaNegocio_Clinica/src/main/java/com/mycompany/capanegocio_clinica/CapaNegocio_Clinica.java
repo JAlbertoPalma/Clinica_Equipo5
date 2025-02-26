@@ -3,12 +3,16 @@
  */
 package com.mycompany.capanegocio_clinica;
 
+import BO.CitaBO;
 import BO.MedicoBO;
 import BO.PacienteBO;
 import BO.UsuarioBO;
 import Conexion.ConexionBD;
 import Conexion.IConexionBD;
+import DTO.CitaNuevaDTO;
+import DTO.CitaViejaDTO;
 import DTO.UsuarioViejoDTO;
+import Entidades.Cita;
 import Entidades.ConsultaUrgencia;
 import Exception.NegocioException;
 import Exception.PersistenciaException;
@@ -31,6 +35,7 @@ public class CapaNegocio_Clinica {
         PacienteBO pacienteBO = new PacienteBO(conexion);
         UsuarioBO usuarioBO = new UsuarioBO(conexion);
         MedicoBO medicoBO = new MedicoBO(conexion);
+        CitaBO citaBO = new CitaBO(conexion);
         UsuarioViejoDTO usuario = null;
 
 //        UsuarioNuevoDTO usuarioGuardar = new UsuarioNuevoDTO("pabs35@example.com", "contrasenia1", Usuario.TipoUsuario.paciente);
@@ -212,16 +217,29 @@ public class CapaNegocio_Clinica {
 //            Logger.getLogger(CapaNegocio_Clinica.class.getName()).log(Level.SEVERE, null, ex);
 //        }
         
+//        try{
+//            List<Map<String, Object>> agenda = medicoBO.consultarAgendaMedico(1);
+//            
+//            for (Map<String, Object> map : agenda) {
+//                System.out.println("cita: " + map.get("id_cita") 
+//                                 + " nombre del paciente: " + map.get("nombre_paciente")
+//                                 + "fecha cita: " + map.get("horaInicio").toString());
+//            }
+//        }catch(NegocioException ne){
+//            System.out.println(ne.getMessage());
+//        }
+
         try{
-            List<Map<String, Object>> agenda = medicoBO.consultarAgendaMedico(1);
-            
-            for (Map<String, Object> map : agenda) {
-                System.out.println("cita: " + map.get("id_cita") 
-                                 + " nombre del paciente: " + map.get("nombre_paciente")
-                                 + "fecha cita: " + map.get("horaInicio").toString());
+            CitaNuevaDTO cita = new CitaNuevaDTO(1, 1, LocalDate.of(2025, 2, 23), LocalTime.of(10, 30) , LocalTime.of(11, 0), Cita.EstadoCita.pendiente);
+            citaBO.agendarCita(cita);
+            citaBO.cancelarCita(1);
+            citaBO.obtenerCita(6);
+            List<CitaViejaDTO> citas = citaBO.obtenerTodas();
+            for (CitaViejaDTO cita1 : citas) {
+                System.out.println(cita1.toString());
             }
-        }catch(NegocioException ne){
-            System.out.println(ne.getMessage());
+        }catch(NegocioException pe){
+            System.out.println(pe.getMessage());
         }
         
     }

@@ -14,6 +14,7 @@ import java.time.LocalTime;
  */
 public class CitaNuevaDTO {
     private int idMedico;
+    private int idPaciente;
     private LocalDate fecha;
     private LocalTime horaInicio;
     private LocalTime horaFin;
@@ -22,8 +23,9 @@ public class CitaNuevaDTO {
     public CitaNuevaDTO() {
     }
 
-    public CitaNuevaDTO(int idMedico, LocalDate fecha, LocalTime horaInicio, LocalTime horaFin, Cita.EstadoCita estado) {
+    public CitaNuevaDTO(int idMedico, int idPaciente, LocalDate fecha, LocalTime horaInicio, LocalTime horaFin, Cita.EstadoCita estado) {
         this.idMedico = idMedico;
+        this.idPaciente = idPaciente;
         this.fecha = fecha;
         this.horaInicio = horaInicio;
         this.horaFin = horaFin;
@@ -36,6 +38,14 @@ public class CitaNuevaDTO {
 
     public void setIdMedico(int idMedico) {
         this.idMedico = idMedico;
+    }
+
+    public int getIdPaciente() {
+        return idPaciente;
+    }
+
+    public void setIdPaciente(int idPaciente) {
+        this.idPaciente = idPaciente;
     }
 
     public LocalDate getFecha() {
@@ -72,8 +82,7 @@ public class CitaNuevaDTO {
 
     @Override
     public String toString() {
-        return "CitaNuevaDTO{" + "idMedico=" + idMedico + ", fecha=" + fecha + ", horaInicio=" + horaInicio + ", horaFin=" + horaFin + ", estado=" + estado + '}';
-    }
-    
+        return "CitaNuevaDTO{" + "idMedico=" + idMedico + ", idPaciente=" + idPaciente + ", fecha=" + fecha + ", horaInicio=" + horaInicio + ", horaFin=" + horaFin + ", estado=" + estado + '}';
+    }    
     
 }

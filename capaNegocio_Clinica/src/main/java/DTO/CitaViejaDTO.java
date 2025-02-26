@@ -15,6 +15,7 @@ import java.time.LocalTime;
 public class CitaViejaDTO {
     private int idCita;
     private int idMedico;
+    private int idPaciente;
     private LocalDate fecha;
     private LocalTime horaInicio;
     private LocalTime horaFin;
@@ -23,17 +24,19 @@ public class CitaViejaDTO {
     public CitaViejaDTO() {
     }
 
-    public CitaViejaDTO(int idCita, int idMedico, LocalDate fecha, LocalTime horaInicio, LocalTime horaFin, Cita.EstadoCita estado) {
+    public CitaViejaDTO(int idCita, int idMedico, int idPaciente, LocalDate fecha, LocalTime horaInicio, LocalTime horaFin, Cita.EstadoCita estado) {
         this.idCita = idCita;
         this.idMedico = idMedico;
+        this.idPaciente = idPaciente;
         this.fecha = fecha;
         this.horaInicio = horaInicio;
         this.horaFin = horaFin;
         this.estado = estado;
     }
 
-    public CitaViejaDTO(int idMedico, LocalDate fecha, LocalTime horaInicio, LocalTime horaFin, Cita.EstadoCita estado) {
+    public CitaViejaDTO(int idMedico, int idPaciente, LocalDate fecha, LocalTime horaInicio, LocalTime horaFin, Cita.EstadoCita estado) {
         this.idMedico = idMedico;
+        this.idPaciente = idPaciente;
         this.fecha = fecha;
         this.horaInicio = horaInicio;
         this.horaFin = horaFin;
@@ -55,6 +58,15 @@ public class CitaViejaDTO {
     public void setIdMedico(int idMedico) {
         this.idMedico = idMedico;
     }
+
+    public int getIdPaciente() {
+        return idPaciente;
+    }
+
+    public void setIdPaciente(int idPaciente) {
+        this.idPaciente = idPaciente;
+    }
+    
 
     public LocalDate getFecha() {
         return fecha;
@@ -90,8 +102,7 @@ public class CitaViejaDTO {
 
     @Override
     public String toString() {
-        return "CitaViejaDTO{" + "idCita=" + idCita + ", idMedico=" + idMedico + ", fecha=" + fecha + ", horaInicio=" + horaInicio + ", horaFin=" + horaFin + ", estado=" + estado + '}';
+        return "CitaViejaDTO{" + "idCita=" + idCita + ", idMedico=" + idMedico + ", idPaciente=" + idPaciente + ", fecha=" + fecha + ", horaInicio=" + horaInicio + ", horaFin=" + horaFin + ", estado=" + estado + '}';
     }
-    
     
 }
