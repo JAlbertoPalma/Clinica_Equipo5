@@ -74,7 +74,6 @@ public class UsuarioDAO implements IUsuarioDAO {
     }
     
     @Override
-<<<<<<< HEAD
     public Usuario iniciarSesion(String identificador, String contrasenia) throws PersistenciaException {
         Usuario usuario;
         try {
@@ -95,26 +94,25 @@ public class UsuarioDAO implements IUsuarioDAO {
             throw new PersistenciaException("Error al iniciar sesión ", e);
         }
     }
-=======
-    public boolean actualizarUsuario(Usuario usuario) throws PersistenciaException {//Funciona
-        String consultaSQL = "UPDATE usuarios SET correo = ?, cedulaProfesional=?, contrasenia=?, tipo=? WHERE id = ?;";
-        try (Connection con = this.conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(consultaSQL)) {
-            // Asignamos los parámetros correctamente
-            ps.setString(1, usuario.getCorreo());
-            ps.setString(2, usuario.getCedulaProfesional());
-            ps.setString(3, usuario.getContrasenia());
-            ps.setObject(4, usuario.getTipo());
-            ps.setInt(5, usuario.getIdUsuario()); // WHERE id = ?
-            // Ejecutamos la actualización
-            int filasAfectadas = ps.executeUpdate();
-            return filasAfectadas > 0;
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error al actualizar usuario con ID: " + usuario.getIdUsuario(), e);
-            throw new PersistenciaException("Error al actualizar usuario con ID " + usuario.getIdUsuario(), e);
-        }
-    }
+    
+//    public boolean actualizarUsuario(Usuario usuario) throws PersistenciaException {//Funciona
+//        String consultaSQL = "UPDATE usuarios SET correo = ?, cedulaProfesional=?, contrasenia=?, tipo=? WHERE id = ?;";
+//        try (Connection con = this.conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(consultaSQL)) {
+//            // Asignamos los parámetros correctamente
+//            ps.setString(1, usuario.getCorreo());
+//            ps.setString(2, usuario.getCedulaProfesional());
+//            ps.setString(3, usuario.getContrasenia());
+//            ps.setObject(4, usuario.getTipo());
+//            ps.setInt(5, usuario.getIdUsuario()); // WHERE id = ?
+//            // Ejecutamos la actualización
+//            int filasAfectadas = ps.executeUpdate();
+//            return filasAfectadas > 0;
+//        } catch (SQLException e) {
+//            logger.log(Level.SEVERE, "Error al actualizar usuario con ID: " + usuario.getIdUsuario(), e);
+//            throw new PersistenciaException("Error al actualizar usuario con ID " + usuario.getIdUsuario(), e);
+//        }
+//    }
 
->>>>>>> c827a9bebddbee8dd621014d744ac394427d64d9
     @Override
     public Usuario iniciarSesionPaciente(String correo, String contrasenia) throws PersistenciaException {
         try {

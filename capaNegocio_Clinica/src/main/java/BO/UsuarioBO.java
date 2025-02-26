@@ -103,13 +103,13 @@ public class UsuarioBO {
         }
     }
     
-    public boolean actualizarUsuario(Usuario usuario) throws NegocioException{
-        try{
-            boolean contraBuscada = usuarioDAO.actualizarUsuario(usuario);
-            return contraBuscada;
-        }catch (PersistenciaException ex) {
-            Logger.getLogger(UsuarioBO.class.getName()).log(Level.SEVERE, null, ex);
-            throw new NegocioException("Hubo un error al verificar la contrasenia.", ex);
-        }
-    }
+//    public boolean actualizarUsuario(Usuario usuario) throws NegocioException{
+//        try{
+//            boolean contraBuscada = usuarioDAO.actualizarUsuario(usuario);
+//            return contraBuscada;
+//        }catch (PersistenciaException ex) {
+//            Logger.getLogger(UsuarioBO.class.getName()).log(Level.SEVERE, null, ex);
+//            throw new NegocioException("Hubo un error al verificar la contrasenia.", ex);
+//        }
+//    }
 }

@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 public class CitaDAO implements ICitaDAO{
     
     IConexionBD conexion;
-    private static final Logger logger = Logger.getLogger(UsuarioDAO.class.getName());
+    private static final Logger logger = Logger.getLogger(CitaDAO.class.getName());
 
     public CitaDAO(IConexionBD conexion) {
         this.conexion = conexion;
