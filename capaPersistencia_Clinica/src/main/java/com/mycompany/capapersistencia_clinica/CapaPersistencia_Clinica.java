@@ -13,7 +13,10 @@ import DAO.UsuarioDAO;
 import Entidades.Medico;
 import Entidades.Paciente;
 import Entidades.Usuario;
+import Entidades.Usuario.TipoUsuario;
+import static Entidades.Usuario.TipoUsuario.paciente;
 import Exception.PersistenciaException;
+import static com.mysql.cj.conf.PropertyKey.logger;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -148,28 +151,45 @@ public class CapaPersistencia_Clinica {
 //            
 //        }
         
-        try{
-            Usuario usuarioSesion = usuarioDAO.iniciarSesionPaciente("pabs35@example.com", "contrasenia1");
-            Paciente pacienteSesion = pacienteDAO.obtenerPacientePorCorreo(usuarioSesion.getCorreo());
-            System.out.println("Bienvenido paciente: " + pacienteSesion.getNombre());
-        }catch(PersistenciaException pe){
-            System.err.println("Error: " + pe);
-        }
-        
-        try{
-            Usuario usuarioSesion = usuarioDAO.iniciarSesionMedico("8888999999", "contrasena8");
-            Medico medicoSesion = medicoDAO.obtenerMedicoPorCedula(usuarioSesion.getCedulaProfesional());
-            System.out.println("Bienvenido Medico: " + medicoSesion.getNombre());
-        }catch(PersistenciaException pe){
-            System.err.println("Error: " + pe);
-        }
-        
-        
+//        try{
+//            Usuario usuarioSesion = usuarioDAO.iniciarSesionPaciente("pabs35@example.com", "contrasenia1");
+//            Paciente pacienteSesion = pacienteDAO.obtenerPacientePorCorreo(usuarioSesion.getCorreo());
+//            System.out.println("Bienvenido paciente: " + pacienteSesion.getNombre());
+//        }catch(PersistenciaException pe){
+//            System.err.println("Error: " + pe);
+//        }
+//        
+//        try{
+//            Usuario usuarioSesion = usuarioDAO.iniciarSesionMedico("8888999999", "contrasena8");
+//            Medico medicoSesion = medicoDAO.obtenerMedicoPorCedula(usuarioSesion.getCedulaProfesional());
+//            System.out.println("Bienvenido Medico: " + medicoSesion.getNombre());
+//        }catch(PersistenciaException pe){
+//            System.err.println("Error: " + pe);
+//        }
+//        
+//        
+//        try {
+//            // Asignar médico de urgencia
+//            pacienteDAO.asignarMedicoUrgencia(1);
+//        } catch (PersistenciaException ex) {
+//            Logger.getLogger(CapaPersistencia_Clinica.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+        Usuario usuario = new Usuario();
+        usuario.setIdUsuario(1); // Asumimos que el ID del usuario que quieres actualizar es 1
+        usuario.setCorreo("nuevoCorreo@dominio.com");
+        usuario.setCedulaProfesional("123456789");
+        usuario.setContrasenia("nuevaContraseña");
+        usuario.setTipo(Usuario.TipoUsuario.medico); 
+
         try {
-            // Asignar médico de urgencia
-            pacienteDAO.asignarMedicoUrgencia(1);
-        } catch (PersistenciaException ex) {
-            Logger.getLogger(CapaPersistencia_Clinica.class.getName()).log(Level.SEVERE, null, ex);
+            boolean actualizado = usuarioDAO.actualizarUsuario(usuario);
+            if (actualizado) {
+                System.out.println("Usuario actualizado correctamente.");
+            } else {
+                System.out.println("No se pudo actualizar el usuario.");
+            }
+        } catch (PersistenciaException e) {
+            Logger.getLogger(CapaPersistencia_Clinica.class.getName()).log(Level.SEVERE, null, e);
         }
        
     }

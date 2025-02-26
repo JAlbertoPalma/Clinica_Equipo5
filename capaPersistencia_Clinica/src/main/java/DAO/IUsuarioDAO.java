@@ -27,4 +27,6 @@ public interface IUsuarioDAO {
     public List<Usuario> obtenerUsuarios() throws PersistenciaException;
     
     public boolean verificarContra(String texto) throws SQLException, PersistenciaException;
+    
+    public boolean actualizarUsuario(Usuario usuario) throws PersistenciaException;
 }

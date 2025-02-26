@@ -5,6 +5,7 @@
 package DAO;
 
 import Conexion.IConexionBD;
+import Entidades.Paciente;
 import Entidades.Usuario;
 import Entidades.Usuario.TipoUsuario;
 import Exception.PersistenciaException;
@@ -68,6 +69,25 @@ public class UsuarioDAO implements IUsuarioDAO {
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error al crear usuario", e);
             throw new PersistenciaException("Error al crear al usuario", e);
+        }
+    }
+    
+    @Override
+    public boolean actualizarUsuario(Usuario usuario) throws PersistenciaException {//Funciona
+        String consultaSQL = "UPDATE usuarios SET correo = ?, cedulaProfesional=?, contrasenia=?, tipo=? WHERE id = ?;";
+        try (Connection con = this.conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(consultaSQL)) {
+            // Asignamos los parámetros correctamente
+            ps.setString(1, usuario.getCorreo());
+            ps.setString(2, usuario.getCedulaProfesional());
+            ps.setString(3, usuario.getContrasenia());
+            ps.setObject(4, usuario.getTipo());
+            ps.setInt(5, usuario.getIdUsuario()); // WHERE id = ?
+            // Ejecutamos la actualización
+            int filasAfectadas = ps.executeUpdate();
+            return filasAfectadas > 0;
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error al actualizar usuario con ID: " + usuario.getIdUsuario(), e);
+            throw new PersistenciaException("Error al actualizar usuario con ID " + usuario.getIdUsuario(), e);
         }
     }
 

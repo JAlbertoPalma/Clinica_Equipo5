@@ -39,6 +39,20 @@ public class PacienteNuevoDTO {
         this.idUsuario = idUsuario;
     }
 
+    public PacienteNuevoDTO(String nombre, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, String calle, String colonia, String numero, String telefono, String correo) {
+        this.nombre = nombre;
+        this.apellidoPaterno = apellidoPaterno;
+        this.apellidoMaterno = apellidoMaterno;
+        this.fechaNacimiento = fechaNacimiento;
+        this.calle = calle;
+        this.colonia = colonia;
+        this.numero = numero;
+        this.telefono = telefono;
+        this.correo = correo;
+    }
+    
+    
+
     public String getNombre() {
         return nombre;
     }

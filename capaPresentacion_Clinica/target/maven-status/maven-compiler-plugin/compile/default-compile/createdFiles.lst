@@ -13,6 +13,7 @@ GUIs\MenuPacientes$3.class
 GUIs\MenuPacientes$1.class
 GUIs\CitasPacientes$1.class
 GUIs\Inicio.class
+GUIs\ConsultaSinCita$1.class
 GUIs\ConsultaSinCita.class
 GUIs\InicioSesion$1.class
 GUIs\AgendaMedico$1.class
@@ -22,6 +23,7 @@ GUIs\AgendarCitaPaciente.class
 GUIs\MenuMedico$2.class
 GUIs\AgendaMedico.class
 GUIs\PerfilMedico$1.class
+GUIs\PerfilPaciente$3.class
 GUIs\Inicio$2.class
 GUIs\PerfilPaciente.class
 GUIs\MenuPacientes$4.class
