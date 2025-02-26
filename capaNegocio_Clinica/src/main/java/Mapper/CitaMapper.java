@@ -6,7 +6,9 @@ package Mapper;
 
 import DTO.CitaNuevaDTO;
 import DTO.CitaViejaDTO;
+import DTO.ConsultaUrgenciaDTO;
 import Entidades.Cita;
+import Entidades.ConsultaUrgencia;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,5 +99,20 @@ public class CitaMapper {
             listaDTO.add(toNuevoDTO(cita));
         }
         return listaDTO;
+    }
+    
+    /**
+     * Convierte una entidad medico a un MedicoViejoDTO (incluyendo ID)
+     */
+    public ConsultaUrgenciaDTO toUrgenciaDTO(ConsultaUrgencia consultaUrgencia) {
+        if (consultaUrgencia == null) {
+            return null;
+        }
+        return new ConsultaUrgenciaDTO(
+                consultaUrgencia.getNombreMedico(),
+                consultaUrgencia.getHoraInicioConsulta(),
+                consultaUrgencia.getHoraFinConsulta(),
+                consultaUrgencia.getFolio()
+        );
     }
 }

@@ -2,27 +2,25 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package Entidades;
+package DTO;
 
-import java.sql.Time;
 import java.time.LocalTime;
 
 /**
  *
- * @author pablo
+ * @author Beto_
  */
-public class ConsultaUrgencia {
+public class ConsultaUrgenciaDTO {
     private int idCitasUrgencia;
     private int idCita;
     private String folio;
     private String nombreMedico;
     private LocalTime horaInicioConsulta;
     private LocalTime horaFinConsulta;
-
-    public ConsultaUrgencia() {
+    public ConsultaUrgenciaDTO() {
     }
 
-    public ConsultaUrgencia(int idCitasUrgencia, int idCita, String folio, String nombreMedico, LocalTime horaInicioConsulta, LocalTime horaFinConsulta) {
+    public ConsultaUrgenciaDTO(int idCitasUrgencia, int idCita, String folio, String nombreMedico, LocalTime horaInicioConsulta, LocalTime horaFinConsulta) {
         this.idCitasUrgencia = idCitasUrgencia;
         this.idCita = idCita;
         this.folio = folio;
@@ -31,7 +29,7 @@ public class ConsultaUrgencia {
         this.horaFinConsulta = horaFinConsulta;
     }
 
-    public ConsultaUrgencia(int idCita, String folio, String nombreMedico, LocalTime horaInicioConsulta, LocalTime horaFinConsulta) {
+    public ConsultaUrgenciaDTO(int idCita, String folio, String nombreMedico, LocalTime horaInicioConsulta, LocalTime horaFinConsulta) {
         this.idCita = idCita;
         this.folio = folio;
         this.nombreMedico = nombreMedico;
@@ -39,7 +37,7 @@ public class ConsultaUrgencia {
         this.horaFinConsulta = horaFinConsulta;
     }
     
-    public ConsultaUrgencia(String nombreMedico, LocalTime horaInicioConsulta, LocalTime horaFinConsulta, String folio) {
+    public ConsultaUrgenciaDTO(String nombreMedico, LocalTime horaInicioConsulta, LocalTime horaFinConsulta, String folio) {
         this.nombreMedico = nombreMedico;
         this.horaInicioConsulta = horaInicioConsulta;
         this.horaFinConsulta = horaFinConsulta;

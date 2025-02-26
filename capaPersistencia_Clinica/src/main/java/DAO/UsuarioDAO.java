@@ -69,7 +69,7 @@ public class UsuarioDAO implements IUsuarioDAO {
             return usuario;
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error al crear usuario", e);
-            throw new PersistenciaException("Error al crear al usuario", e);
+            throw new PersistenciaException("Error al crear al usuario" + e.getMessage(), e);
         }
     }
     

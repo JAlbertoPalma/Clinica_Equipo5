@@ -175,11 +175,11 @@ public class CapaPersistencia_Clinica {
 //        } catch (PersistenciaException ex) {
 //            Logger.getLogger(CapaPersistencia_Clinica.class.getName()).log(Level.SEVERE, null, ex);
 //        }
-//        try{
-//            usuarioDAO.encriptarContrasenias();
-//        }catch(PersistenciaException pe){
-//            System.out.println("Error: " + pe.getMessage());
-//        }
+        try{
+            usuarioDAO.encriptarContrasenias();
+        }catch(PersistenciaException pe){
+            System.out.println("Error: " + pe.getMessage());
+        }
 
 //        try{
 //            usuarioDAO.iniciarSesion("8888999999", "contrasena8");
@@ -220,38 +220,38 @@ public class CapaPersistencia_Clinica {
 //            System.out.println(pe.getMessage());
 //        }
         
-        try{
-            Usuario u = usuarioDAO.obtenerUsuario("ximena.valencia@example.com");
-            System.out.println("Usuario: " + u);
-            System.out.println("Es: " + BCrypt.checkpw("contrasena1", u.getContrasenia()));
-        }catch(PersistenciaException pe){
-            
-        }
-        
-        try{
-            Paciente pas1 = new Paciente("Ximena", "Valencia", "Ríos", LocalDate.of(2000, 4, 4), "Calle de la Paz", "Jardines del Sur", "333", "555-789-0123", "ximena.valencia@example.com", 1);
-            if(pacienteDAO.actualizarPaciente(1, pas1)){
-                System.out.println("exito");
-            }else{
-                System.out.println("no exito");
-            }
-            System.out.println(pas1.toString());
-        }catch(PersistenciaException pe){
-            System.out.println(pe.getMessage());
-        }
-        
-        try{
-            Medico med1 = new Medico("Dr. Leonardo", "Alarcón", "Jiménes", Medico.EspecialidadMedico.cardiologia, "4444555555", true, 6);
-            if(medicoDAO.actualizarMedico(1, med1)){
-                System.out.println("exito");
-            }else{
-                System.out.println("no exito");
-            }
-            System.out.println(med1.toString());
-        }catch(PersistenciaException pe){
-            System.out.println("Error: " + pe.getMessage());
-        }
-       
+//        try{
+//            Usuario u = usuarioDAO.obtenerUsuario("ximena.valencia@example.com");
+//            System.out.println("Usuario: " + u);
+//            System.out.println("Es: " + BCrypt.checkpw("contrasena1", u.getContrasenia()));
+//        }catch(PersistenciaException pe){
+//            
+//        }
+//        
+//        try{
+//            Paciente pas1 = new Paciente("Ximena", "Valencia", "Ríos", LocalDate.of(2000, 4, 4), "Calle de la Paz", "Jardines del Sur", "333", "555-789-0123", "ximena.valencia@example.com", 1);
+//            if(pacienteDAO.actualizarPaciente(1, pas1)){
+//                System.out.println("exito");
+//            }else{
+//                System.out.println("no exito");
+//            }
+//            System.out.println(pas1.toString());
+//        }catch(PersistenciaException pe){
+//            System.out.println(pe.getMessage());
+//        }
+//        
+//        try{
+//            Medico med1 = new Medico("Dr. Leonardo", "Alarcón", "Jiménes", Medico.EspecialidadMedico.cardiologia, "4444555555", true, 6);
+//            if(medicoDAO.actualizarMedico(1, med1)){
+//                System.out.println("exito");
+//            }else{
+//                System.out.println("no exito");
+//            }
+//            System.out.println(med1.toString());
+//        }catch(PersistenciaException pe){
+//            System.out.println("Error: " + pe.getMessage());
+//        }
+//       
     }
 
 }

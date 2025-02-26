@@ -7,12 +7,14 @@ package BO;
 import Conexion.IConexionBD;
 import DAO.IPacienteDAO;
 import DAO.PacienteDAO;
+import DTO.ConsultaUrgenciaDTO;
 import DTO.PacienteNuevoDTO;
 import DTO.PacienteViejoDTO;
 import Entidades.ConsultaUrgencia;
 import Entidades.Paciente;
 import Exception.NegocioException;
 import Exception.PersistenciaException;
+import Mapper.CitaMapper;
 import Mapper.PacienteMapper;
 import java.time.LocalDate;
 import java.util.List;
@@ -29,6 +31,7 @@ public class PacienteBO {
     private static final Logger logger = Logger.getLogger(PacienteBO.class.getName());
     private final IPacienteDAO pacienteDAO;
     private final PacienteMapper mapper = new PacienteMapper(); // Usamos el mapper
+    private final CitaMapper mapperCita = new CitaMapper(); // Usamos el mapper
 
     public PacienteBO(IConexionBD conexion) {
         this.pacienteDAO = new PacienteDAO(conexion);
@@ -141,12 +144,12 @@ public class PacienteBO {
     }
 
     //AsignarMedicoUrgencia
-    public ConsultaUrgencia asignarMedicoUrgencia(int idPaciente) throws NegocioException {
+    public ConsultaUrgenciaDTO asignarMedicoUrgencia(int idPaciente) throws NegocioException {
         try {
             if (idPaciente <= 0) {
                 throw new NegocioException("El ID del paciente debe ser válido.");
             }
-            return pacienteDAO.asignarMedicoUrgencia(idPaciente);
+            return mapperCita.toUrgenciaDTO(pacienteDAO.asignarMedicoUrgencia(idPaciente));
         } catch (PersistenciaException pe) {
             throw new NegocioException("Error: " + pe.getMessage());
         }

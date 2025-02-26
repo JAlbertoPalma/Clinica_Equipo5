@@ -302,21 +302,23 @@ public class PacienteDAO implements IPacienteDAO {
     @Override
     public ConsultaUrgencia asignarMedicoUrgencia(int idPaciente) throws PersistenciaException {
         try (Connection con = this.conexion.crearConexion();) {
-            CallableStatement pstmt = con.prepareCall("CALL asignar_medico_urgencia(?,?,?,?)");
+            CallableStatement pstmt = con.prepareCall("CALL asignar_medico_urgencia(?,?,?,?,?)");
             pstmt.setInt(1, idPaciente);
             pstmt.registerOutParameter(2, Types.VARCHAR);
             pstmt.registerOutParameter(3, Types.TIME);
             pstmt.registerOutParameter(4, Types.TIME);
+            pstmt.registerOutParameter(5, Types.VARCHAR);
             pstmt.execute();
 
             String nombreMedico = pstmt.getString(2);
             LocalTime horaInicio = pstmt.getTime(3).toLocalTime();
             LocalTime horaFin = pstmt.getTime(4).toLocalTime();
+            String folio =pstmt.getString(5);
 
-            return new ConsultaUrgencia(nombreMedico, horaInicio, horaFin);
+            return new ConsultaUrgencia(nombreMedico, horaInicio, horaFin, folio);
         } catch (SQLException ex) {
             Logger.getLogger(PacienteDAO.class.getName()).log(Level.SEVERE, null, ex);
-            throw new PersistenciaException("Error al asignar médico de urgencia", ex);
+            throw new PersistenciaException("Error al asignar médico de urgencia: " + ex.getMessage(), ex);
         }
     }
 

@@ -4,6 +4,13 @@
  */
 package GUIs;
 
+import BO.PacienteBO;
+import DTO.ConsultaUrgenciaDTO;
+import Exception.NegocioException;
+import configuracion.DependencyInjector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import sesionUsuario.SesionUsuario;
 
 /**
@@ -11,7 +18,9 @@ import sesionUsuario.SesionUsuario;
  * @author jorge
  */
 public class MenuPacientes extends javax.swing.JFrame {
-
+    // Obtener instancia de PacienteBO desde DependencyInjector
+    PacienteBO pacienteBO = DependencyInjector.crearPacienteBO();
+    
     /**
      * Creates new form MenuPacientes
      */
@@ -129,8 +138,17 @@ public class MenuPacientes extends javax.swing.JFrame {
 
     private void btnConsultaSinCitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultaSinCitaActionPerformed
         ConsultaSinCita consultaSinCita = new ConsultaSinCita(); // Crear la instancia de la otra pantalla
-    consultaSinCita.setVisible(true); // Hacer visible la nueva pantalla
-    this.dispose(); // Cerrar la pantalla actual
+        try {
+            ConsultaUrgenciaDTO consultaUrgencia= pacienteBO.asignarMedicoUrgencia(SesionUsuario.getPaciente().getId_paciente());
+            JOptionPane.showMessageDialog(this, "Consulta con: " + consultaUrgencia.getNombreMedico()+ " en el horario: " + 
+                    consultaUrgencia.getHoraInicioConsulta() + " - " + consultaUrgencia.getHoraFinConsulta() + "Presentando el folio: " + consultaUrgencia.getFolio(), 
+                    "Consulta sin cita creada", JOptionPane.INFORMATION_MESSAGE);
+        } catch (NegocioException ne) {
+            Logger.getLogger(MenuPacientes.class.getName()).log(Level.SEVERE, null, ne);
+            JOptionPane.showMessageDialog(this, ne.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        consultaSinCita.setVisible(true); // Hacer visible la nueva pantalla
+        this.dispose(); // Cerrar la pantalla actual
     }//GEN-LAST:event_btnConsultaSinCitaActionPerformed
 
     private void btnPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPerfilActionPerformed
