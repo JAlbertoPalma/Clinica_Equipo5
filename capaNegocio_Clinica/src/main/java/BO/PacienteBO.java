@@ -59,7 +59,7 @@ public class PacienteBO {
     }
 
     //Actualizacion de paciente
-    public Paciente actualizarActivista(int idPaciente, PacienteNuevoDTO pacienteDTO) throws NegocioException { //Funciona
+    public Paciente actualizarPaciente(int idPaciente, PacienteNuevoDTO pacienteDTO) throws NegocioException { //Funciona
         //validaciones de espacios vacíos
         if (pacienteDTO.getNombre().isEmpty() || pacienteDTO.getApellidoPaterno().isEmpty()
                 || pacienteDTO.getCalle().isEmpty() || pacienteDTO.getColonia().isEmpty()

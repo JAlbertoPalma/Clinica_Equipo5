@@ -29,7 +29,13 @@ public interface IUsuarioDAO {
     
     public List<Usuario> obtenerUsuarios() throws PersistenciaException;
     
+<<<<<<< HEAD
     public boolean verificarContra(String texto) throws PersistenciaException;
     
     public void encriptarContrasenias() throws PersistenciaException;
+=======
+    public boolean verificarContra(String texto) throws SQLException, PersistenciaException;
+    
+    public boolean actualizarUsuario(Usuario usuario) throws PersistenciaException;
+>>>>>>> c827a9bebddbee8dd621014d744ac394427d64d9
 }

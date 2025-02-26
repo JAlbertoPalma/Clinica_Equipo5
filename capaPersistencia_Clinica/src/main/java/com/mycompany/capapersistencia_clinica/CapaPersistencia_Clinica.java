@@ -13,7 +13,10 @@ import DAO.UsuarioDAO;
 import Entidades.Medico;
 import Entidades.Paciente;
 import Entidades.Usuario;
+import Entidades.Usuario.TipoUsuario;
+import static Entidades.Usuario.TipoUsuario.paciente;
 import Exception.PersistenciaException;
+import static com.mysql.cj.conf.PropertyKey.logger;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -161,7 +164,11 @@ public class CapaPersistencia_Clinica {
 //        }catch(PersistenciaException pe){
 //            System.err.println("Error: " + pe);
 //        }
+<<<<<<< HEAD
 //
+=======
+//        
+>>>>>>> c827a9bebddbee8dd621014d744ac394427d64d9
 //        
 //        try {
 //            // Asignar médico de urgencia
@@ -169,6 +176,7 @@ public class CapaPersistencia_Clinica {
 //        } catch (PersistenciaException ex) {
 //            Logger.getLogger(CapaPersistencia_Clinica.class.getName()).log(Level.SEVERE, null, ex);
 //        }
+<<<<<<< HEAD
 //        try{
 //            usuarioDAO.encriptarContrasenias();
 //        }catch(PersistenciaException pe){
@@ -181,6 +189,26 @@ public class CapaPersistencia_Clinica {
         }catch(PersistenciaException pe){
             System.out.println(pe.getMessage());
         }
+=======
+        Usuario usuario = new Usuario();
+        usuario.setIdUsuario(1); // Asumimos que el ID del usuario que quieres actualizar es 1
+        usuario.setCorreo("nuevoCorreo@dominio.com");
+        usuario.setCedulaProfesional("123456789");
+        usuario.setContrasenia("nuevaContraseña");
+        usuario.setTipo(Usuario.TipoUsuario.medico); 
+
+        try {
+            boolean actualizado = usuarioDAO.actualizarUsuario(usuario);
+            if (actualizado) {
+                System.out.println("Usuario actualizado correctamente.");
+            } else {
+                System.out.println("No se pudo actualizar el usuario.");
+            }
+        } catch (PersistenciaException e) {
+            Logger.getLogger(CapaPersistencia_Clinica.class.getName()).log(Level.SEVERE, null, e);
+        }
+       
+>>>>>>> c827a9bebddbee8dd621014d744ac394427d64d9
     }
 
 }
