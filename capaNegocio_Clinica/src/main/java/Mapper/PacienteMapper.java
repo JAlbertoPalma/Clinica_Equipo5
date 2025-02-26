@@ -36,6 +36,24 @@ public class PacienteMapper {
                 paciNuevo.getIdUsuario()
         );
     }
+    
+    public Paciente toEntityV(PacienteViejoDTO paciViejo) {
+        if (paciViejo == null) {
+            return null;
+        }
+        return new Paciente(
+                paciViejo.getNombre(),
+                paciViejo.getApellidoPaterno(),
+                paciViejo.getApellidoMaterno(),
+                paciViejo.getFechaNacimiento(),
+                paciViejo.getCalle(),
+                paciViejo.getColonia(),
+                paciViejo.getNumero(),
+                paciViejo.getTelefono(),
+                paciViejo.getCorreo(),
+                paciViejo.getId_paciente()
+        );
+    }
 
     /**
      * Convierte una entidad Paciente a un PacienteNuevoDTO

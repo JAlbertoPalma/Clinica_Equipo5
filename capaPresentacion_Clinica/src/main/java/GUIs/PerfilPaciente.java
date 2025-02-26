@@ -4,6 +4,17 @@
  */
 package GUIs;
 
+import BO.PacienteBO;
+import Conexion.ConexionBD;
+import Conexion.IConexionBD;
+import DTO.PacienteNuevoDTO;
+import DTO.PacienteViejoDTO;
+import Entidades.Paciente;
+import configuracion.DependencyInjector;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author jorge
@@ -218,10 +229,58 @@ public class PerfilPaciente extends javax.swing.JFrame {
     }//GEN-LAST:event_btnVolverActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnGuardarActionPerformed
+        IConexionBD conexion = new ConexionBD();
+        try {
+            // Obtener los datos desde los campos de texto
+            String nombre = txtNombre.getText().trim();
+            String apellidoPaterno = txtApellidoP.getText().trim();
+            String apellidoMaterno = txtApellidoM.getText().trim();
+            String calle = txtCalle.getText().trim();
+            String colonia = txtColonia.getText().trim();
+            String numeroCasa = txtNumeroC.getText().trim();
+            String telefono = txtTelefono.getText().trim();
+            String correo = txtCorreo.getText().trim();
+            String contra = txtContraseña.getText().trim();
+            LocalDate fechaNacimiento = jDateChooser1.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-  
+            // Validación de campos vacíos
+            if (nombre.isEmpty() || apellidoPaterno.isEmpty() || apellidoMaterno.isEmpty()
+                    || calle.isEmpty() || colonia.isEmpty() || numeroCasa.isEmpty()
+                    || telefono.isEmpty()||contra.isEmpty()||correo.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            // Obtener instancia de PacienteBO desde DependencyInjector
+            PacienteBO pacienteBO = DependencyInjector.crearPacienteBO();
+
+            // Crear el objeto DTO con los datos ingresados
+            PacienteViejoDTO pacienteDTO = new PacienteViejoDTO();
+            pacienteDTO.setNombre(nombre);
+            pacienteDTO.setApellidoPaterno(apellidoPaterno);
+            pacienteDTO.setApellidoMaterno(apellidoMaterno);
+            pacienteDTO.setCalle(calle);
+            pacienteDTO.setColonia(colonia);
+            pacienteDTO.setNumero(numeroCasa);
+            pacienteDTO.setTelefono(telefono);
+            pacienteDTO.setFechaNacimiento(fechaNacimiento);
+            pacienteDTO.setCorreo(correo);
+            // Llamar al método de actualización
+            Paciente pacienteActualizado = pacienteBO.actualizarPaciente(pacienteDTO);
+
+            // Mostrar mensaje de éxito
+            if (pacienteActualizado!=null) {
+                System.out.println("La actualizacion se ejecuto exitosamente");
+            }else{
+                System.out.println("Hubo un error a la hora de actualizar");
+            }
+                
+            JOptionPane.showMessageDialog(this, "Paciente actualizado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Ocurrió un error al actualizar el paciente.", "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btnGuardarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardar;
