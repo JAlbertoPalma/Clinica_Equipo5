@@ -6,6 +6,7 @@ package DAO;
 
 import Entidades.Usuario;
 import Exception.PersistenciaException;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -24,4 +25,6 @@ public interface IUsuarioDAO {
     public Usuario obtenerUsuarioPorCedula(String cedula)throws PersistenciaException;
     
     public List<Usuario> obtenerUsuarios() throws PersistenciaException;
+    
+    public boolean verificarContra(String texto) throws SQLException, PersistenciaException;
 }
