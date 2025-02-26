@@ -227,41 +227,48 @@ public class CapaNegocio_Clinica {
 //            System.out.println(ne.getMessage());
 //        }
 
-        try{
-            CitaNuevaDTO cita = new CitaNuevaDTO(1, 1, LocalDate.of(2025, 2, 23), LocalTime.of(10, 30) , LocalTime.of(11, 0), Cita.EstadoCita.pendiente);
-            citaBO.agendarCita(cita);
-            citaBO.cancelarCita(1);
-            citaBO.obtenerCita(6);
-            List<CitaViejaDTO> citas = citaBO.obtenerTodas();
-            for (CitaViejaDTO cita1 : citas) {
-                System.out.println(cita1.toString());
-            }
-        }catch(NegocioException pe){
-            System.out.println(pe.getMessage());
-        }
+//        try{
+//            CitaNuevaDTO cita = new CitaNuevaDTO(1, 1, LocalDate.of(2025, 2, 23), LocalTime.of(10, 30) , LocalTime.of(11, 0), Cita.EstadoCita.pendiente);
+//            citaBO.agendarCita(cita);
+//            citaBO.cancelarCita(1);
+//            citaBO.obtenerCita(6);
+//            List<CitaViejaDTO> citas = citaBO.obtenerTodas();
+//            for (CitaViejaDTO cita1 : citas) {
+//                System.out.println(cita1.toString());
+//            }
+//        }catch(NegocioException pe){
+//            System.out.println(pe.getMessage());
+//        }
         
+//            try{
+//                PacienteViejoDTO pacienteDTO = new PacienteViejoDTO();
+//                LocalDate FechaNacimiento = LocalDate.of(2005, 01, 11);
+//                
+//                
+//                pacienteDTO.setNombre("Pepe");
+//                pacienteDTO.setApellidoPaterno("Perez");
+//                pacienteDTO.setApellidoMaterno("Martinez");
+//                pacienteDTO.setCalle("calles2");
+//                pacienteDTO.setColonia("colonia2");
+//                pacienteDTO.setNumero("4321");
+//                pacienteDTO.setFechaNacimiento(FechaNacimiento);
+//                pacienteDTO.setTelefono("0987654321");
+//                pacienteDTO.setCorreo("correo.se.example.com");
+//                
+//                
+//                
+//                pacienteBO.actualizarPaciente(pacienteDTO);
+//                System.out.println("Paciente actualizado");
+//            }catch(NegocioException e){
+//                System.err.print(e);
+//            }
             try{
-                PacienteViejoDTO pacienteDTO = new PacienteViejoDTO();
-                LocalDate FechaNacimiento = LocalDate.of(2005, 01, 11);
-                
-                
-                pacienteDTO.setId_paciente(7);
-                pacienteDTO.setNombre("Pedro");
-                pacienteDTO.setApellidoPaterno("Perez");
-                pacienteDTO.setApellidoMaterno("Martinez");
-                pacienteDTO.setCalle("calles2");
-                pacienteDTO.setColonia("colonia2");
-                pacienteDTO.setNumero("4321");
-                pacienteDTO.setFechaNacimiento(FechaNacimiento);
-                pacienteDTO.setTelefono("0987654321");
-                pacienteDTO.setCorreo("correo.se.example.com");
-                
-                
-                
-                pacienteBO.actualizarPaciente(pacienteDTO);
-                System.out.println("Paciente actualizado");
-            }catch(NegocioException e){
-                System.err.print(e);
+                String correo = "pablo.1205example.com";
+                pacienteBO.EncontraridPaciente(correo);
+                System.out.println("Id encontrado");
+                System.out.println(pacienteBO.EncontraridPaciente(correo));
+            }catch(Exception e){
+                System.out.println("Error al encontrar el id");
             }
         
     }

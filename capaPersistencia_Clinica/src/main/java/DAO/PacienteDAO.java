@@ -32,11 +32,14 @@ import java.util.logging.Logger;
  * @author pablo
  */
 public class PacienteDAO implements IPacienteDAO {
+
     IConexionBD conexion;
     private static final Logger logger = Logger.getLogger(PacienteDAO.class.getName());
+
     public PacienteDAO(IConexionBD conexion) {
         this.conexion = conexion;
     }
+
     //agregar Paciente
     @Override
     public Paciente agregarPaciente(Paciente paciente) throws PersistenciaException {//Funciona
@@ -103,16 +106,15 @@ public class PacienteDAO implements IPacienteDAO {
             throw new PersistenciaException("Error al actualizar paciente con ID " + paciente.getIdPaciente(), e);
         }
     }
-    
+
     @Override
-    public Paciente obtenerPaciente(int idPaciente) throws PersistenciaException{
+    public Paciente obtenerPaciente(int idPaciente) throws PersistenciaException {
         // auxiliar de usuario
         Paciente paciente = null;
         String tipo;
-        
+
         String consultaSQL = "SELECT id, nombre, apellidoPat, apellidoMat, fechaNacimiento, calle, colonia, numero, telefono, correo, id_usuario FROM pacientes WHERE id = ?";
-        try (Connection con = this.conexion.crearConexion();
-                PreparedStatement ps = con.prepareStatement(consultaSQL)) {
+        try (Connection con = this.conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(consultaSQL)) {
 
             // Asignamos el parámetro ID de la consulta 
             ps.setInt(1, idPaciente);
@@ -122,7 +124,7 @@ public class PacienteDAO implements IPacienteDAO {
                 if (rs.next()) { //verificamos que se haya obtenido algo
                     // Se crea el objeto paciente y se asignan sus propiedades
                     paciente = new Paciente();
-                    
+
                     paciente.setIdPaciente(rs.getInt("id"));
                     paciente.setNombre(rs.getString("nombre"));
                     paciente.setApellidoPaterno(rs.getString("apellidoPat"));
@@ -134,7 +136,7 @@ public class PacienteDAO implements IPacienteDAO {
                     paciente.setTelefono(rs.getString("telefono"));
                     paciente.setCorreo(rs.getString("correo"));
                     paciente.setIdUsuario(rs.getInt("id_usuario"));
-                    
+
                     logger.info("Paciente encontrado: " + paciente);
                 } else {
                     logger.warning("No se encontró el paciente con id: " + idPaciente); // no es error, solo advertencia
@@ -147,16 +149,15 @@ public class PacienteDAO implements IPacienteDAO {
         }
         return paciente;
     }
-    
+
     @Override
-    public Paciente obtenerPacientePorCorreo(String correo) throws PersistenciaException{
+    public Paciente obtenerPacientePorCorreo(String correo) throws PersistenciaException {
         // auxiliar de usuario
         Paciente paciente = null;
         String tipo;
-        
+
         String consultaSQL = "SELECT id, nombre, apellidoPat, apellidoMat, fechaNacimiento, calle, colonia, numero, telefono, correo, id_usuario FROM pacientes WHERE correo = ?";
-        try (Connection con = this.conexion.crearConexion();
-                PreparedStatement ps = con.prepareStatement(consultaSQL)) {
+        try (Connection con = this.conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(consultaSQL)) {
 
             // Asignamos el parámetro ID de la consulta 
             ps.setString(1, correo);
@@ -166,7 +167,7 @@ public class PacienteDAO implements IPacienteDAO {
                 if (rs.next()) { //verificamos que se haya obtenido algo
                     // Se crea el objeto paciente y se asignan sus propiedades
                     paciente = new Paciente();
-                    
+
                     paciente.setIdPaciente(rs.getInt("id"));
                     paciente.setNombre(rs.getString("nombre"));
                     paciente.setApellidoPaterno(rs.getString("apellidoPat"));
@@ -178,7 +179,7 @@ public class PacienteDAO implements IPacienteDAO {
                     paciente.setTelefono(rs.getString("telefono"));
                     paciente.setCorreo(rs.getString("correo"));
                     paciente.setIdUsuario(rs.getInt("id_usuario"));
-                    
+
                     logger.info("Paciente encontrado: " + paciente);
                 } else {
                     logger.warning("No se encontró el paciente con correo: " + correo); // no es error, solo advertencia
@@ -191,36 +192,34 @@ public class PacienteDAO implements IPacienteDAO {
         }
         return paciente;
     }
-    
+
     @Override
-    public List<Paciente> obtenerPacientes() throws PersistenciaException{
+    public List<Paciente> obtenerPacientes() throws PersistenciaException {
         String consultaSQL = "SELECT id, nombre, apellidoPat, apellidoMat, fechaNacimiento, calle, colonia, numero, telefono, correo, id_usuario FROM pacientes";
 
         // Lista donde se almacenarán los usuarios recuperados
         List<Paciente> pacientes = new ArrayList<>();
 
         // iniciamos el intento de ejecutar el comando/consulta en la bd
-        try (Connection con = this.conexion.crearConexion();
-                PreparedStatement ps = con.prepareStatement(consultaSQL);
-                ResultSet rs = ps.executeQuery() // Se ejecuta la consulta y se obtiene el resultado en un ResultSet
+        try (Connection con = this.conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(consultaSQL); ResultSet rs = ps.executeQuery() // Se ejecuta la consulta y se obtiene el resultado en un ResultSet
                 ) {
             // Se recorre el ResultSet mientras haya filas disponibles con el next()
             while (rs.next()) {
-                
+
                 // Se crea el objeto medico y se asignan sus propiedades
-                    Paciente paciente = new Paciente();
-                    
-                    paciente.setIdPaciente(rs.getInt("id"));
-                    paciente.setNombre(rs.getString("nombre"));
-                    paciente.setApellidoPaterno(rs.getString("apellidoPat"));
-                    paciente.setApellidoMaterno(rs.getString("apellidoMat"));
-                    paciente.setFechaNacimiento(rs.getObject("fechaNacimiento", LocalDate.class));
-                    paciente.setCalle(rs.getString("calle"));
-                    paciente.setColonia(rs.getString("colonia"));
-                    paciente.setNumero(rs.getString("numero"));
-                    paciente.setTelefono(rs.getString("telefono"));
-                    paciente.setCorreo(rs.getString("correo"));
-                    paciente.setIdUsuario(rs.getInt("id_usuario"));
+                Paciente paciente = new Paciente();
+
+                paciente.setIdPaciente(rs.getInt("id"));
+                paciente.setNombre(rs.getString("nombre"));
+                paciente.setApellidoPaterno(rs.getString("apellidoPat"));
+                paciente.setApellidoMaterno(rs.getString("apellidoMat"));
+                paciente.setFechaNacimiento(rs.getObject("fechaNacimiento", LocalDate.class));
+                paciente.setCalle(rs.getString("calle"));
+                paciente.setColonia(rs.getString("colonia"));
+                paciente.setNumero(rs.getString("numero"));
+                paciente.setTelefono(rs.getString("telefono"));
+                paciente.setCorreo(rs.getString("correo"));
+                paciente.setIdUsuario(rs.getInt("id_usuario"));
 
                 // Se agrega el usuario a la lista
                 pacientes.add(paciente);
@@ -298,7 +297,7 @@ public class PacienteDAO implements IPacienteDAO {
         }
         return horariosDisponibles;
     }
-    
+
     //Asignar medico a urgencias
     @Override
     public ConsultaUrgencia asignarMedicoUrgencia(int idPaciente) throws PersistenciaException {
@@ -309,16 +308,33 @@ public class PacienteDAO implements IPacienteDAO {
             pstmt.registerOutParameter(3, Types.TIME);
             pstmt.registerOutParameter(4, Types.TIME);
             pstmt.execute();
-            
+
             String nombreMedico = pstmt.getString(2);
             LocalTime horaInicio = pstmt.getTime(3).toLocalTime();
             LocalTime horaFin = pstmt.getTime(4).toLocalTime();
-            
-            return new ConsultaUrgencia(nombreMedico,horaInicio,horaFin);
+
+            return new ConsultaUrgencia(nombreMedico, horaInicio, horaFin);
         } catch (SQLException ex) {
             Logger.getLogger(PacienteDAO.class.getName()).log(Level.SEVERE, null, ex);
             throw new PersistenciaException("Error al asignar médico de urgencia", ex);
         }
     }
-            
+
+    @Override
+    public int EncontraridPaciente(String correo) throws PersistenciaException {
+        int idPaciente = 0;
+        String sql = "SELECT id FROM pacientes WHERE correo = ?";
+
+        try (Connection con = conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, correo);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                idPaciente = rs.getInt("id");
+            }
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al buscar el ID del paciente", e);
+        }
+        return idPaciente;
+    }
 }

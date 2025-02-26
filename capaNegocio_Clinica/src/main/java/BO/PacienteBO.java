@@ -69,7 +69,7 @@ public class PacienteBO {
 
         // Obtener el ID del paciente desde el DTO (asumiendo que pacienteViejoDTO contiene el idPaciente)
         int idPaciente = pacienteDTO.getId_paciente();
-        System.out.println(pacienteDTO.getId_paciente());
+        System.out.println("Id en la BO es: "+pacienteDTO.getId_paciente());
         // Mapeo del DTO a la entidad
         Paciente paciente = mapper.toEntityV(pacienteDTO);
         paciente.setIdPaciente(idPaciente);
@@ -142,6 +142,18 @@ public class PacienteBO {
             }
             return pacienteDAO.asignarMedicoUrgencia(idPaciente);
         } catch (PersistenciaException pe) {
+            throw new NegocioException("Error: " + pe.getMessage());
+        }
+    }
+    
+    //Encontrar id del paciente con correo
+    public int EncontraridPaciente(String correo)throws NegocioException{
+        try{
+            if (correo==null) {
+                throw new NegocioException("El ID del paciente debe ser válido.");
+            }
+            return pacienteDAO.EncontraridPaciente(correo);
+        }catch(PersistenciaException pe){
             throw new NegocioException("Error: " + pe.getMessage());
         }
     }
