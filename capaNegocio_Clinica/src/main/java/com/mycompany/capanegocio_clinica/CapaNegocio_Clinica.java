@@ -8,13 +8,17 @@ import BO.PacienteBO;
 import BO.UsuarioBO;
 import Conexion.ConexionBD;
 import Conexion.IConexionBD;
+import DTO.PacienteViejoDTO;
 import DTO.UsuarioViejoDTO;
 import Entidades.ConsultaUrgencia;
 import Exception.NegocioException;
 import Exception.PersistenciaException;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -26,7 +30,7 @@ import java.util.logging.Logger;
  */
 public class CapaNegocio_Clinica {
 
-    public static void main(String[] args) throws PersistenciaException, SQLException {
+    public static void main(String[] args) throws PersistenciaException, SQLException, ParseException {
         IConexionBD conexion = new ConexionBD();
         PacienteBO pacienteBO = new PacienteBO(conexion);
         UsuarioBO usuarioBO = new UsuarioBO(conexion);
@@ -212,17 +216,40 @@ public class CapaNegocio_Clinica {
 //            Logger.getLogger(CapaNegocio_Clinica.class.getName()).log(Level.SEVERE, null, ex);
 //        }
         
-        try{
-            List<Map<String, Object>> agenda = medicoBO.consultarAgendaMedico(1);
-            
-            for (Map<String, Object> map : agenda) {
-                System.out.println("cita: " + map.get("id_cita") 
-                                 + " nombre del paciente: " + map.get("nombre_paciente")
-                                 + "fecha cita: " + map.get("horaInicio").toString());
+//        try{
+//            List<Map<String, Object>> agenda = medicoBO.consultarAgendaMedico(1);
+//            
+//            for (Map<String, Object> map : agenda) {
+//                System.out.println("cita: " + map.get("id_cita") 
+//                                 + " nombre del paciente: " + map.get("nombre_paciente")
+//                                 + "fecha cita: " + map.get("horaInicio").toString());
+//            }
+//        }catch(NegocioException ne){
+//            System.out.println(ne.getMessage());
+//        }
+            try{
+                PacienteViejoDTO pacienteDTO = new PacienteViejoDTO();
+                LocalDate FechaNacimiento = LocalDate.of(2005, 01, 11);
+                
+                
+                pacienteDTO.setId_paciente(7);
+                pacienteDTO.setNombre("Pedro");
+                pacienteDTO.setApellidoPaterno("Perez");
+                pacienteDTO.setApellidoMaterno("Martinez");
+                pacienteDTO.setCalle("calles2");
+                pacienteDTO.setColonia("colonia2");
+                pacienteDTO.setNumero("4321");
+                pacienteDTO.setFechaNacimiento(FechaNacimiento);
+                pacienteDTO.setTelefono("0987654321");
+                pacienteDTO.setCorreo("correo.se.example.com");
+                
+                
+                
+                pacienteBO.actualizarPaciente(pacienteDTO);
+                System.out.println("Paciente actualizado");
+            }catch(NegocioException e){
+                System.err.print(e);
             }
-        }catch(NegocioException ne){
-            System.out.println(ne.getMessage());
-        }
         
     }
 }

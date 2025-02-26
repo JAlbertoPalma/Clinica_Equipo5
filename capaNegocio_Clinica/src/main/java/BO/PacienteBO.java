@@ -59,16 +59,21 @@ public class PacienteBO {
     }
 
     //Actualizacion de paciente
-    public Paciente actualizarPaciente(int idPaciente, PacienteNuevoDTO pacienteDTO) throws NegocioException { //Funciona
+    public Paciente actualizarPaciente(PacienteViejoDTO pacienteDTO) throws NegocioException { //Funciona
         //validaciones de espacios vacíos
         if (pacienteDTO.getNombre().isEmpty() || pacienteDTO.getApellidoPaterno().isEmpty()
                 || pacienteDTO.getCalle().isEmpty() || pacienteDTO.getColonia().isEmpty()
-                || pacienteDTO.getNumero().isEmpty() || pacienteDTO.getTelefono().isEmpty()
-                || pacienteDTO.getCorreo().isEmpty()) {
+                || pacienteDTO.getNumero().isEmpty() || pacienteDTO.getTelefono().isEmpty()) {
             throw new NegocioException("Todos los campos son obligatorios.");
         }
-        Paciente paciente = mapper.toEntity(pacienteDTO);
+
+        // Obtener el ID del paciente desde el DTO (asumiendo que pacienteViejoDTO contiene el idPaciente)
+        int idPaciente = pacienteDTO.getId_paciente();
+        System.out.println(pacienteDTO.getId_paciente());
+        // Mapeo del DTO a la entidad
+        Paciente paciente = mapper.toEntityV(pacienteDTO);
         paciente.setIdPaciente(idPaciente);
+
         try {
             // Llamar a la DAO para actualizar el paciente
             pacienteDAO.actualizarPaciente(paciente);
@@ -79,8 +84,8 @@ public class PacienteBO {
         }
         return paciente;
     }
-    
-    public PacienteViejoDTO obtenerPaciente(int idPaciente) throws NegocioException{
+
+    public PacienteViejoDTO obtenerPaciente(int idPaciente) throws NegocioException {
         try {
             return mapper.toViejoDTO(pacienteDAO.obtenerPaciente(idPaciente));
         } catch (PersistenciaException ex) {
@@ -88,11 +93,11 @@ public class PacienteBO {
             throw new NegocioException("No se logró obtener al paciente" + ex.getMessage());
         }
     }
-    
-    public List<PacienteViejoDTO> obtenerTodos() throws NegocioException{
-        try{
+
+    public List<PacienteViejoDTO> obtenerTodos() throws NegocioException {
+        try {
             return mapper.toViejoDTOList(pacienteDAO.obtenerPacientes());
-        }catch(PersistenciaException pe){
+        } catch (PersistenciaException pe) {
             Logger.getLogger(PacienteBO.class.getName()).log(Level.SEVERE, null, pe);
             throw new NegocioException("No se lograron obtener los pacientes" + pe.getMessage());
         }
@@ -128,17 +133,17 @@ public class PacienteBO {
             throw new NegocioException("Error al consultar citas disponibles: " + e.getMessage(), e);
         }
     }
-    
+
     //AsignarMedicoUrgencia
-    public ConsultaUrgencia asignarMedicoUrgencia(int idPaciente) throws NegocioException{
-        try{
+    public ConsultaUrgencia asignarMedicoUrgencia(int idPaciente) throws NegocioException {
+        try {
             if (idPaciente <= 0) {
                 throw new NegocioException("El ID del paciente debe ser válido.");
             }
             return pacienteDAO.asignarMedicoUrgencia(idPaciente);
-        }catch(PersistenciaException pe){
+        } catch (PersistenciaException pe) {
             throw new NegocioException("Error: " + pe.getMessage());
         }
     }
-            
+
 }
