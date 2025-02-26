@@ -4,6 +4,8 @@
  */
 package GUIs;
 
+import sesionUsuario.SesionUsuario;
+
 /**
  *
  * @author jorge
@@ -90,7 +92,8 @@ public class MenuMedico extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
- Inicio inicio= new Inicio(); // Crear la instancia de la otra pantalla
+    SesionUsuario.cerrarSesion();
+    Inicio inicio= new Inicio(); // Crear la instancia de la otra pantalla
     inicio.setVisible(true); // Hacer visible la nueva pantalla
     this.dispose(); // Cerrar la pantalla actual
      }//GEN-LAST:event_btnCerrarSesionActionPerformed

@@ -4,6 +4,8 @@
  */
 package GUIs;
 
+import sesionUsuario.SesionUsuario;
+
 /**
  *
  * @author jorge
@@ -107,13 +109,14 @@ public class MenuPacientes extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
-        Inicio inicio= new Inicio(); // Crear la instancia de la otra pantalla
+    SesionUsuario.cerrarSesion();
+    Inicio inicio= new Inicio(); // Crear la instancia de la otra pantalla
     inicio.setVisible(true); // Hacer visible la nueva pantalla
     this.dispose(); // Cerrar la pantalla actual
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
     private void btnAgendarCitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgendarCitaActionPerformed
-        AgendarCitaPaciente agendarCitaPaciente = new AgendarCitaPaciente(); // Crear la instancia de la otra pantalla
+    AgendarCitaPaciente agendarCitaPaciente = new AgendarCitaPaciente(); // Crear la instancia de la otra pantalla
     agendarCitaPaciente.setVisible(true); // Hacer visible la nueva pantalla
     this.dispose(); // Cerrar la pantalla actual
     }//GEN-LAST:event_btnAgendarCitaActionPerformed

@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import sesionUsuario.SesionUsuario;
 
 /**
  *
@@ -138,13 +139,15 @@ public class InicioSesion extends javax.swing.JFrame {
 
             if (usuario != null) {
                 if (usuario.getTipo() == Usuario.TipoUsuario.paciente){
-                    JOptionPane.showMessageDialog(this, "Sesión iniciada como paciente");
+                    SesionUsuario.setUsuario(pacienteBO.obtenerPacientePorCorreo(entrada));
+                    JOptionPane.showMessageDialog(this, "Bienvenido paciente " + SesionUsuario.getPaciente().getNombre());
                     MenuPacientes menuPacientes = new MenuPacientes();
                     menuPacientes.setVisible(true);
                     dispose();
                 }
                 else if (usuario.getTipo() == Usuario.TipoUsuario.medico){
-                    JOptionPane.showMessageDialog(this, "Sesión iniciada como médico");
+                    SesionUsuario.setUsuario(medicoBO.obtenerMedicoPorCedula(entrada));
+                    JOptionPane.showMessageDialog(this, "Bienvenido médico " + SesionUsuario.getMedico().getNombre());
                     MenuMedico menuMedicos = new MenuMedico();
                     menuMedicos.setVisible(true);
                     dispose();

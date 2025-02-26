@@ -93,6 +93,15 @@ public class PacienteBO {
             throw new NegocioException("No se logró obtener al paciente" + ex.getMessage());
         }
     }
+    
+    public PacienteViejoDTO obtenerPacientePorCorreo(String correo) throws NegocioException {
+        try {
+            return mapper.toViejoDTO(pacienteDAO.obtenerPacientePorCorreo(correo));
+        } catch (PersistenciaException ex) {
+            Logger.getLogger(PacienteBO.class.getName()).log(Level.SEVERE, null, ex);
+            throw new NegocioException("No se logró obtener al paciente" + ex.getMessage());
+        }
+    }
 
     public List<PacienteViejoDTO> obtenerTodos() throws NegocioException {
         try {

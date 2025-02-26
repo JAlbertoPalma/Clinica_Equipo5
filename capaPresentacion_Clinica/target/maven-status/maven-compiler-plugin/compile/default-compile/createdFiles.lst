@@ -14,6 +14,7 @@ GUIs\MenuPacientes$1.class
 GUIs\CitasPacientes$1.class
 GUIs\Inicio.class
 GUIs\ConsultaSinCita$1.class
+sesionUsuario\SesionUsuario.class
 GUIs\ConsultaSinCita.class
 GUIs\InicioSesion$1.class
 GUIs\AgendaMedico$1.class

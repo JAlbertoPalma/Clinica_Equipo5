@@ -4,6 +4,8 @@
  */
 package GUIs;
 
+import sesionUsuario.SesionUsuario;
+
 /**
  *
  * @author jorge
