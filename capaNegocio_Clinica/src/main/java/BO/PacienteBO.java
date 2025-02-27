@@ -155,6 +155,14 @@ public class PacienteBO {
         }
     }
     
+    public List<Map<String, Object>> consultarCitasPaciente(int idPaciente, String especialidad, LocalDate fechaInicio, LocalDate fechaFin) throws NegocioException{
+        try{
+            return pacienteDAO.consultarCitasPaciente(idPaciente, especialidad, fechaInicio, fechaFin);
+        } catch (PersistenciaException pe) {
+            throw new NegocioException("Error: " + pe.getMessage());
+        }
+    }
+    
     //Encontrar id del paciente con correo
     public int EncontraridPaciente(String correo)throws NegocioException{
         try{

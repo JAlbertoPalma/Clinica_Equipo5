@@ -4,6 +4,7 @@
  */
 package GUIs;
 
+import BO.MedicoBO;
 import BO.PacienteBO;
 import BO.UsuarioBO;
 import Conexion.ConexionBD;
@@ -13,8 +14,12 @@ import DTO.UsuarioNuevoDTO;
 import DTO.UsuarioViejoDTO;
 import Entidades.Usuario;
 import Exception.NegocioException;
+import configuracion.DependencyInjector;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 
@@ -25,7 +30,10 @@ import javax.swing.JOptionPane;
  * @author jorge
  */
 public class Registro extends javax.swing.JFrame {
-
+    private PacienteBO pacienteBO = DependencyInjector.crearPacienteBO();
+    private MedicoBO medicoBO = DependencyInjector.crearMedicoBO();
+    private UsuarioBO usuarioBO = DependencyInjector.crearUsuarioBO();
+    
     /**
      * Creates new form Registro
      */
@@ -228,21 +236,58 @@ public class Registro extends javax.swing.JFrame {
     }//GEN-LAST:event_btncancelarActionPerformed
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-        IConexionBD conexion = new ConexionBD();
-        PacienteBO pacienteBO = new PacienteBO(conexion);
-        UsuarioBO usuarioBO = new UsuarioBO(conexion);
-        UsuarioViejoDTO usuario = null;
-        
-        String correo = txtCorreo.getText();
-        String contrasena = txtContraseña.getText();
-        String nombre = txtNombreC.getText();
-        String apellidoP = txtApellidoP.getText();
-        String apellidoM = txtApellidoM.getText();
-        String calle = txtCalle.getText();
-        String colonia = txtColonia.getText();
-        String numeroCasa = txtNumeroC.getText();
-        String telefono = txtTelefono.getText();
-        LocalDate fechaNacimiento = jDateChooser1.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        UsuarioViejoDTO usuario;
+
+        String correo = txtCorreo.getText().trim(); // Eliminar espacios en blanco
+        String contrasena = txtContraseña.getText().trim();
+        String nombre = txtNombreC.getText().trim();
+        String apellidoP = txtApellidoP.getText().trim();
+        String apellidoM = txtApellidoM.getText().trim();
+        String calle = txtCalle.getText().trim();
+        String colonia = txtColonia.getText().trim();
+        String numeroCasa = txtNumeroC.getText().trim();
+        String telefono = txtTelefono.getText().trim();
+        Date fechaNacimientoDate = jDateChooser1.getDate(); // Obtener Date de jDateChooser
+        LocalDate fechaNacimiento;
+
+        // Validación 1: Campos obligatorios no vacíos
+        if (correo.isEmpty() || contrasena.isEmpty() || nombre.isEmpty() || apellidoP.isEmpty() ||
+            calle.isEmpty() || colonia.isEmpty() || numeroCasa.isEmpty() || telefono.isEmpty() || fechaNacimientoDate == null) {
+            JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Validación 2: Formato de correo electrónico utilizando patrones de progra3 jeje
+        if (!correo.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            JOptionPane.showMessageDialog(this, "Por favor, ingrese un correo electrónico válido.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Validación 3: Longitud de contraseña mínima
+        if (contrasena.length() < 6) { // Ajusta la longitud mínima según tus requisitos
+            JOptionPane.showMessageDialog(this, "La contraseña debe tener al menos 6 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Validación 4: Formato de número de teléfono
+        if (!telefono.matches("\\d{10}")) {
+            JOptionPane.showMessageDialog(this, "Por favor, ingrese un número de teléfono válido (10 dígitos).", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Validación 5: Convertir Date a LocalDate
+        try {
+            fechaNacimiento = fechaNacimientoDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al procesar la fecha de nacimiento.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Validación 6: Fecha de nacimiento no puede ser en el futuro
+        if (fechaNacimiento.isAfter(LocalDate.now())) {
+            JOptionPane.showMessageDialog(this, "La fecha de nacimiento no puede ser en el futuro.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         UsuarioNuevoDTO usuarioGuardar = new UsuarioNuevoDTO(correo, contrasena, Usuario.TipoUsuario.paciente);
 
@@ -277,6 +322,11 @@ public class Registro extends javax.swing.JFrame {
             System.err.println("Error al insertar: " + ne.getMessage());
             ne.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error en el registro: " + ne.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (NumberFormatException nfe) {
+            JOptionPane.showMessageDialog(this, "Error al convertir el ID de usuario.", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) { // Capturar otras excepciones generales
+            Logger.getLogger(Registro.class.getName()).log(Level.SEVERE, null, e);
+            JOptionPane.showMessageDialog(this, "Error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnRegistrarActionPerformed
 

@@ -17,6 +17,7 @@ public class MenuMedico extends javax.swing.JFrame {
      */
     public MenuMedico() {
         initComponents();
+        lblBienvenida.setText("¡Hola " + SesionUsuario.getMedico().getNombre() + "! Tu id de medico es: " + SesionUsuario.getMedico().getIdMedico());
     }
 
     /**
@@ -32,6 +33,7 @@ public class MenuMedico extends javax.swing.JFrame {
         btnAgenda = new javax.swing.JButton();
         btnHistorial = new javax.swing.JButton();
         btnPerfil = new javax.swing.JButton();
+        lblBienvenida = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -78,13 +80,19 @@ public class MenuMedico extends javax.swing.JFrame {
                 .addGap(22, 22, 22)
                 .addComponent(btnCerrarSesion)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(126, 126, 126)
+                .addComponent(lblBienvenida, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(27, 27, 27)
                 .addComponent(btnCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(52, 52, 52)
+                .addGap(10, 10, 10)
+                .addComponent(lblBienvenida, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
                 .addComponent(btnAgenda)
                 .addGap(18, 18, 18)
                 .addComponent(btnHistorial)
@@ -125,5 +133,6 @@ AgendaMedico agendaMedico = new AgendaMedico(); // Crear la instancia de la otra
     private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JButton btnHistorial;
     private javax.swing.JButton btnPerfil;
+    private javax.swing.JLabel lblBienvenida;
     // End of variables declaration//GEN-END:variables
 }

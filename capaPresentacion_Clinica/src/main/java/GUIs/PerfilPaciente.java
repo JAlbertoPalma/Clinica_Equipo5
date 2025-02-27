@@ -261,7 +261,7 @@ public class PerfilPaciente extends javax.swing.JFrame {
             pacienteDTO.setCorreo(SesionUsuario.getPaciente().getCorreo());
             
             // Llamar al método de actualización
-            if(pacienteBO.actualizarPaciente(SesionUsuario.getPaciente().getId_paciente(), pacienteDTO)){
+            if(pacienteBO.actualizarPaciente(SesionUsuario.getPaciente().getIdPaciente(), pacienteDTO)){
                 System.out.println("paciente actualizado");
                 JOptionPane.showMessageDialog(this, "Paciente actualizado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             }

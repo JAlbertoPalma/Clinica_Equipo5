@@ -18,6 +18,7 @@ import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -236,33 +237,67 @@ public class AgendarCitaPaciente extends javax.swing.JFrame {
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
         // TODO add your handling code here:
-        try{
-            // Extraer el medico de la combobox
+        try {
+            // Validación 1: Médico seleccionado
             MedicoComboBoxItem medicoSeleccionado = (MedicoComboBoxItem) comboMedicoDisponible.getSelectedItem();
+            if (medicoSeleccionado == null) {
+                JOptionPane.showMessageDialog(this, "Por favor, seleccione un médico.", "Error", JOptionPane.ERROR_MESSAGE);
+                return; // Salir del método si no hay médico seleccionado
+            }
             int idMedico = medicoSeleccionado.getMedico().getIdMedico();
-            
-            //to LocalDate
-            LocalDate fechaLocalDate = jDateChooser1.getDate().toInstant()
-                                          .atZone(ZoneId.systemDefault())
-                                          .toLocalDate();
-            
-            // separar fechas
-            LocalTime fechaInicio;
-            LocalTime fechaFin;
-            
+
+            // Validación 2: Fecha seleccionada
+            Date fechaSeleccionada = jDateChooser1.getDate();
+            if (fechaSeleccionada == null) {
+                JOptionPane.showMessageDialog(this, "Por favor, seleccione una fecha.", "Error", JOptionPane.ERROR_MESSAGE);
+                return; // Salir del método si no hay fecha seleccionada
+            }
+            LocalDate fechaLocalDate = fechaSeleccionada.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+
+            // Validación 3: Horario seleccionado
             String fechas = (String) comboHorario.getSelectedItem();
+            if (fechas == null || fechas.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Por favor, seleccione un horario.", "Error", JOptionPane.ERROR_MESSAGE);
+                return; // Salir del método si no hay horario seleccionado
+            }
             String[] fechasSplit = fechas.split(" - ");
-            fechaInicio = LocalTime.parse(fechasSplit[0]);
-            fechaFin = LocalTime.parse(fechasSplit[1]);
-            
-            
-            //to LocalDate
-            CitaNuevaDTO citaDTO = new CitaNuevaDTO(idMedico, SesionUsuario.getPaciente().getId_paciente(), 
+            if (fechasSplit.length != 2) {
+                JOptionPane.showMessageDialog(this, "Formato de horario incorrecto.", "Error", JOptionPane.ERROR_MESSAGE);
+                return; // Salir del método si el formato del horario es incorrecto
+            }
+            LocalTime fechaInicio = LocalTime.parse(fechasSplit[0]);
+            LocalTime fechaFin = LocalTime.parse(fechasSplit[1]);
+
+            // Validación 4: Fecha de cita no puede ser en el pasado
+            if (fechaLocalDate.isBefore(LocalDate.now())) {
+                JOptionPane.showMessageDialog(this, "La fecha de la cita no puede ser en el pasado.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Validación 5: Hora de inicio no puede ser después de la hora de fin
+            if (fechaInicio.isAfter(fechaFin)) {
+                JOptionPane.showMessageDialog(this, "La hora de inicio no puede ser después de la hora de fin.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Crear y agendar la cita
+            int idPaciente = SesionUsuario.getPaciente().getIdPaciente();
+            System.out.println(idPaciente);
+            System.out.println("Paciente: " + SesionUsuario.getPaciente().toString());
+            CitaNuevaDTO citaDTO = new CitaNuevaDTO(idMedico, idPaciente,
                     fechaLocalDate, fechaInicio, fechaFin, Cita.EstadoCita.pendiente);
+            System.out.println("CitaDTO: " + citaDTO.toString());
             citaBO.agendarCita(citaDTO);
-        }catch(NegocioException ne){
+            JOptionPane.showMessageDialog(this, "Cita creada con horario: " + fechaInicio + " - " + fechaFin, "Cita Agendada", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (NegocioException ne) {
             Logger.getLogger(AgendarCitaPaciente.class.getName()).log(Level.SEVERE, null, ne);
             JOptionPane.showMessageDialog(this, ne.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) { // Capturar otras excepciones (por ejemplo, parseo de hora)
+            Logger.getLogger(AgendarCitaPaciente.class.getName()).log(Level.SEVERE, null, e);
+            JOptionPane.showMessageDialog(this, "Error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnConfirmarActionPerformed
 

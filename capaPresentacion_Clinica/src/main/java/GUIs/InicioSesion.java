@@ -7,13 +7,10 @@ package GUIs;
 import BO.MedicoBO;
 import BO.PacienteBO;
 import BO.UsuarioBO;
-import DTO.UsuarioNuevoDTO;
 import DTO.UsuarioViejoDTO;
 import Entidades.Usuario;
 import Exception.NegocioException;
-import Exception.PersistenciaException;
 import configuracion.DependencyInjector;
-import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -101,7 +98,7 @@ public class InicioSesion extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(117, 117, 117)
+                .addGap(101, 101, 101)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -113,7 +110,7 @@ public class InicioSesion extends javax.swing.JFrame {
                 .addComponent(btnIniciarSesion)
                 .addGap(25, 25, 25)
                 .addComponent(btnRegistro)
-                .addContainerGap(70, Short.MAX_VALUE))
+                .addContainerGap(86, Short.MAX_VALUE))
         );
 
         pack();
@@ -134,35 +131,57 @@ public class InicioSesion extends javax.swing.JFrame {
         String entrada = txtUsuario.getText();
         String contrasenia = String.valueOf(txtContra.getPassword());
 
+        // Validación 1: Campos no vacíos
+        if (entrada.trim().isEmpty() || contrasenia.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, ingrese usuario y contraseña.", "Error", JOptionPane.ERROR_MESSAGE);
+            return; // Salir del método si los campos están vacíos
+        }
+
+        // Validación 2: Longitud de contraseña mínima
+        if (contrasenia.length() < 6) { // Ajusta la longitud mínima según tus requisitos
+            JOptionPane.showMessageDialog(this, "La contraseña debe tener al menos 6 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Validación 3: Formato de correo electrónico
+        if (entrada.contains("@")) { // Validación básica, puedes usar expresiones regulares para una validación más estricta
+            if (!entrada.contains(".") || !entrada.contains("@")) {
+                JOptionPane.showMessageDialog(this, "Por favor, ingrese un correo electrónico válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+
         try {
             UsuarioViejoDTO usuario = usuarioBO.iniciarSesion(entrada, contrasenia);
 
             if (usuario != null) {
-                if (usuario.getTipo() == Usuario.TipoUsuario.paciente){
+                if (usuario.getTipo() == Usuario.TipoUsuario.paciente) {
                     SesionUsuario.setUsuario(pacienteBO.obtenerPacientePorCorreo(entrada));
                     JOptionPane.showMessageDialog(this, "Bienvenido paciente " + SesionUsuario.getPaciente().getNombre());
                     MenuPacientes menuPacientes = new MenuPacientes();
                     menuPacientes.setVisible(true);
                     dispose();
-                }
-                else if (usuario.getTipo() == Usuario.TipoUsuario.medico){
+                } else if (usuario.getTipo() == Usuario.TipoUsuario.medico) {
                     SesionUsuario.setUsuario(medicoBO.obtenerMedicoPorCedula(entrada));
                     JOptionPane.showMessageDialog(this, "Bienvenido médico " + SesionUsuario.getMedico().getNombre());
                     MenuMedico menuMedicos = new MenuMedico();
                     menuMedicos.setVisible(true);
                     dispose();
                 }
+            } else {
+                // Si no se encuentra ni paciente ni médico, mostrar error
+                JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
             }
-
-            // Si no se encuentra ni paciente ni médico, mostrar error
-            JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
+            SesionUsuario.setUsuario(pacienteBO.obtenerPacientePorCorreo(entrada));
 
         } catch (NegocioException ne) {
             Logger.getLogger(InicioSesion.class.getName()).log(Level.SEVERE, null, ne.getMessage());
             JOptionPane.showMessageDialog(this, "Error al iniciar sesión: " + ne.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) { // Capturar otras excepciones (por ejemplo, NullPointerException)
+            Logger.getLogger(InicioSesion.class.getName()).log(Level.SEVERE, null, e.getMessage());
+            JOptionPane.showMessageDialog(this, "Error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnIniciarSesionActionPerformed
-
   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

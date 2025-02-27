@@ -175,11 +175,11 @@ public class CapaPersistencia_Clinica {
 //        } catch (PersistenciaException ex) {
 //            Logger.getLogger(CapaPersistencia_Clinica.class.getName()).log(Level.SEVERE, null, ex);
 //        }
-        try{
-            usuarioDAO.encriptarContrasenias();
-        }catch(PersistenciaException pe){
-            System.out.println("Error: " + pe.getMessage());
-        }
+//        try{
+//            usuarioDAO.encriptarContrasenias();
+//        }catch(PersistenciaException pe){
+//            System.out.println("Error: " + pe.getMessage());
+//        }
 
 //        try{
 //            usuarioDAO.iniciarSesion("8888999999", "contrasena8");
@@ -252,6 +252,23 @@ public class CapaPersistencia_Clinica {
 //            System.out.println("Error: " + pe.getMessage());
 //        }
 //       
+
+        try{
+            List<Map<String, Object>> citas = pacienteDAO.consultarCitasPaciente(1, null, null, null);
+        
+            for (Map<String, Object> cita : citas) {
+                System.out.println("id_cita: " + cita.get("id_cita")
+                                  + "\nespecialidad: " + cita.get("especialidad")
+                                  + "\nnombre_medico: " + cita.get("nombre_medico")
+                                  + "\nfecha: " +cita.get("fecha")
+                                  + "\nhora_inicio: " + cita.get("hora_inicio")
+                                  + "\nhora_fin: " + cita.get("hora_fin")
+                                  + "\nestado_cita: " + cita.get("hora_fin")
+                );
+            }
+        }catch(PersistenciaException pe){
+            System.out.println(pe.getMessage());
+        }
     }
 
 }

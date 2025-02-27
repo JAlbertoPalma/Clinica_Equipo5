@@ -17,10 +17,6 @@ public interface IUsuarioDAO {
     
     public Usuario iniciarSesion(String entrada, String contrasenia) throws PersistenciaException;
     
-    public Usuario iniciarSesionPaciente(String correo, String contrasenia) throws PersistenciaException;
-    
-    public Usuario iniciarSesionMedico(String cedula, String contrasenia) throws PersistenciaException;
-    
     public Usuario obtenerUsuario(String entrada)throws PersistenciaException;
     
     public Usuario obtenerUsuarioPorCorreo(String correo)throws PersistenciaException;
@@ -28,8 +24,6 @@ public interface IUsuarioDAO {
     public Usuario obtenerUsuarioPorCedula(String cedula)throws PersistenciaException;
     
     public List<Usuario> obtenerUsuarios() throws PersistenciaException;
-    
-    public boolean verificarContra(String texto) throws PersistenciaException;
     
     public void encriptarContrasenias() throws PersistenciaException;
 }

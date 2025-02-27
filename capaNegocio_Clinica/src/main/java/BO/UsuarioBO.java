@@ -92,24 +92,4 @@ public class UsuarioBO {
             throw new NegocioException("Hubo un error al guardar el usuario.", ex);
         }
     }
-    
-    public boolean verificarContra(String texto) throws SQLException, PersistenciaException, NegocioException{
-        try{
-            boolean contraBuscada = usuarioDAO.verificarContra(texto);
-            return contraBuscada;
-        }catch (PersistenciaException ex) {
-            Logger.getLogger(UsuarioBO.class.getName()).log(Level.SEVERE, null, ex);
-            throw new NegocioException("Hubo un error al verificar la contrasenia.", ex);
-        }
-    }
-    
-//    public boolean actualizarUsuario(Usuario usuario) throws NegocioException{
-//        try{
-//            boolean contraBuscada = usuarioDAO.actualizarUsuario(usuario);
-//            return contraBuscada;
-//        }catch (PersistenciaException ex) {
-//            Logger.getLogger(UsuarioBO.class.getName()).log(Level.SEVERE, null, ex);
-//            throw new NegocioException("Hubo un error al verificar la contrasenia.", ex);
-//        }
-//    }
 }

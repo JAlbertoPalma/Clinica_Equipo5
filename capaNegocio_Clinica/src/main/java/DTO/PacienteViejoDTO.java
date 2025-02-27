@@ -11,7 +11,7 @@ import java.time.LocalDate;
  * @author pablo
  */
 public class PacienteViejoDTO {
-    private String idPaciente;
+    private int idPaciente;
     private String nombre;
     private String apellidoPaterno;
     private String apellidoMaterno;
@@ -28,7 +28,7 @@ public class PacienteViejoDTO {
     }
 
     // Constructor con todos los atributos
-    public PacienteViejoDTO(String idPaciente, String nombre, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, 
+    public PacienteViejoDTO(int idPaciente, String nombre, String apellidoPaterno, String apellidoMaterno, LocalDate fechaNacimiento, 
             String calle, String colonia, String numero, String telefono, String correo, int idUsuario) {
         this.idPaciente = idPaciente;
         this.nombre = nombre;
@@ -59,11 +59,11 @@ public class PacienteViejoDTO {
     }
     
     // Getters y Setters
-    public String getIdPaciente() {
+    public int getIdPaciente() {
         return idPaciente;
     }
 
-    public void setIdPaciente(String idPaciente) {
+    public void setIdPaciente(int idPaciente) {
         this.idPaciente = idPaciente;
     }
 
@@ -138,13 +138,13 @@ public class PacienteViejoDTO {
     public void setCorreo(String correo) {
         this.correo = correo;
     }
-    
-    public int getId_paciente() {
+
+    public int getIdUsuario() {
         return idUsuario;
     }
 
-    public void setId_paciente(int id_paciente) {
-        this.idUsuario = id_paciente;
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     @Override

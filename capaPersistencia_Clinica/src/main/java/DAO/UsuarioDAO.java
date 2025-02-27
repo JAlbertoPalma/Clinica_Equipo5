@@ -53,23 +53,23 @@ public class UsuarioDAO implements IUsuarioDAO {
 
             int filasAfectadas = ps.executeUpdate();
             if (filasAfectadas == 0) {
-                logger.severe("La creación del usuario falló");
-                throw new PersistenciaException("La creación del usuario falló");
+                logger.severe("Error: No se pudo crear el usuario.");
+                throw new PersistenciaException("Error: No se pudo crear el usuario.");
             }
             // Se obtiene el ID generado por la base de datos 
             try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     usuario.setIdUsuario(generatedKeys.getInt(1));
-                    logger.info("Usuario creado exitosamente con ID: " + usuario.getIdUsuario());
+                    logger.info("Usuario creado con ID: " + usuario.getIdUsuario());
                 } else {
-                    logger.severe("La creación del usuario falló, no se obtuvo ID.");
-                    throw new PersistenciaException("La creación del usuario falló, no se obtuvo ID.");
+                    logger.severe("Error: No se obtuvo el ID del usuario creado.");
+                    throw new PersistenciaException("Error: No se obtuvo el ID del usuario creado.");
                 }
             }
             return usuario;
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error al crear usuario", e);
-            throw new PersistenciaException("Error al crear al usuario" + e.getMessage(), e);
+            logger.log(Level.SEVERE, "Error al crear usuario: " + e.getMessage(), e);
+            throw new PersistenciaException("Error al crear usuario: " + e.getMessage(), e);
         }
     }
     
@@ -78,8 +78,8 @@ public class UsuarioDAO implements IUsuarioDAO {
         Usuario usuario;
         try {
             usuario = obtenerUsuario(identificador);
-            
             if(usuario == null){
+                logger.warning("Usuario no encontrado con identificador: " + identificador);
                 throw new PersistenciaException("No hay registros de un usuario con este correo o cedula");
             }
             
@@ -87,61 +87,14 @@ public class UsuarioDAO implements IUsuarioDAO {
             if (BCrypt.checkpw(contrasenia, contraseniaEncriptada)) {
                 return usuario;
             } else {
+                logger.warning("Contraseña incorrecta para el usuario: " + identificador);
                 throw new PersistenciaException("Error: la contraseña no coincide con el correo o cedula");
             }
+        } catch (PersistenciaException e) {
+            throw e; // Relanzar excepciones de persistencia sin envolver
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error al iniciar sesión ", e);
-            throw new PersistenciaException("Error al iniciar sesión ", e);
-        }
-    }
-    
-//    public boolean actualizarUsuario(Usuario usuario) throws PersistenciaException {//Funciona
-//        String consultaSQL = "UPDATE usuarios SET correo = ?, cedulaProfesional=?, contrasenia=?, tipo=? WHERE id = ?;";
-//        try (Connection con = this.conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(consultaSQL)) {
-//            // Asignamos los parámetros correctamente
-//            ps.setString(1, usuario.getCorreo());
-//            ps.setString(2, usuario.getCedulaProfesional());
-//            ps.setString(3, usuario.getContrasenia());
-//            ps.setObject(4, usuario.getTipo());
-//            ps.setInt(5, usuario.getIdUsuario()); // WHERE id = ?
-//            // Ejecutamos la actualización
-//            int filasAfectadas = ps.executeUpdate();
-//            return filasAfectadas > 0;
-//        } catch (SQLException e) {
-//            logger.log(Level.SEVERE, "Error al actualizar usuario con ID: " + usuario.getIdUsuario(), e);
-//            throw new PersistenciaException("Error al actualizar usuario con ID " + usuario.getIdUsuario(), e);
-//        }
-//    }
-
-    @Override
-    public Usuario iniciarSesionPaciente(String correo, String contrasenia) throws PersistenciaException {
-        try {
-            Usuario usuario = obtenerUsuarioPorCorreo(correo);
-            String contraseniaEncriptada = usuario.getContrasenia();
-            if (BCrypt.checkpw(contrasenia, contraseniaEncriptada)) {
-                return usuario;
-            } else {
-                throw new PersistenciaException("Error: la contraseña no coincide con el correo");
-            }
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error al iniciarSesion ", e);
-            throw new PersistenciaException("Error al iniciar sesión ", e);
-        }
-    }
-
-    @Override
-    public Usuario iniciarSesionMedico(String cedula, String contrasenia) throws PersistenciaException {
-        try {
-            Usuario usuario = obtenerUsuarioPorCedula(cedula);
-            String contraseniaBD = usuario.getContrasenia();
-            if (contrasenia.equals(contraseniaBD)) {
-                return usuario;
-            } else {
-                throw new PersistenciaException("Error: la contraseña no coincide con la cedula");
-            }
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error al iniciarSesion ", e);
-            throw new PersistenciaException("Error al iniciar sesión ", e);
+            logger.log(Level.SEVERE, "Error al iniciar sesión: " + e.getMessage(), e);
+            throw new PersistenciaException("Error al iniciar sesión: " + e.getMessage(), e);
         }
     }
     
@@ -150,8 +103,8 @@ public class UsuarioDAO implements IUsuarioDAO {
         // auxiliar de usuario
         Usuario usuario = null;
         String tipo;
-
         String consultaSQL = "SELECT id, correo, cedulaProfesional, contrasenia, tipo FROM usuarios WHERE correo = ? OR cedulaProfesional = ?";
+        
         try (Connection con = this.conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(consultaSQL)) {
 
             // Asignamos el parámetro ID de la consulta 
@@ -177,16 +130,16 @@ public class UsuarioDAO implements IUsuarioDAO {
 
                     logger.info("Usuario encontrado: " + usuario);
                 } else {
-                    logger.warning("No se encontró usuario con correo: " + entrada); // no es error, solo advertencia
-                    throw new PersistenciaException("No se encontró un registro con este correo o cedula");
+                    logger.warning("Usuario no encontrado con entrada: " + entrada);
+                    throw new PersistenciaException("Usuario no encontrado.");
                 }
             }
+            return usuario;
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error al consultar usuario con correo o cedula: " + entrada, e);
             throw new PersistenciaException("Error al consultar usuario por correo o cedula " + entrada, e);
 
         }
-        return usuario;
     }
 
     @Override
@@ -224,12 +177,12 @@ public class UsuarioDAO implements IUsuarioDAO {
                     throw new PersistenciaException("No se encontró un registro con este correo");
                 }
             }
+            return usuario;
+            
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error al consultar usuario con correo: " + correo, e);
-            throw new PersistenciaException("Error al consultar usuario por correo " + correo, e);
-
+            logger.log(Level.SEVERE, "Error al consultar usuario: " + e.getMessage(), e);
+            throw new PersistenciaException("Error al consultar usuario: " + e.getMessage(), e);
         }
-        return usuario;
     }
 
     @Override
@@ -316,29 +269,6 @@ public class UsuarioDAO implements IUsuarioDAO {
             // Se lanza una excepción personalizada si hay un error en la consulta
             throw new PersistenciaException("Error al obtener la lista de usuarios.", ex);
         }
-    }
-
-    @Override
-    public boolean verificarContra(String texto) throws PersistenciaException {
-        String consultaSQL = "SELECT * FROM USUARIOS WHERE CONTRASENIA = ?";
-        try (Connection con = this.conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(consultaSQL)) {
-            ps.setString(1, texto);  // Establecer la cédula a buscar
-
-            // Ejecutar la consulta
-            ResultSet rs = ps.executeQuery();
-
-            // Verificar si la cédula existe
-            if (rs.next()) {
-                // Si hay un resultado, la cédula existe
-                return true;
-            } else {
-                // Si no hay resultado, la cédula no existe
-                return false;
-            }
-        }catch(Exception e){
-            System.out.println("Error al verificar contrasenia");
-        }
-        return false;
     }
 
     @Override

@@ -288,19 +288,18 @@ public class MedicoDAO implements IMedicoDAO {
     }
 
     @Override
-    public String actualizarEstado(int idMedico, String nuevoEstado) throws PersistenciaException {
-        String consultaSQL = "UPDATE MEDICOS SET estaActivo = ? WHERE id = ?";
-        int estado = nuevoEstado.equals("Activo") ? 1 : 0; 
+    public boolean darAltaMedico(int idMedico) throws PersistenciaException {
+        String consultaSQL = "UPDATE MEDICOS SET estaActivo = TRUE WHERE id = ?";
 
         try (Connection con = this.conexion.crearConexion(); PreparedStatement ps = con.prepareStatement(consultaSQL)) {
 
-            ps.setInt(1, estado); 
-            ps.setInt(2, idMedico); 
-            ps.executeUpdate();
+            ps.setInt(1, idMedico); 
+            // Ejecutamos la actualización
+            int filasAfectadas = ps.executeUpdate();
+            return filasAfectadas > 0;
 
         } catch (SQLException e) {
             throw new PersistenciaException("Error al actualizar el estado del médico.", e);
         }
-        return "Estado actualizado correctamente";
     }
 }

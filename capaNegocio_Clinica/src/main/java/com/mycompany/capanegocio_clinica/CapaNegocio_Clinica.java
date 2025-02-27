@@ -271,12 +271,6 @@ public class CapaNegocio_Clinica {
 //            }catch(Exception e){
 //                System.out.println("Error al encontrar el id");
 //            }
-            
-            int idMedico = 1; // Cambia esto por un ID real de tu BD
-            String nuevoEstado = "Activo";
-
-        String resultado = medicoBO.cambiarEstadoMedico(idMedico, nuevoEstado);
-        System.out.println(resultado);
         
     }
 }

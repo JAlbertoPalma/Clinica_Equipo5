@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import sesionUsuario.SesionUsuario;
 
 /**
  *
@@ -20,7 +21,6 @@ import javax.swing.table.DefaultTableModel;
  */
 public class AgendaMedico extends javax.swing.JFrame {
     private MedicoBO medicoBO = DependencyInjector.crearMedicoBO();
-    private final int idMedico = 1; // ID del médico
     private static final Logger logger = Logger.getLogger(AgendaMedico.class.getName());
     /**
      * Creates new form AgendaMedico
@@ -165,7 +165,7 @@ public class AgendaMedico extends javax.swing.JFrame {
 
     private void cargarAgenda() {
         try {
-            List<Map<String, Object>> citas = medicoBO.consultarAgendaMedico(idMedico);
+            List<Map<String, Object>> citas = medicoBO.consultarAgendaMedico(SesionUsuario.getMedico().getIdMedico());
 
             if (citas == null || citas.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "No se encontraron citas para el médico.", "Información", JOptionPane.INFORMATION_MESSAGE);

@@ -4,17 +4,41 @@
  */
 package GUIs;
 
+import BO.CitaBO;
+import BO.PacienteBO;
+import Exception.NegocioException;
+import configuracion.DependencyInjector;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import sesionUsuario.SesionUsuario;
+
 /**
  *
  * @author jorge
  */
 public class CitasPacientes extends javax.swing.JFrame {
-
+     private CitaBO citaBO = DependencyInjector.crearCitaBO();
+     private PacienteBO pacienteBO = DependencyInjector.crearPacienteBO();
+     private Integer idCitaSeleccionada; // Variable para almacenar el id_cita seleccionado
     /**
      * Creates new form CitasPacientes
      */
     public CitasPacientes() {
         initComponents();
+        // Llenar comboEspecialidad
+        String[] especialidades = {"cardiologia", "oftamologia", "ortopedia", "neurologia", "nefrologia"};
+        comboEspecialidad.setModel(new DefaultComboBoxModel<>(especialidades));
+        cargarCitasPaciente();
+        agregarListenerSeleccionTabla();
     }
 
     /**
@@ -35,6 +59,8 @@ public class CitasPacientes extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         btnBuscar = new javax.swing.JButton();
         btnCancelarCita = new javax.swing.JButton();
+        jDateChooser2 = new com.toedter.calendar.JDateChooser();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -47,17 +73,17 @@ public class CitasPacientes extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Especialidad", "Medico", "Fecha", "Hora"
+                "id_cita", "Especialidad", "Medico", "Fecha", "Hora", "estado"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, true, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -66,43 +92,60 @@ public class CitasPacientes extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTable1);
 
-        comboEspecialidad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         jLabel1.setText("Especialidad:");
 
-        jLabel2.setText("Fecha:");
+        jLabel2.setText("FechaInicio:");
 
         btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
         btnCancelarCita.setText("Cancelar Cita");
+        btnCancelarCita.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarCitaActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("FechaFin:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(btnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(34, 34, 34)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 421, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(comboEspecialidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnBuscar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnCancelarCita)
                 .addGap(29, 29, 29))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                                .addComponent(comboEspecialidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jLabel2)
+                                .addGap(18, 18, 18)
+                                .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnBuscar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -118,11 +161,15 @@ public class CitasPacientes extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(comboEspecialidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1))
-                        .addGap(31, 31, 31)
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2))
-                        .addGap(26, 26, 26)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3))
+                        .addGap(11, 11, 11)
                         .addComponent(btnBuscar)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                 .addComponent(btnCancelarCita)
@@ -139,6 +186,36 @@ public class CitasPacientes extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_btnVolverActionPerformed
 
+    private void btnCancelarCitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarCitaActionPerformed
+        // TODO add your handling code here:
+       if (idCitaSeleccionada != null) {
+            try {
+                citaBO.cancelarCita(idCitaSeleccionada);
+                JOptionPane.showMessageDialog(this, "Cita cancelada correctamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
+                cargarCitasPaciente(); // Actualizar la tabla
+            } catch (NegocioException ne) {
+                JOptionPane.showMessageDialog(this, "Error al cancelar la cita: " + ne.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Seleccione una cita para cancelar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+        }
+        
+    }//GEN-LAST:event_btnCancelarCitaActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        // TODO add your handling code here:
+        // Obtener valores de los filtros
+        String especialidadSeleccionada = (String) comboEspecialidad.getSelectedItem();
+        Date fechaInicio = jDateChooser1.getDate();
+        Date fechaFin = jDateChooser2.getDate();
+
+        // Convertir Date a LocalDate
+        LocalDate localDateInicio = fechaInicio != null ? fechaInicio.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
+        LocalDate localDateFin = fechaFin != null ? fechaFin.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
+
+        cargarCitasPaciente(especialidadSeleccionada, localDateInicio, localDateFin);
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
    
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -147,9 +224,67 @@ public class CitasPacientes extends javax.swing.JFrame {
     private javax.swing.JButton btnVolver;
     private javax.swing.JComboBox<String> comboEspecialidad;
     private com.toedter.calendar.JDateChooser jDateChooser1;
+    private com.toedter.calendar.JDateChooser jDateChooser2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
+
+     private void cargarCitasPaciente() {
+        cargarCitasPaciente(null, null, null);
+    }
+     
+    private void cargarCitasPaciente(String especialidad, LocalDate fechaInicio, LocalDate fechaFin) {
+        try {
+            // Llamar al método que obtiene las citas con filtros
+            List<Map<String, Object>> citas = pacienteBO.consultarCitasPaciente(SesionUsuario.getPaciente().getIdPaciente(), especialidad, fechaInicio, fechaFin);
+
+            if (citas == null || citas.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No se encontraron citas para el paciente.", "Información", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            // Crear modelo de tabla
+            DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+            modelo.setRowCount(0); // Limpiar la tabla
+            // Llenar la tabla con los datos obtenidos
+            for (Map<String, Object> cita : citas) {
+                String idCita = String.valueOf(cita.get("id_cita"));
+                String especialidadCita = (String) cita.get("especialidad");
+                String nombreMedico = (String) cita.get("nombre_medico");
+                String fecha = (String) cita.get("fecha").toString();
+                String horaInicio = (String) cita.get("hora_inicio").toString();
+                String horaFin = (String) cita.get("hora_fin").toString();
+                String estadoCita = (String) cita.get("estado_cita");
+
+                if (idCita == null || especialidadCita == null || nombreMedico == null
+                        || fecha == null || horaInicio == null || horaFin == null
+                        || estadoCita == null) {
+                    JOptionPane.showMessageDialog(this, "Datos de cita incompletos.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                modelo.addRow(new String[]{idCita, especialidadCita, nombreMedico, fecha, horaInicio, horaFin, estadoCita});
+            }
+
+        } catch (NegocioException ne) {
+            JOptionPane.showMessageDialog(this, "Error al cargar las citas: " + ne.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void agregarListenerSeleccionTabla() {
+        ListSelectionModel selectionModel = jTable1.getSelectionModel();
+        selectionModel.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    int selectedRow = jTable1.getSelectedRow();
+                    if (selectedRow != -1) {
+                        idCitaSeleccionada = Integer.parseInt((String) jTable1.getValueAt(selectedRow, 0)); // Obtener id_cita
+                    }
+                }
+            }
+        });
+    }
 }

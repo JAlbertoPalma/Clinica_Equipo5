@@ -152,12 +152,11 @@ public class MedicoBO {
         }
     }
 
-    public String cambiarEstadoMedico(int idMedico, String nuevoEstado) throws NegocioException, PersistenciaException {
+    public boolean darAltaMedico(int idMedico) throws NegocioException{
         try {
-            medicoDAO.actualizarEstado(idMedico, nuevoEstado);
+            return medicoDAO.darAltaMedico(idMedico);
         } catch (PersistenciaException e) {
             throw new NegocioException("Error al cambiar estado del médico.", e);
         }
-        return medicoDAO.actualizarEstado(idMedico, nuevoEstado);
     }
 }

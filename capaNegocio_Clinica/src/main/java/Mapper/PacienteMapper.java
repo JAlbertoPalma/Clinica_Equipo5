@@ -42,6 +42,7 @@ public class PacienteMapper {
             return null;
         }
         return new Paciente(
+                paciViejo.getIdPaciente(),
                 paciViejo.getNombre(),
                 paciViejo.getApellidoPaterno(),
                 paciViejo.getApellidoMaterno(),
@@ -51,7 +52,7 @@ public class PacienteMapper {
                 paciViejo.getNumero(),
                 paciViejo.getTelefono(),
                 paciViejo.getCorreo(),
-                paciViejo.getId_paciente()
+                paciViejo.getIdUsuario()
         );
     }
 
@@ -84,7 +85,7 @@ public class PacienteMapper {
             return null;
         }
         return new PacienteViejoDTO(
-                String.valueOf(paciente.getIdPaciente()), // Convertimos el ID a String
+                paciente.getIdPaciente(), // Convertimos el ID a String
                 paciente.getNombre(),
                 paciente.getApellidoPaterno(),
                 paciente.getApellidoMaterno(),

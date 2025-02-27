@@ -26,6 +26,8 @@ public class MenuPacientes extends javax.swing.JFrame {
      */
     public MenuPacientes() {
         initComponents();
+        lblBienvenida.setText("¡Hola " + SesionUsuario.getPaciente().getNombre() + "! Tu id de paciente es: " + SesionUsuario.getPaciente().getIdPaciente());
+
     }
 
     /**
@@ -42,6 +44,7 @@ public class MenuPacientes extends javax.swing.JFrame {
         btnConsultaSinCita = new javax.swing.JButton();
         btnPerfil = new javax.swing.JButton();
         btnCerrarSesion = new javax.swing.JButton();
+        lblBienvenida = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -89,20 +92,27 @@ public class MenuPacientes extends javax.swing.JFrame {
                 .addComponent(btnCerrarSesion)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(207, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(btnAgendarCita, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnMisCitas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnConsultaSinCita, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(197, 197, 197))
+                .addContainerGap(127, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(btnAgendarCita, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnMisCitas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnConsultaSinCita, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(197, 197, 197))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(lblBienvenida, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(108, 108, 108))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(17, 17, 17)
                 .addComponent(btnCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(64, 64, 64)
+                .addGap(10, 10, 10)
+                .addComponent(lblBienvenida, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32)
                 .addComponent(btnAgendarCita)
                 .addGap(18, 18, 18)
                 .addComponent(btnMisCitas)
@@ -110,7 +120,7 @@ public class MenuPacientes extends javax.swing.JFrame {
                 .addComponent(btnConsultaSinCita)
                 .addGap(18, 18, 18)
                 .addComponent(btnPerfil)
-                .addContainerGap(141, Short.MAX_VALUE))
+                .addContainerGap(151, Short.MAX_VALUE))
         );
 
         pack();
@@ -139,7 +149,7 @@ public class MenuPacientes extends javax.swing.JFrame {
     private void btnConsultaSinCitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultaSinCitaActionPerformed
         ConsultaSinCita consultaSinCita = new ConsultaSinCita(); // Crear la instancia de la otra pantalla
         try {
-            ConsultaUrgenciaDTO consultaUrgencia= pacienteBO.asignarMedicoUrgencia(SesionUsuario.getPaciente().getId_paciente());
+            ConsultaUrgenciaDTO consultaUrgencia= pacienteBO.asignarMedicoUrgencia(SesionUsuario.getPaciente().getIdPaciente());
             JOptionPane.showMessageDialog(this, "Consulta con: " + consultaUrgencia.getNombreMedico()+ " en el horario: " + 
                     consultaUrgencia.getHoraInicioConsulta() + " - " + consultaUrgencia.getHoraFinConsulta() + "Presentando el folio: " + consultaUrgencia.getFolio(), 
                     "Consulta sin cita creada", JOptionPane.INFORMATION_MESSAGE);
@@ -165,5 +175,6 @@ public class MenuPacientes extends javax.swing.JFrame {
     private javax.swing.JButton btnConsultaSinCita;
     private javax.swing.JButton btnMisCitas;
     private javax.swing.JButton btnPerfil;
+    private javax.swing.JLabel lblBienvenida;
     // End of variables declaration//GEN-END:variables
 }

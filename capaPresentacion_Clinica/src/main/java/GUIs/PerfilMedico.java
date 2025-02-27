@@ -127,13 +127,17 @@ public class PerfilMedico extends javax.swing.JFrame {
         try {
             String nuevaDisponibilidad = (String) comboDisponibilidad.getSelectedItem();
             //Se verifica el estado actual del medico
-            medicoBO.cambiarEstadoMedico(SesionUsuario.getMedico().getIdMedico(),nuevaDisponibilidad);
+            if(nuevaDisponibilidad.equalsIgnoreCase("Inactivo")){
+                medicoBO.darBajaMedico(SesionUsuario.getMedico().getIdMedico());
+            }else{
+                medicoBO.darAltaMedico(SesionUsuario.getMedico().getIdMedico());
+            }
 
             JOptionPane.showMessageDialog(this, "Disponibilidad actualizada con éxito.",
                     "Confirmación", JOptionPane.INFORMATION_MESSAGE);
-        } catch (Exception e) {
-            Logger.getLogger(PerfilMedico.class.getName()).log(Level.SEVERE, null, e);
-            JOptionPane.showMessageDialog(this, "Error al actualizar disponibilidad.",
+        } catch (NegocioException ne) {
+            Logger.getLogger(PerfilMedico.class.getName()).log(Level.SEVERE, null, ne);
+            JOptionPane.showMessageDialog(this, ne.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnConfirmarActionPerformed

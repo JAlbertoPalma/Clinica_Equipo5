@@ -339,4 +339,57 @@ public class PacienteDAO implements IPacienteDAO {
         }
         return idPaciente;
     }
+    
+    //Consultar agenda del medico
+    @Override
+    public List<Map<String, Object>> consultarCitasPaciente(int idPaciente, String especialidad, LocalDate fechaInicio, LocalDate fechaFin) throws PersistenciaException {
+        List<Map<String, Object>> citas = new ArrayList<>();
+        try (Connection con = this.conexion.crearConexion();) {
+            String sql = "SELECT id_paciente, id_cita, especialidad, nombre_medico, fecha, hora_inicio, hora_fin, estado_cita " +
+                    "FROM vista_citas_paciente " +
+                    "WHERE id_paciente = ?";
+
+            if (especialidad != null && !especialidad.isEmpty()) {
+                sql += " AND especialidad = ?";
+            }
+            if (fechaInicio != null) {
+                sql += " AND fecha >= ?";
+            }
+            if (fechaFin != null) {
+                sql += " AND fecha <= ?";
+            }
+
+            CallableStatement pstmt = con.prepareCall(sql);
+            pstmt.setInt(1, idPaciente);
+
+            int paramIndex = 2;
+            if (especialidad != null && !especialidad.isEmpty()) {
+                pstmt.setString(paramIndex++, especialidad);
+            }
+            if (fechaInicio != null) {
+                pstmt.setDate(paramIndex++, Date.valueOf(fechaInicio));
+            }
+            if (fechaFin != null) {
+                pstmt.setDate(paramIndex++, Date.valueOf(fechaFin));
+            }
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Map<String, Object> cita = new HashMap<>();
+                cita.put("id_paciente", rs.getInt("id_paciente"));
+                cita.put("id_cita", rs.getInt("id_cita"));
+                cita.put("especialidad", rs.getString("especialidad"));
+                cita.put("nombre_medico", rs.getString("nombre_medico"));
+                cita.put("fecha", rs.getObject(("fecha"), LocalDate.class));
+                cita.put("hora_inicio", rs.getObject(("hora_inicio"), LocalTime.class));
+                cita.put("hora_fin", rs.getObject(("hora_fin"), LocalTime.class));
+                cita.put("estado_cita", rs.getString("estado_cita"));
+                citas.add(cita);
+            }
+        } catch (SQLException e) {
+            throw new PersistenciaException("Error al consultar la agenda del médico." + e.getMessage(), e);
+        }
+        return citas;
+    }
 }

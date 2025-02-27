@@ -84,7 +84,7 @@ public class CitaDAO implements ICitaDAO{
             return filasAfectadas > 0;
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error al cancelar la cita con ID: " + idCita, e);
-            throw new PersistenciaException("Error al cancelar la cita con ID: " + idCita, e.getCause());
+            throw new PersistenciaException(e.getMessage(), e.getCause());
         }
     }
     
