@@ -4,17 +4,36 @@
  */
 package GUIs;
 
+import BO.MedicoBO;
+import DTO.MedicoViejoDTO;
+import Exception.NegocioException;
+import configuracion.DependencyInjector;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import sesionUsuario.SesionUsuario;
+
 /**
  *
  * @author jorge
  */
 public class PerfilMedico extends javax.swing.JFrame {
 
+    MedicoBO medicoBO = DependencyInjector.crearMedicoBO();
+
     /**
      * Creates new form PerfilMedico
      */
     public PerfilMedico() {
         initComponents();
+        
+        // Llenar comboEspecialidad
+        String[] estados = {"Activo", "No activo"};
+        comboDisponibilidad.setModel(new DefaultComboBoxModel<>(estados));
     }
 
     /**
@@ -41,10 +60,20 @@ public class PerfilMedico extends javax.swing.JFrame {
         });
 
         comboDisponibilidad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activo", "Inactivo" }));
+        comboDisponibilidad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboDisponibilidadActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Disponibilidad:");
 
         btnConfirmar.setText("Confirmar Cambio");
+        btnConfirmar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConfirmarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -90,7 +119,24 @@ public class PerfilMedico extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_btnVolverActionPerformed
 
-    
+    private void comboDisponibilidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboDisponibilidadActionPerformed
+
+    }//GEN-LAST:event_comboDisponibilidadActionPerformed
+
+    private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
+        try {
+            String nuevaDisponibilidad = (String) comboDisponibilidad.getSelectedItem();
+            //Se verifica el estado actual del medico
+            medicoBO.cambiarEstadoMedico(SesionUsuario.getMedico().getIdMedico(),nuevaDisponibilidad);
+
+            JOptionPane.showMessageDialog(this, "Disponibilidad actualizada con éxito.",
+                    "Confirmación", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            Logger.getLogger(PerfilMedico.class.getName()).log(Level.SEVERE, null, e);
+            JOptionPane.showMessageDialog(this, "Error al actualizar disponibilidad.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnConfirmarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnConfirmar;

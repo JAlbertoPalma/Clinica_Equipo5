@@ -24,6 +24,7 @@ import java.util.logging.Logger;
  * @author pablo
  */
 public class MedicoBO {
+
     private static final Logger logger = Logger.getLogger(MedicoBO.class.getName());
     private final IMedicoDAO medicoDAO;
     private final MedicoMapper mapper = new MedicoMapper(); // Usamos el mapper
@@ -34,7 +35,7 @@ public class MedicoBO {
 
     //Dar de baja al medico
     public boolean darBajaMedico(int idMedico) throws NegocioException {    //Funciona        
-        
+
         // Validar que el ID sea positivo
         if (idMedico <= 0) {
             throw new NegocioException("El ID debe ser un número válido mayor que cero.");
@@ -43,15 +44,15 @@ public class MedicoBO {
         try {
             // Validar que el id exista
             Medico medicoBuscado = medicoDAO.obtenerMedico(idMedico);
-            if(medicoBuscado == null){
+            if (medicoBuscado == null) {
                 throw new NegocioException("No hay registros de un médico con este id");
             }
-            
+
             //validar que el medico este dado de alta
-            if(!medicoBuscado.isEstaActivo()){
+            if (!medicoBuscado.isEstaActivo()) {
                 throw new NegocioException("Este médico ya está dado de baja");
             }
-            
+
             // Intentar dar de baja al médico utilizando el DAO
             medicoDAO.darBajaMedico(idMedico);
             return true;
@@ -61,16 +62,16 @@ public class MedicoBO {
             throw new NegocioException("No se pudo dar de baja el médico con ID: " + idMedico, ex);
         }
     }
-    
+
     //Actualizacion de paciente
     public boolean actualizarMedico(int idMedico, MedicoNuevoDTO medicoDTO) throws NegocioException { //Funciona
         //validaciones de espacios vacíos
         if (medicoDTO.getNombre().isEmpty() || medicoDTO.getApellidoPaterno().isEmpty()
-         || medicoDTO.getCedulaProfesional().isEmpty()) {
+                || medicoDTO.getCedulaProfesional().isEmpty()) {
             throw new NegocioException("Todos los campos son obligatorios.");
         }
 
-        System.out.println("Id en la BO es: "+idMedico);
+        System.out.println("Id en la BO es: " + idMedico);
         // Mapeo del DTO a la entidad
         Medico medico = mapper.toEntity(medicoDTO);
 
@@ -84,8 +85,8 @@ public class MedicoBO {
         }
         return true;
     }
-    
-    public MedicoViejoDTO obtenerMedico(int idMedico) throws NegocioException{
+
+    public MedicoViejoDTO obtenerMedico(int idMedico) throws NegocioException {
         if (idMedico <= 0) {
             throw new NegocioException("El ID debe ser un número válido mayor que cero.");
         }
@@ -96,8 +97,8 @@ public class MedicoBO {
             throw new NegocioException("No se logró obtener al medico" + ex.getMessage());
         }
     }
-    
-    public MedicoViejoDTO obtenerMedicoPorCedula(String cedula) throws NegocioException{
+
+    public MedicoViejoDTO obtenerMedicoPorCedula(String cedula) throws NegocioException {
         try {
             return mapper.toViejoDTO(medicoDAO.obtenerMedicoPorCedula(cedula));
         } catch (PersistenciaException ex) {
@@ -105,8 +106,8 @@ public class MedicoBO {
             throw new NegocioException("No se logró obtener al medico" + ex.getMessage());
         }
     }
-    
-    public List<MedicoViejoDTO> obtenerTodos() throws NegocioException{
+
+    public List<MedicoViejoDTO> obtenerTodos() throws NegocioException {
         try {
             return mapper.toViejoDTOList(medicoDAO.obtenerMedicosActivos());
         } catch (PersistenciaException ex) {
@@ -114,15 +115,15 @@ public class MedicoBO {
             throw new NegocioException("No se lograron obtener registros" + ex.getMessage());
         }
     }
-    
-    public List<MedicoViejoDTO> obtenerMedicosActivos() throws NegocioException{
-        try{
+
+    public List<MedicoViejoDTO> obtenerMedicosActivos() throws NegocioException {
+        try {
             List<Medico> MedicosEncontrados = medicoDAO.obtenerMedicosActivos();
             return mapper.toViejoDTOList(MedicosEncontrados);
-        }catch(PersistenciaException e){
+        } catch (PersistenciaException e) {
             logger.log(Level.SEVERE, "Error al obtener la lista de medicos activos.", e);
             throw new NegocioException("No se pudo obtener la lista de médicos activos.", e);
-        }        
+        }
     }
 
     //Consultar de historial del medico
@@ -150,6 +151,13 @@ public class MedicoBO {
             throw new NegocioException("No se pudo obtener la agenda del médico.", e);
         }
     }
-    
-    
+
+    public String cambiarEstadoMedico(int idMedico, String nuevoEstado) throws NegocioException, PersistenciaException {
+        try {
+            medicoDAO.actualizarEstado(idMedico, nuevoEstado);
+        } catch (PersistenciaException e) {
+            throw new NegocioException("Error al cambiar estado del médico.", e);
+        }
+        return medicoDAO.actualizarEstado(idMedico, nuevoEstado);
+    }
 }

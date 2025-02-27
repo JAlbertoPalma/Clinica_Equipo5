@@ -50,6 +50,11 @@ public class MenuMedico extends javax.swing.JFrame {
         });
 
         btnHistorial.setText("Historial Pacientes");
+        btnHistorial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHistorialActionPerformed(evt);
+            }
+        });
 
         btnPerfil.setText("Mi Perfil");
         btnPerfil.addActionListener(new java.awt.event.ActionListener() {
@@ -110,8 +115,11 @@ AgendaMedico agendaMedico = new AgendaMedico(); // Crear la instancia de la otra
     this.dispose(); // Cerrar la pantalla actual
     }//GEN-LAST:event_btnAgendaActionPerformed
 
-   
+    private void btnHistorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistorialActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnHistorialActionPerformed
 
+   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgenda;
     private javax.swing.JButton btnCerrarSesion;

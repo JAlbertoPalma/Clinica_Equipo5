@@ -11,6 +11,7 @@ GUIs\MenuMedico$3.class
 GUIs\HistorialConsultas.class
 GUIs\AgendarCitaPaciente$2.class
 GUIs\PerfilPaciente$2.class
+GUIs\PerfilMedico$3.class
 GUIs\MenuPacientes$3.class
 GUIs\MenuPacientes$1.class
 GUIs\CitasPacientes$1.class
@@ -27,12 +28,14 @@ GUIs\Registro$2.class
 GUIs\AgendarCitaPaciente.class
 GUIs\MenuMedico$2.class
 GUIs\AgendaMedico.class
+GUIs\MenuMedico$4.class
 GUIs\PerfilMedico$1.class
 GUIs\Inicio$2.class
 GUIs\PerfilPaciente.class
 GUIs\AgendarCitaPaciente$3.class
 GUIs\MenuPacientes$4.class
 GUIs\MenuPacientes$2.class
+GUIs\PerfilMedico$2.class
 GUIs\CitasPacientes$2.class
 GUIs\AgendarCitaPaciente$4.class
 GUIs\MenuMedico$1.class

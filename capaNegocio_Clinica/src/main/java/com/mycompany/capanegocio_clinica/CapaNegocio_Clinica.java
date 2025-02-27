@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class CapaNegocio_Clinica {
 
-    public static void main(String[] args) throws PersistenciaException, SQLException, ParseException {
+    public static void main(String[] args) throws PersistenciaException, SQLException, ParseException, NegocioException {
         IConexionBD conexion = new ConexionBD();
         PacienteBO pacienteBO = new PacienteBO(conexion);
         UsuarioBO usuarioBO = new UsuarioBO(conexion);
@@ -262,14 +262,21 @@ public class CapaNegocio_Clinica {
 //            }catch(NegocioException e){
 //                System.err.print(e);
 //            }
-            try{
-                String correo = "pablo.1205example.com";
-                pacienteBO.EncontraridPaciente(correo);
-                System.out.println("Id encontrado");
-                System.out.println(pacienteBO.EncontraridPaciente(correo));
-            }catch(Exception e){
-                System.out.println("Error al encontrar el id");
-            }
+            //Pruena de cusqueda de id
+//            try{
+//                String correo = "pablo.1205example.com";
+//                pacienteBO.EncontraridPaciente(correo);
+//                System.out.println("Id encontrado");
+//                System.out.println(pacienteBO.EncontraridPaciente(correo));
+//            }catch(Exception e){
+//                System.out.println("Error al encontrar el id");
+//            }
+            
+            int idMedico = 1; // Cambia esto por un ID real de tu BD
+            String nuevoEstado = "Activo";
+
+        String resultado = medicoBO.cambiarEstadoMedico(idMedico, nuevoEstado);
+        System.out.println(resultado);
         
     }
 }

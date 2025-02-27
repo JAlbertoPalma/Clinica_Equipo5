@@ -28,4 +28,6 @@ public interface IMedicoDAO {
     public List<Map<String, Object>> consultarHistorialConsultas(int idMedico) throws PersistenciaException;
     
     public List<Map<String, Object>> consultarAgenda(int idMedico) throws PersistenciaException;
+    
+    public String actualizarEstado(int idMedico, String nuevoEstado) throws PersistenciaException;
 }
