@@ -23,7 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Clase de Lógica de Negocio para la gestión de pacientes.
  * @author pablo
  */
 public class PacienteBO {
@@ -33,10 +33,23 @@ public class PacienteBO {
     private final PacienteMapper mapper = new PacienteMapper(); // Usamos el mapper
     private final CitaMapper mapperCita = new CitaMapper(); // Usamos el mapper
 
+    /**
+     * Constructor de PacienteBO.
+     * Inicializa el objeto PacienteDAO con la conexión a la base de datos proporcionada.
+     *
+     * @param conexion Objeto IConexionBD para la conexión a la base de datos.
+     */
     public PacienteBO(IConexionBD conexion) {
         this.pacienteDAO = new PacienteDAO(conexion);
     }
 
+    /**
+     * Agrega un nuevo paciente a la base de datos.
+     *
+     * @param pacienteDTO DTO con los datos del paciente a agregar.
+     * @return true si la adición fue exitosa, false en caso contrario.
+     * @throws NegocioException Si ocurre un error durante el proceso de adición.
+     */
     public boolean agregarPaciente(PacienteNuevoDTO pacienteDTO) throws NegocioException {  //Funciona
         if (pacienteDTO == null) {
             throw new NegocioException("El paciente no puede ser nulo.");
@@ -61,7 +74,14 @@ public class PacienteBO {
         }
     }
 
-    //Actualizacion de paciente
+    /**
+     * Actualiza los datos de un paciente.
+     *
+     * @param idPaciente ID del paciente a actualizar.
+     * @param pacienteDTO DTO con los nuevos datos del paciente.
+     * @return true si la actualización fue exitosa, false en caso contrario.
+     * @throws NegocioException Si ocurre un error durante el proceso de actualización.
+     */
     public boolean actualizarPaciente(int idPaciente, PacienteNuevoDTO pacienteDTO) throws NegocioException { //Funciona
         //validaciones de espacios vacíos
         if (pacienteDTO.getNombre().isEmpty() || pacienteDTO.getApellidoPaterno().isEmpty()
@@ -85,6 +105,13 @@ public class PacienteBO {
         return true;
     }
 
+    /**
+     * Obtiene los datos de un paciente por su ID.
+     *
+     * @param idPaciente ID del paciente a obtener.
+     * @return DTO con los datos del paciente.
+     * @throws NegocioException Si ocurre un error durante el proceso de obtención.
+     */
     public PacienteViejoDTO obtenerPaciente(int idPaciente) throws NegocioException {
         try {
             return mapper.toViejoDTO(pacienteDAO.obtenerPaciente(idPaciente));
@@ -94,6 +121,13 @@ public class PacienteBO {
         }
     }
     
+    /**
+     * Obtiene los datos de un paciente por su correo electrónico.
+     *
+     * @param correo Correo electrónico del paciente a obtener.
+     * @return DTO con los datos del paciente.
+     * @throws NegocioException Si ocurre un error durante el proceso de obtención.
+     */
     public PacienteViejoDTO obtenerPacientePorCorreo(String correo) throws NegocioException {
         try {
             return mapper.toViejoDTO(pacienteDAO.obtenerPacientePorCorreo(correo));
@@ -103,6 +137,12 @@ public class PacienteBO {
         }
     }
 
+    /**
+     * Obtiene una lista con todos los pacientes.
+     *
+     * @return Lista de DTOs con los datos de todos los pacientes.
+     * @throws NegocioException Si ocurre un error durante el proceso de obtención.
+     */
     public List<PacienteViejoDTO> obtenerTodos() throws NegocioException {
         try {
             return mapper.toViejoDTOList(pacienteDAO.obtenerPacientes());
@@ -112,7 +152,16 @@ public class PacienteBO {
         }
     }
 
-    //Consulta historial de consultas del paciente
+    /**
+     * Consulta el historial de consultas de un paciente.
+     *
+     * @param idPaciente ID del paciente para consultar el historial.
+     * @param tipoConsulta Tipo de consulta a filtrar (opcional).
+     * @param fechaInicio Fecha de inicio para filtrar por rango de fechas (opcional).
+     * @param fechaFin Fecha de fin para filtrar por rango de fechas (opcional).
+     * @return Lista de mapas con los datos del historial de consultas.
+     * @throws NegocioException Si ocurre un error durante el proceso de consulta.
+     */
     public List<Map<String, Object>> consultarHistorialConsultasPaciente(int idPaciente, String tipoConsulta, LocalDate fechaInicio, LocalDate fechaFin) throws NegocioException {//Funciona
         if (idPaciente <= 0) {
             throw new NegocioException("El ID del paciente debe ser válido.");
@@ -128,7 +177,14 @@ public class PacienteBO {
         }
     }
 
-    //Buscar citas disponibles
+    /**
+     * Busca citas disponibles para un médico en una fecha específica.
+     *
+     * @param idMedico ID del médico para buscar citas disponibles.
+     * @param fechaCita Fecha de la cita para buscar horarios disponibles.
+     * @return Lista de mapas con los horarios disponibles.
+     * @throws NegocioException Si ocurre un error durante el proceso de búsqueda.
+     */
     public List<Map<String, Object>> consultarCitasDisponibles(int idMedico, String fechaCita) throws NegocioException {//Funciona
         if (idMedico <= 0) {
             throw new NegocioException("El ID del paciente debe ser válido.");
@@ -143,7 +199,13 @@ public class PacienteBO {
         }
     }
 
-    //AsignarMedicoUrgencia
+    /**
+     * Asigna un médico de urgencia a un paciente.
+     *
+     * @param idPaciente ID del paciente para asignar un médico de urgencia.
+     * @return DTO con los datos de la asignación.
+     * @throws NegocioException Si ocurre un error durante el proceso de asignación.
+     */
     public ConsultaUrgenciaDTO asignarMedicoUrgencia(int idPaciente) throws NegocioException {
         try {
             if (idPaciente <= 0) {
@@ -155,6 +217,16 @@ public class PacienteBO {
         }
     }
     
+    /**
+     * Consulta las citas de un paciente, filtradas por especialidad y rango de fechas.
+     *
+     * @param idPaciente ID del paciente para consultar sus citas.
+     * @param especialidad Especialidad para filtrar las citas (opcional).
+     * @param fechaInicio Fecha de inicio para filtrar por rango de fechas (opcional).
+     * @param fechaFin Fecha de fin para filtrar por rango de fechas (opcional).
+     * @return Lista de mapas con los datos de las citas del paciente.
+     * @throws NegocioException Si ocurre un error durante el proceso de consulta.
+     */
     public List<Map<String, Object>> consultarCitasPaciente(int idPaciente, String especialidad, LocalDate fechaInicio, LocalDate fechaFin) throws NegocioException{
         try{
             return pacienteDAO.consultarCitasPaciente(idPaciente, especialidad, fechaInicio, fechaFin);
@@ -163,7 +235,13 @@ public class PacienteBO {
         }
     }
     
-    //Encontrar id del paciente con correo
+    /**
+     * Encuentra el ID de un paciente por su correo electrónico.
+     *
+     * @param correo Correo electrónico del paciente para buscar su ID.
+     * @return ID del paciente encontrado.
+     * @throws NegocioException Si ocurre un error durante el proceso de búsqueda.
+     */
     public int EncontraridPaciente(String correo)throws NegocioException{
         try{
             if (correo==null) {

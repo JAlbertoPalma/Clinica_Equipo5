@@ -21,7 +21,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Clase DAO para la gestión de citas en la base de datos.
+ * Implementa la interfaz ICitaDAO.
  * @author Beto_
  */
 public class CitaDAO implements ICitaDAO{
@@ -29,9 +30,22 @@ public class CitaDAO implements ICitaDAO{
     IConexionBD conexion;
     private static final Logger logger = Logger.getLogger(CitaDAO.class.getName());
 
+    /**
+     * Constructor de la clase CitaDAO.
+     *
+     * @param conexion Objeto IConexionBD para la conexión a la base de datos.
+     */
     public CitaDAO(IConexionBD conexion) {
         this.conexion = conexion;
     }
+    
+    /**
+     * Agendar una nueva cita en la base de datos.
+     *
+     * @param cita Objeto Cita con los datos de la cita a agendar.
+     * @return Objeto Cita con el ID generado por la base de datos.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos.
+     */
     @Override
     public Cita agendarCita(Cita cita) throws PersistenciaException {
         // consulta SQL que vamos a ejecutar en mysql
@@ -69,7 +83,14 @@ public class CitaDAO implements ICitaDAO{
             throw new PersistenciaException("Error al crear al cita: " + e.getMessage());
         }
     }
-
+    
+    /**
+     * Cancela una cita existente en la base de datos.
+     *
+     * @param idCita ID de la cita a cancelar.
+     * @return true si la cita se canceló correctamente, false en caso contrario.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos.
+     */
     @Override
     public boolean cancelarCita(int idCita) throws PersistenciaException {
         String sentenciaSQL = "UPDATE citas SET estado = 'cancelada' WHERE id = ?";
@@ -88,6 +109,13 @@ public class CitaDAO implements ICitaDAO{
         }
     }
     
+    /**
+     * Obtiene una cita por su ID.
+     *
+     * @param idCita ID de la cita a obtener.
+     * @return Objeto Cita con los datos de la cita, o null si no se encuentra.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos.
+     */
     @Override
     public Cita obtenerCita(int idCita) throws PersistenciaException{
         // auxiliar de usuario
@@ -135,7 +163,13 @@ public class CitaDAO implements ICitaDAO{
         }
         return cita;
     }
-
+    
+    /**
+     * Obtiene una lista con todas las citas almacenadas en la base de datos.
+     *
+     * @return Lista de objetos Cita con todas las citas.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos.
+     */
     @Override
     public List<Cita> obtenerTodas() throws PersistenciaException {
         String consultaSQL = "SELECT id, fecha, horaInicio, horaFin, estado, id_medico, id_paciente FROM citas WHERE id";

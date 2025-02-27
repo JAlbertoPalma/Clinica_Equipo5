@@ -24,7 +24,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Clase DAO para la gestión de médicos en la base de datos.
+ * Implementa la interfaz IMedicoDAO.
  * @author Beto_
  */
 public class MedicoDAO implements IMedicoDAO {
@@ -32,11 +33,21 @@ public class MedicoDAO implements IMedicoDAO {
     IConexionBD conexion;
     private static final Logger logger = Logger.getLogger(MedicoDAO.class.getName());
 
+    /**
+     * Constructor de la clase MedicoDAO.
+     *
+     * @param conexion Objeto IConexionBD para la conexión a la base de datos.
+     */
     public MedicoDAO(IConexionBD conexion) {
         this.conexion = conexion;
     }
 
-    //Dar de baja al medico
+    /**
+     * Da de baja a un médico en la base de datos utilizando un procedimiento almacenado.
+     *
+     * @param idMedico ID del médico a dar de baja.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos.
+     */
     @Override
     public void darBajaMedico(int idMedico) throws PersistenciaException {
         try (Connection con = this.conexion.crearConexion(); CallableStatement pstmt = con.prepareCall("call dar_baja_medico (?)")) {
@@ -47,7 +58,15 @@ public class MedicoDAO implements IMedicoDAO {
             throw new PersistenciaException("No se pudo dar de baja el médico con ID: " + idMedico, e);
         }
     }
-
+    
+    /**
+     * Actualiza los datos de un médico en la base de datos.
+     *
+     * @param idMedico ID del médico a actualizar.
+     * @param medico Objeto Medico con los nuevos datos.
+     * @return true si la actualización fue exitosa, false en caso contrario.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos.
+     */
     @Override
     public boolean actualizarMedico(int idMedico, Medico medico) throws PersistenciaException {
         String consultaSQL = "UPDATE medicos SET nombre = ?, apellidoPat=?, apellidoMat=?, especialidad=?, cedulaProfesional=?, id_usuario=? WHERE id = ?";
@@ -69,7 +88,14 @@ public class MedicoDAO implements IMedicoDAO {
             throw new PersistenciaException("Error al actualizar medico con ID " + idMedico, e);
         }
     }
-
+    
+    /**
+     * Obtiene un médico por su ID.
+     *
+     * @param idMedico ID del médico a obtener.
+     * @return Objeto Medico con los datos del médico, o null si no se encuentra.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos.
+     */
     @Override
     public Medico obtenerMedico(int idMedico) throws PersistenciaException {
         // auxiliar de usuario
@@ -124,7 +150,14 @@ public class MedicoDAO implements IMedicoDAO {
         }
         return medico;
     }
-
+    
+    /**
+     * Obtiene un médico por su cédula profesional.
+     *
+     * @param cedula Cédula profesional del médico a obtener.
+     * @return Objeto Medico con los datos del médico, o null si no se encuentra.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos.
+     */
     @Override
     public Medico obtenerMedicoPorCedula(String cedula) throws PersistenciaException {
         // auxiliar de usuario
@@ -179,7 +212,13 @@ public class MedicoDAO implements IMedicoDAO {
         }
         return medico;
     }
-
+    
+    /**
+     * Obtiene una lista de medicos con estado activo = true
+     *
+     * @return Lista de Objeto Medico con los datos del médico, o null si no se encuentra.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos.
+     */
     @Override
     public List<Medico> obtenerMedicosActivos() throws PersistenciaException {
         String consultaSQL = "SELECT id, nombre, apellidoPat, apellidoMat, especialidad, cedulaProfesional, estaActivo, id_usuario FROM medicos WHERE estaActivo = TRUE";
@@ -234,7 +273,13 @@ public class MedicoDAO implements IMedicoDAO {
         }
     }
 
-    //Consultar de historial del medico
+    /**
+     * Consulta el historial de consultas de un médico.
+     *
+     * @param idMedico ID del médico para consultar el historial.
+     * @return Lista de mapas con los datos del historial de consultas.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos.
+     */
     @Override
     public List<Map<String, Object>> consultarHistorialConsultas(int idMedico) throws PersistenciaException {   //Funciona
         List<Map<String, Object>> agenda = new ArrayList<>();
@@ -262,7 +307,13 @@ public class MedicoDAO implements IMedicoDAO {
         return agenda;
     }
 
-    //Consultar agenda del medico
+    /**
+     * Consulta la agenda de un médico.
+     *
+     * @param idMedico ID del médico para consultar la agenda.
+     * @return Lista de mapas con los datos de la agenda.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos.
+     */
     @Override
     public List<Map<String, Object>> consultarAgenda(int idMedico) throws PersistenciaException {//Funciona
         List<Map<String, Object>> agenda = new ArrayList<>();
@@ -286,7 +337,14 @@ public class MedicoDAO implements IMedicoDAO {
         }
         return agenda;
     }
-
+    
+    /**
+     * Da de alta a un médico en la base de datos.
+     *
+     * @param idMedico ID del médico a dar de alta.
+     * @return true si el alta fue exitosa, false en caso contrario.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos.
+     */
     @Override
     public boolean darAltaMedico(int idMedico) throws PersistenciaException {
         String consultaSQL = "UPDATE MEDICOS SET estaActivo = TRUE WHERE id = ?";

@@ -28,19 +28,30 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Clase DAO para la gestión de pacientes en la base de datos.
+ * Implementa la interfaz IPacienteDAO.
  * @author pablo
  */
 public class PacienteDAO implements IPacienteDAO {
 
     IConexionBD conexion;
     private static final Logger logger = Logger.getLogger(PacienteDAO.class.getName());
-
+    
+    /**
+     * constructor vacío, inicializa la conexión
+     * @param conexion la conexión con la base de datos
+     */
     public PacienteDAO(IConexionBD conexion) {
         this.conexion = conexion;
     }
 
-    //agregar Paciente
+    /**
+     * Agrega un nuevo paciente a la base de datos.
+     *
+     * @param paciente Objeto Paciente con los datos del paciente a agregar.
+     * @return Objeto Paciente con el ID generado por la base de datos.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos.
+     */
     @Override
     public Paciente agregarPaciente(Paciente paciente) throws PersistenciaException {//Funciona
         // consulta SQL que vamos a ejecutar en mysql
@@ -82,7 +93,14 @@ public class PacienteDAO implements IPacienteDAO {
         }
     }
 
-    //ACTUALIZAR PACIENTE
+    /**
+     * Actualiza los datos de un paciente en la base de datos.
+     *
+     * @param idPaciente ID del paciente a actualizar.
+     * @param paciente Objeto Paciente con los nuevos datos.
+     * @return true si la actualización fue exitosa, false en caso contrario.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos.
+     */
     @Override
     public boolean actualizarPaciente(int idPaciente, Paciente paciente) throws PersistenciaException {//Funciona
         String consultaSQL = "UPDATE pacientes SET nombre = ?, apellidoPat=?, apellidoMat=?, fechaNacimiento=?, calle=?, colonia=?, numero=?, telefono=?, correo=? WHERE id = ?";
@@ -106,7 +124,14 @@ public class PacienteDAO implements IPacienteDAO {
             throw new PersistenciaException("Error al actualizar paciente con ID " + paciente.getIdPaciente(), e);
         }
     }
-
+    
+    /**
+     * Obtiene un paciente por su ID.
+     *
+     * @param idPaciente ID del paciente a obtener.
+     * @return Objeto Paciente con los datos del paciente, o null si no se encuentra.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos.
+     */
     @Override
     public Paciente obtenerPaciente(int idPaciente) throws PersistenciaException {
         // auxiliar de usuario
@@ -150,6 +175,13 @@ public class PacienteDAO implements IPacienteDAO {
         return paciente;
     }
 
+     /**
+     * Obtiene un paciente por su correo electrónico.
+     *
+     * @param correo Correo electrónico del paciente a obtener.
+     * @return Objeto Paciente con los datos del paciente, o null si no se encuentra.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos.
+     */
     @Override
     public Paciente obtenerPacientePorCorreo(String correo) throws PersistenciaException {
         // auxiliar de usuario
@@ -193,6 +225,12 @@ public class PacienteDAO implements IPacienteDAO {
         return paciente;
     }
 
+    /**
+     * Obtiene una lista de todos los pacientes.
+     *
+     * @return Lista de objetos Paciente con todos los pacientes.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos.
+     */
     @Override
     public List<Paciente> obtenerPacientes() throws PersistenciaException {
         String consultaSQL = "SELECT id, nombre, apellidoPat, apellidoMat, fechaNacimiento, calle, colonia, numero, telefono, correo, id_usuario FROM pacientes";
@@ -235,7 +273,16 @@ public class PacienteDAO implements IPacienteDAO {
         }
     }
 
-    //Consulta historial de consultas del paciente
+    /**
+     * Consulta el historial de consultas de un paciente.
+     *
+     * @param idPaciente ID del paciente para consultar el historial.
+     * @param tipoConsulta Tipo de consulta a filtrar (opcional).
+     * @param fechaInicio Fecha de inicio para filtrar por rango de fechas (opcional).
+     * @param fechaFin Fecha de fin para filtrar por rango de fechas (opcional).
+     * @return Lista de mapas con los datos del historial de consultas.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos.
+     */
     @Override
     public List<Map<String, Object>> consultarHistorialConsultas(int idPaciente, String tipoConsulta, LocalDate fechaInicio, LocalDate fechaFin) throws PersistenciaException {//Funciona
         List<Map<String, Object>> historial = new ArrayList<>();
@@ -276,7 +323,14 @@ public class PacienteDAO implements IPacienteDAO {
         return historial;
     }
 
-    //Buscar Citas disponibles
+    /**
+     * Busca citas disponibles para un médico en una fecha específica.
+     *
+     * @param idMedico ID del médico para buscar citas disponibles.
+     * @param fechaCita Fecha de la cita para buscar horarios disponibles.
+     * @return Lista de mapas con los horarios disponibles.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos.
+     */
     @Override
     public List<Map<String, Object>> buscarCitasDisponibles(int idMedico, String fechaCita) throws PersistenciaException {//Funciona
         List<Map<String, Object>> horariosDisponibles = new ArrayList<>();
@@ -298,7 +352,13 @@ public class PacienteDAO implements IPacienteDAO {
         return horariosDisponibles;
     }
 
-    //Asignar medico a urgencias
+    /**
+     * Asigna un médico de urgencia a un paciente.
+     *
+     * @param idPaciente ID del paciente para asignar un médico de urgencia.
+     * @return Objeto ConsultaUrgencia con los datos de la asignación.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos.
+     */
     @Override
     public ConsultaUrgencia asignarMedicoUrgencia(int idPaciente) throws PersistenciaException {
         try (Connection con = this.conexion.crearConexion();) {
@@ -321,7 +381,14 @@ public class PacienteDAO implements IPacienteDAO {
             throw new PersistenciaException("Error al asignar médico de urgencia: " + ex.getMessage(), ex);
         }
     }
-
+    
+    /**
+     * Encuentra el ID de un paciente por su correo electrónico.
+     *
+     * @param correo Correo electrónico del paciente para buscar su ID.
+     * @return ID del paciente encontrado.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos.
+     */
     @Override
     public int EncontraridPaciente(String correo) throws PersistenciaException {
         int idPaciente = 0;
@@ -340,7 +407,16 @@ public class PacienteDAO implements IPacienteDAO {
         return idPaciente;
     }
     
-    //Consultar agenda del medico
+    /**
+     * Consulta las citas de un paciente, filtradas por especialidad y rango de fechas.
+     *
+     * @param idPaciente ID del paciente para consultar sus citas.
+     * @param especialidad Especialidad para filtrar las citas (opcional).
+     * @param fechaInicio Fecha de inicio para filtrar por rango de fechas (opcional).
+     * @param fechaFin Fecha de fin para filtrar por rango de fechas (opcional).
+     * @return Lista de mapas con los datos de las citas del paciente.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos.
+     */
     @Override
     public List<Map<String, Object>> consultarCitasPaciente(int idPaciente, String especialidad, LocalDate fechaInicio, LocalDate fechaFin) throws PersistenciaException {
         List<Map<String, Object>> citas = new ArrayList<>();

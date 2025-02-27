@@ -147,7 +147,6 @@ public class MenuPacientes extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMisCitasActionPerformed
 
     private void btnConsultaSinCitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultaSinCitaActionPerformed
-        ConsultaSinCita consultaSinCita = new ConsultaSinCita(); // Crear la instancia de la otra pantalla
         try {
             ConsultaUrgenciaDTO consultaUrgencia= pacienteBO.asignarMedicoUrgencia(SesionUsuario.getPaciente().getIdPaciente());
             JOptionPane.showMessageDialog(this, "Consulta con: " + consultaUrgencia.getNombreMedico()+ " en el horario: " + 
@@ -157,7 +156,6 @@ public class MenuPacientes extends javax.swing.JFrame {
             Logger.getLogger(MenuPacientes.class.getName()).log(Level.SEVERE, null, ne);
             JOptionPane.showMessageDialog(this, ne.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-        consultaSinCita.setVisible(true); // Hacer visible la nueva pantalla
         this.dispose(); // Cerrar la pantalla actual
     }//GEN-LAST:event_btnConsultaSinCitaActionPerformed
 

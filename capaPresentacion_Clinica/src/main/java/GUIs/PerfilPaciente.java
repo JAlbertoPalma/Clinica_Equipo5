@@ -14,6 +14,8 @@ import configuracion.DependencyInjector;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import sesionUsuario.SesionUsuario;
 
@@ -223,27 +225,44 @@ public class PerfilPaciente extends javax.swing.JFrame {
     }
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        try {
-            //Date to LocalDate
+            try {
+            // Validación 1: Verificar si hay fecha seleccionada
+            if (jDateChooser1.getDate() == null) {
+                JOptionPane.showMessageDialog(this, "Por favor, seleccione una fecha de nacimiento.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Date to LocalDate
             LocalDate fechaLocalDate = jDateChooser1.getDate().toInstant()
-                                          .atZone(ZoneId.systemDefault())
-                                          .toLocalDate();
-            
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+
             // Obtener los datos desde los campos de texto
-            String nombre = txtNombre.getText();
-            String apellidoPaterno = txtApellidoP.getText();
-            String apellidoMaterno = txtApellidoM.getText();
-            String calle = txtCalle.getText();
-            String colonia = txtColonia.getText();
-            String numeroCasa = txtNumeroC.getText();
-            String telefono = txtTelefono.getText();
+            String nombre = txtNombre.getText().trim();
+            String apellidoPaterno = txtApellidoP.getText().trim();
+            String apellidoMaterno = txtApellidoM.getText().trim();
+            String calle = txtCalle.getText().trim();
+            String colonia = txtColonia.getText().trim();
+            String numeroCasa = txtNumeroC.getText().trim();
+            String telefono = txtTelefono.getText().trim();
             LocalDate fechaNacimiento = fechaLocalDate;
 
-            // Validación de campos vacíos
-            if (nombre.isEmpty() || apellidoPaterno.isEmpty() || apellidoMaterno.isEmpty()
-                    || calle.isEmpty() || colonia.isEmpty() || numeroCasa.isEmpty()
-                    || telefono.isEmpty() || fechaNacimiento.toString().isEmpty()) {
+            // Validación 2: Campos obligatorios no vacíos
+            if (nombre.isEmpty() || apellidoPaterno.isEmpty() || calle.isEmpty() 
+             || colonia.isEmpty() || numeroCasa.isEmpty()|| telefono.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Validación 3: Formato de número de teléfono
+            if (!telefono.matches("\\d{10}")) {
+                JOptionPane.showMessageDialog(this, "Por favor, ingrese un número de teléfono válido (10 dígitos).", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Validación 4: Fecha de nacimiento no puede ser en el futuro
+            if (fechaNacimiento.isAfter(LocalDate.now())) {
+                JOptionPane.showMessageDialog(this, "La fecha de nacimiento no puede ser en el futuro.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -259,15 +278,15 @@ public class PerfilPaciente extends javax.swing.JFrame {
             pacienteDTO.setTelefono(telefono);
             pacienteDTO.setFechaNacimiento(fechaNacimiento);
             pacienteDTO.setCorreo(SesionUsuario.getPaciente().getCorreo());
-            
+
             // Llamar al método de actualización
-            if(pacienteBO.actualizarPaciente(SesionUsuario.getPaciente().getIdPaciente(), pacienteDTO)){
+            if (pacienteBO.actualizarPaciente(SesionUsuario.getPaciente().getIdPaciente(), pacienteDTO)) {
                 System.out.println("paciente actualizado");
                 JOptionPane.showMessageDialog(this, "Paciente actualizado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (Exception e) {
+            Logger.getLogger(PerfilPaciente.class.getName()).log(Level.SEVERE, null, e);
             JOptionPane.showMessageDialog(this, "Ocurrió un error al actualizar el paciente.", "Error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
 

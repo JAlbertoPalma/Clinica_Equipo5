@@ -13,12 +13,11 @@ import Entidades.Usuario;
 import Exception.NegocioException;
 import Exception.PersistenciaException;
 import Mapper.UsuarioMapper;
-import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Clase de Lógica de Negocio para la gestión de usuarios.
  * @author Beto_
  */
 public class UsuarioBO {
@@ -26,10 +25,23 @@ public class UsuarioBO {
     private final IUsuarioDAO usuarioDAO;
     private final UsuarioMapper mapper = new UsuarioMapper(); // Usamos el mapper
 
+    /**
+     * Constructor de UsuarioBO.
+     * Inicializa el objeto UsuarioDAO con la conexión a la base de datos proporcionada.
+     *
+     * @param conexion Objeto IConexionBD para la conexión a la base de datos.
+     */
     public UsuarioBO(IConexionBD conexion) {
         this.usuarioDAO = new UsuarioDAO(conexion);
     }
     
+    /**
+     * Agrega un nuevo usuario a la base de datos.
+     *
+     * @param usuarioDTO DTO con los datos del usuario a agregar.
+     * @return true si la adición fue exitosa, false en caso contrario.
+     * @throws NegocioException Si ocurre un error durante el proceso de adición.
+     */
     public boolean agregarUsuario(UsuarioNuevoDTO usuarioDTO) throws NegocioException { //Funciona
         if (usuarioDTO == null) {
             throw new NegocioException("El usuario no puede ser nulo.");
@@ -52,33 +64,30 @@ public class UsuarioBO {
         }
     }
     
+    /**
+     * Inicia sesión de un usuario.
+     *
+     * @param entrada Correo electrónico o cédula profesional del usuario.
+     * @param contrasenia Contraseña del usuario.
+     * @return DTO con los datos del usuario si la autenticación es exitosa.
+     * @throws NegocioException Si ocurre un error durante el proceso de autenticación.
+     */
     public UsuarioViejoDTO iniciarSesion(String entrada, String contrasenia) throws NegocioException{
         try {
             return mapper.toViejoDTO(usuarioDAO.iniciarSesion(entrada, contrasenia));
         } catch (PersistenciaException ex) {
             Logger.getLogger(UsuarioBO.class.getName()).log(Level.SEVERE, null, ex);
-            throw new NegocioException("Hubo un error al guardar el usuario.", ex);
+            throw new NegocioException(ex.getMessage(), ex);
         }
     }
     
-//    public UsuarioViejoDTO iniciarSesionPaciente(String correo, String contrasenia) throws NegocioException{
-//        try {
-//            return mapper.toViejoDTO(usuarioDAO.iniciarSesionPaciente(correo, contrasenia));
-//        } catch (PersistenciaException ex) {
-//            Logger.getLogger(UsuarioBO.class.getName()).log(Level.SEVERE, null, ex);
-//            throw new NegocioException("Hubo un error al guardar el usuario.", ex);
-//        }
-//    }
-//    
-//    public UsuarioViejoDTO iniciarSesionMedico(String cedula, String contrasenia) throws NegocioException{
-//        try {
-//            return mapper.toViejoDTO(usuarioDAO.iniciarSesionMedico(cedula, contrasenia));
-//        } catch (PersistenciaException ex) {
-//            Logger.getLogger(UsuarioBO.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return null;
-//    }
-    
+    /**
+     * Obtiene los datos de un usuario por su correo electrónico.
+     *
+     * @param correo Correo electrónico del usuario a obtener.
+     * @return DTO con los datos del usuario.
+     * @throws NegocioException Si ocurre un error durante el proceso de obtención.
+     */
     public UsuarioViejoDTO obtenerUsuarioPorCorreo(String correo) throws NegocioException{  //Funciona
         if (correo.isEmpty()) {
             throw new NegocioException("El usuario no puede ser nulo.");
@@ -88,8 +97,8 @@ public class UsuarioBO {
             Usuario usuarioEncontrado = usuarioDAO.obtenerUsuarioPorCorreo(correo);
             return mapper.toViejoDTO(usuarioEncontrado);
         } catch (PersistenciaException ex) {
-            logger.log(Level.SEVERE, "Error al guardar usuario en la Base de Datos", ex);
-            throw new NegocioException("Hubo un error al guardar el usuario.", ex);
+            logger.log(Level.SEVERE, "Error al obtener usuario en la Base de Datos", ex);
+            throw new NegocioException("Hubo un error al obtener el usuario.", ex);
         }
     }
 }

@@ -172,7 +172,12 @@ public class InicioSesion extends javax.swing.JFrame {
                 // Si no se encuentra ni paciente ni médico, mostrar error
                 JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
             }
-            SesionUsuario.setUsuario(pacienteBO.obtenerPacientePorCorreo(entrada));
+            
+            if(usuario.getTipo().equals(Usuario.TipoUsuario.paciente)){
+                SesionUsuario.setUsuario(pacienteBO.obtenerPacientePorCorreo(entrada));
+            }else{
+                SesionUsuario.setUsuario(medicoBO.obtenerMedicoPorCedula(entrada));
+            }
 
         } catch (NegocioException ne) {
             Logger.getLogger(InicioSesion.class.getName()).log(Level.SEVERE, null, ne.getMessage());

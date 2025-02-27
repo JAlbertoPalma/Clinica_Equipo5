@@ -22,7 +22,8 @@ import java.util.logging.Logger;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
- *
+ *  Clase DAO para la gestión de usuarios en la base de datos.
+ * Implementa la interfaz IUsuarioDAO.
  * @author Beto_
  */
 public class UsuarioDAO implements IUsuarioDAO {
@@ -30,10 +31,21 @@ public class UsuarioDAO implements IUsuarioDAO {
     IConexionBD conexion;
     private static final Logger logger = Logger.getLogger(UsuarioDAO.class.getName());
 
+    /**
+     * Constructor vacío, inicializa la conexión a la bd
+     * @param conexion la conexión con la base de datos
+     */
     public UsuarioDAO(IConexionBD conexion) {
         this.conexion = conexion;
     }
-
+    
+    /**
+     * Agrega un nuevo usuario a la base de datos, encriptando la contraseña antes de guardarla.
+     *
+     * @param usuario Objeto Usuario con los datos del usuario a agregar.
+     * @return Objeto Usuario con el ID generado por la base de datos.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos.
+     */
     @Override
     public Usuario agregarUsuario(Usuario usuario) throws PersistenciaException {
         // consulta SQL que vamos a ejecutar en mysql
@@ -73,6 +85,14 @@ public class UsuarioDAO implements IUsuarioDAO {
         }
     }
     
+    /**
+     * Inicia sesión de un usuario, verificando el correo o cédula y la contraseña encriptada.
+     *
+     * @param identificador Correo electrónico o cédula profesional del usuario.
+     * @param contrasenia Contraseña del usuario.
+     * @return Objeto Usuario con los datos del usuario si la autenticación es exitosa.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos o la autenticación falla.
+     */
     @Override
     public Usuario iniciarSesion(String identificador, String contrasenia) throws PersistenciaException {
         Usuario usuario;
@@ -98,6 +118,13 @@ public class UsuarioDAO implements IUsuarioDAO {
         }
     }
     
+    /**
+     * Obtiene un usuario por su correo electrónico o cédula profesional.
+     *
+     * @param entrada Correo electrónico o cédula profesional del usuario a obtener.
+     * @return Objeto Usuario con los datos del usuario, o null si no se encuentra.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos.
+     */
     @Override
     public Usuario obtenerUsuario(String entrada) throws PersistenciaException {
         // auxiliar de usuario
@@ -141,7 +168,14 @@ public class UsuarioDAO implements IUsuarioDAO {
 
         }
     }
-
+    
+    /**
+     * Obtiene un usuario por su correo electrónico.
+     *
+     * @param correo Correo electrónico del usuario a obtener.
+     * @return Objeto Usuario con los datos del usuario, o null si no se encuentra.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos.
+     */
     @Override
     public Usuario obtenerUsuarioPorCorreo(String correo) throws PersistenciaException {
         // auxiliar de usuario
@@ -185,6 +219,13 @@ public class UsuarioDAO implements IUsuarioDAO {
         }
     }
 
+    /**
+     * Obtiene un usuario por su cédula profesional.
+     *
+     * @param cedula Cédula profesional del usuario a obtener.
+     * @return Objeto Usuario con los datos del usuario, o null si no se encuentra.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos.
+     */
     @Override
     public Usuario obtenerUsuarioPorCedula(String cedula) throws PersistenciaException {
         // auxiliar de usuario
@@ -227,7 +268,13 @@ public class UsuarioDAO implements IUsuarioDAO {
         }
         return usuario;
     }
-
+    
+    /**
+     * Obtiene una lista de todos los usuarios.
+     *
+     * @return Lista de objetos Usuario con todos los usuarios.
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos.
+     */
     @Override
     public List<Usuario> obtenerUsuarios() throws PersistenciaException {
         String consultaSQL = "SELECT id, correo, cedulaProfesional, contrasenia, tipo FROM usuarios";
@@ -270,7 +317,12 @@ public class UsuarioDAO implements IUsuarioDAO {
             throw new PersistenciaException("Error al obtener la lista de usuarios.", ex);
         }
     }
-
+    
+    /**
+     * Encripta todas las contraseñas de los usuarios en la base de datos.
+     *
+     * @throws PersistenciaException Si ocurre un error al acceder a la base de datos.
+     */
     @Override
     public void encriptarContrasenias() throws PersistenciaException {
         String sqlSelect = "SELECT id, contrasenia FROM usuarios";
